@@ -1,11 +1,8 @@
 function Home() {
     return (
-        <div className=" h-96">
-            <div className="h-96">aa</div>
-            <div className="h-96">aa</div>
-            <div className="h-96">aa</div>
-            <div className="h-96">aa</div>
-            <div className="h-96">aa</div>
+        <div>
+            <div className="h-96">a</div>
+            <div className="h-96">s</div>
         </div>
     );
 }

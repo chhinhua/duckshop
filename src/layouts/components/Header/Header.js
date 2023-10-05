@@ -11,11 +11,7 @@ import Menu from '@mui/icons-material/Menu';
 import Search from '@mui/icons-material/Search';
 import TextField from '@mui/material/TextField';
 import Box from '@mui/material/Box';
-
 import Drawer from '@mui/material/Drawer';
-import Button from '@mui/material/Button';
-// import List from '@mui/material/List';
-
 import ListSubheader from '@mui/material/ListSubheader';
 import List from '@mui/material/List';
 import ListItemButton from '@mui/material/ListItemButton';
@@ -99,8 +95,8 @@ function Header() {
     );
     return (
         <>
-            <div className="bg-primary h-16 flex flex-col justify-center items-center py-5 fixed w-full ">
-                <div className="flex w-4/5 justify-between items-center ">
+            <div className="bg-header h-16 flex flex-col justify-center items-center py-5 fixed w-full z-50">
+                <div className="flex w-11/12 justify-between items-center ">
                     <Image src={logo} className="h-40 " />
                     <form className="w-2/5">
                         <div>
@@ -121,7 +117,7 @@ function Header() {
                             </button> */}
                         </div>
                     </form>
-                    <div className="flex justify-center items-center gap-3">
+                    <div className="flex justify-center items-center md:gap-3 gap-0">
                         <IconButton aria-label="person">
                             <Person />
                         </IconButton>
