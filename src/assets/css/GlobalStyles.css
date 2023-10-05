@@ -1,0 +1,83 @@
+@import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+:root {
+    --primary: #fafafa;
+    --black: #000;
+    --white: rgba(255, 255, 255, 1);
+    --text-color: rgb(22, 24, 35);
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+html {
+    /* font-size: 62.5%; */
+}
+
+body {
+    font-family: 'Poppins', sans-serif;
+    font-size: 1.6rem;
+    line-height: 1.5;
+    /* Tối ưu tải phông chữ */
+    text-rendering: optimizeSpeed;
+    color: var(--text-color);
+}
+
+button,
+input,
+[tabindex] {
+    /* border: none; */
+    outline: none;
+}
+
+a {
+    color: var(--text-color);
+    text-decoration: none;
+}
+
+/* navbar */
+.open span:nth-child(1) {
+    transform: rotate(45deg) translate(6.5px, 6.5px);
+}
+
+.open span:nth-child(2) {
+    width: 0;
+    opacity: 0;
+}
+
+.open span:nth-child(3) {
+    transform: rotate(-45deg) translate(6.5px, -6.5px);
+}
+
+.navbar-dropdown {
+    height: calc(100vh - 100%);
+}
+
+.chair-card {
+    box-shadow: 0px 2.19073px 13.1444px rgba(118, 81, 13, 0.12);
+}
+
+.sales-card {
+    box-shadow: 0px 3.83379px 13.1444px rgba(138, 107, 21, 0.07);
+}
+
+/* Card */
+.primary-card {
+    box-shadow: 0px 7.28827px 31.2354px rgba(182, 161, 110, 0.19);
+
+    @media screen and (min-width: 768px) {
+        box-shadow: 0px 14px 60px rgba(182, 161, 110, 0.19);
+    }
+}
+
+.mini-modal {
+    box-shadow: -5.2059px 2.08236px 36.4413px rgba(150, 126, 67, 0.08);
+
+    @media screen and (min-width: 768px) {
+        box-shadow: -10px 4px 70px rgba(150, 126, 67, 0.08);
+    }
+}
