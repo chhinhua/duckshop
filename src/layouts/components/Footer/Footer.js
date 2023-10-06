@@ -19,7 +19,7 @@ function Footer() {
     const now = new Date();
     const currentYear = now.getFullYear();
     return (
-        <div className="bg-footer w-full px-10 pt-10 pb-5 bottom-0 left-0">
+        <div className="bg-footer w-full px-10 pt-10 pb-5 bottom-0 left-0 mt-10">
             <div className="w-11/12 h-full flex  m-auto">
                 <div className="flex flex-row w-full justify-between h-full lg:gap-24 gap-5 flex-wrap">
                     <div className="flex flex-col items-start text-base not-italic font-normal gap-0">

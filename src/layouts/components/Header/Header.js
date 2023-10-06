@@ -1,6 +1,6 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Image from '../../../components/Image';
-import logo from '../../../assets/img/BG tlcn.png';
+import logo from '../../../assets/img/BG 2.png';
 
 import Badge from '@mui/material/Badge';
 import IconButton from '@mui/material/IconButton';
@@ -57,6 +57,18 @@ function Header() {
         setOpenCh(!openCh);
     };
 
+    const [scroll, setScroll] = useState(false);
+    const listenScrollEvent = () => {
+        window.scrollY > 10 ? setScroll(true) : setScroll(false);
+    };
+
+    useEffect(() => {
+        window.addEventListener('scroll', listenScrollEvent);
+        return () => {
+            window.removeEventListener('scroll', listenScrollEvent);
+        };
+    }, []);
+
     const list = (
         <List
             sx={{ minWidth: 300 }}
@@ -95,29 +107,27 @@ function Header() {
     );
     return (
         <>
-            <div className="bg-header h-16 flex flex-col justify-center items-center py-5 fixed w-full z-50">
-                <div className="flex w-11/12 justify-between items-center ">
-                    <Image src={logo} className="h-40 " />
-                    <form className="w-2/5">
-                        <div>
-                            <Box sx={{ display: 'flex', alignItems: 'flex-end', paddingBottom: '15px' }}>
-                                <Search sx={{ color: 'action.active', mr: 1, my: 0.5 }} />
-                                <TextField
-                                    className="block w-full p-4 pl-10 text-sm border-b"
-                                    id="standard-basic"
-                                    label="Search for an Item..."
-                                    variant="standard"
-                                />
-                            </Box>
-                            {/* <button
-                                type="submit"
-                                class="text-white text-sm absolute right-0.5 bottom-0.5 bg-amber-700 hover:bg-amber-800 focus:ring-2 focus:outline-none focus:ring-amber-900 font-medium rounded-lg  px-3 py-2 "
-                            >
-                                Search
-                            </button> */}
-                        </div>
+            <div
+                className={`${
+                    scroll ? 'bg-header shadow-xl' : 'bg-transparent'
+                } h-20 flex flex-col justify-center items-center fixed w-full z-50 `}
+            >
+                <div className="w-11/12 grid grid-flow-col grid-cols-3 place-content-between ">
+                    <form className="w-full h-full col-span-1 mt-1.5">
+                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
+                            <Search className="mr-1 my-0.5" />
+                            <TextField
+                                className=" w-4/6 text-sm border-b"
+                                id="standard-basic"
+                                label="Search for an Item..."
+                                variant="standard"
+                            />
+                        </Box>
                     </form>
-                    <div className="flex justify-center items-center md:gap-3 gap-0">
+                    <div className="flex w-full justify-center">
+                        <Image src={logo} className="h-full w-48 col-span-1 " />
+                    </div>
+                    <div className="flex justify-end items-center md:gap-3 gap-0 col-span-1">
                         <IconButton aria-label="person">
                             <Person />
                         </IconButton>
