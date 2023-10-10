@@ -45,21 +45,22 @@ const LIST_TOP = [
 ];
 
 function Header() {
+    const [isSignIn, setIsSignIn] = useState(true);
+    // handle menu
     const [openMenu, setOpenMenu] = useState(false);
+    const [openChildren, setOpenChildren] = useState(true);
 
     const toggleMenu = () => () => {
         setOpenMenu((prev) => !prev);
     };
 
-    const [openCh, setOpenCh] = React.useState(true);
-
-    const handleClick = () => {
-        setOpenCh(!openCh);
+    const toggleMenuChildren = () => {
+        setOpenChildren(!openChildren);
     };
-
+    // handle scroll to fix header
     const [scroll, setScroll] = useState(false);
     const listenScrollEvent = () => {
-        window.scrollY > 10 ? setScroll(true) : setScroll(false);
+        window.scrollY > 100 ? setScroll(true) : setScroll(false);
     };
 
     useEffect(() => {
@@ -89,11 +90,11 @@ function Header() {
                 </>
             ))}
 
-            <ListItemButton onClick={handleClick}>
+            <ListItemButton onClick={toggleMenuChildren}>
                 <ListItemText primary="Contact" />
-                {openCh ? <ExpandLess /> : <ExpandMore />}
+                {openChildren ? <ExpandLess /> : <ExpandMore />}
             </ListItemButton>
-            <Collapse in={openCh} timeout="auto" unmountOnExit>
+            <Collapse in={openChildren} timeout="auto" unmountOnExit>
                 <List component="div" disablePadding>
                     <ListItemButton sx={{ pl: 4 }}>
                         <ListItemText primary="Contact us" />
@@ -109,8 +110,8 @@ function Header() {
         <>
             <div
                 className={`${
-                    scroll ? 'bg-header shadow-xl' : 'bg-transparent'
-                } h-20 flex flex-col justify-center items-center fixed w-full z-50 `}
+                    scroll ? 'bg-header shadow-xl fixed duration-200 ease-in ' : 'bg-transparent absolute '
+                } h-20 flex flex-col justify-center items-center  w-full z-50`}
             >
                 <div className="w-11/12 grid grid-flow-col grid-cols-3 place-content-between ">
                     <form className="w-full h-full col-span-1 mt-1.5">

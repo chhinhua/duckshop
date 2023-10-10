@@ -5,7 +5,7 @@ function DefaultLayout({ children }) {
     return (
         <div>
             <Header />
-            <div>{children}</div>
+            <div className="text-base">{children}</div>
             <Footer />
         </div>
     );

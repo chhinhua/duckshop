@@ -13,8 +13,8 @@
 } */
 
 body {
-    /* font-family: 'Poppins', sans-serif; */
-    font-size: 1.6rem;
+    font-family: 'Poppins', sans-serif;
+    /* font-size: 1.6rem; */
     line-height: 1.5;
     /* Tối ưu tải phông chữ */
     text-rendering: optimizeSpeed;
@@ -31,4 +31,23 @@ input,
 a {
     color: var(--text-color);
     text-decoration: none;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+        transform: translateY(20px); /* Đổi animation tùy theo yêu cầu của bạn */
+    }
+    to {
+        opacity: 1;
+        transform: translateY(0); /* Đổi animation tùy theo yêu cầu của bạn */
+    }
+}
+
+/* Áp dụng animation cho các phần tử có lớp animate-your-animation-class */
+.animate-your-animation-class {
+    animation: fadeIn 1s ease-in-out; /* Sử dụng animation 'fadeIn' với thời gian 1 giây và hiệu ứng ease-in-out */
+    opacity: 0;
+    transform: translateY(20px); /* Đổi animation tùy theo yêu cầu của bạn */
+    animation-fill-mode: forwards; /* Giữ trạng thái cuối cùng của animation khi kết thúc */
 }
