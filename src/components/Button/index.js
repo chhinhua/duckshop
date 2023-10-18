@@ -2,117 +2,89 @@ import classNames from 'classnames/bind';
 import styles from './Button.module.scss';
 import { Link } from 'react-router-dom';
 
-import { forwardRef, useEffect } from 'react';
+import { useEffect } from 'react';
 
 const cx = classNames.bind(styles);
 
 // ... passProps là gồm tất cả các giá trị mà cha truyền vào
 
-const Button = forwardRef(
-    (
-        {
-            children,
-            className,
+function Button({
+    children,
+    className,
 
-            to,
-            href,
+    to,
+    href,
 
-            onClick,
+    onClick,
 
-            // Type button
-            menuSetting = false,
+    disable = false,
+    custom = false,
 
-            filled_1 = false,
-            filled_2 = false,
-            outline_1 = false,
-            outline_2 = false,
-            none_1 = false,
-            none_2 = false,
-            none_3 = false,
-            none_4 = false,
+    ...passProps
+}) {
+    let Comp = 'button';
 
-            disable = false,
-            rounded = false,
+    const props = {
+        onClick,
+        ...passProps,
+    };
 
-            leftIcon = false,
-            rightIcon = false,
+    // Remove event handle when button is disable
+    if (disable) {
+        Object.keys(props).forEach((key) => {
+            if (key.startsWith('on') && typeof props[key] === 'function') {
+                delete props[key];
+            }
+        });
+    }
 
-            // Size button
-            small = false,
-            large = false,
+    // Handle switch router dom or export
+    if (to) {
+        props.to = to;
+        Comp = Link;
+    } else if (href) {
+        props.href = href;
+        Comp = 'a';
+    }
 
-            ...passProps
-        },
-        ref,
-    ) => {
-        let Comp = 'button';
+    // Add class by ES6
+    let classs = {
+        disable,
+    };
 
-        const props = {
-            onClick,
-            ...passProps,
-        };
+    useEffect(() => {
+        // Cuộn về đầu trang khi component đã mount
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth', // Cuộn mượt hơn
+        });
+    }, []);
 
-        // Remove event handle when button is disable
-        if (disable) {
-            Object.keys(props).forEach((key) => {
-                if (key.startsWith('on') && typeof props[key] === 'function') {
-                    delete props[key];
-                }
-            });
-        }
-
-        // Handle switch router dom or export
-        if (to) {
-            props.to = to;
-            Comp = Link;
-        } else if (href) {
-            props.href = href;
-            Comp = 'a';
-        }
-
-        // Add class by ES6
-        let classs = {
-            menuSetting,
-
-            filled_1,
-            filled_2,
-            outline_1,
-            outline_2,
-            none_1,
-            none_2,
-            none_3,
-            none_4,
-
-            disable,
-            rounded,
-
-            leftIcon,
-            rightIcon,
-
-            small,
-            large,
-        };
-
-        useEffect(() => {
-            // Cuộn về đầu trang khi component đã mount
-            window.scrollTo({
-                top: 0,
-                behavior: 'smooth', // Cuộn mượt hơn
-            });
-        }, []);
-
-        return (
-            <>
-                <Comp className={cx('wrapper', classs, className)} {...props}>
-                    {leftIcon && <span className={cx('icon')}>{leftIcon}</span>}
-                    <span ref={ref} className={cx('children')}>
-                        {children}
+    return (
+        <>
+            {custom ? (
+                <Comp className={cx('button', classs, className)} {...props}>
+                    <span className={cx('button_lg')}>
+                        <span className={cx('button_sl')}></span>
+                        <span className={cx('button_text')}>{children}</span>
                     </span>
-                    {rightIcon && <span className={cx('icon')}>{rightIcon}</span>}
                 </Comp>
-            </>
-        );
-    },
-);
+            ) : (
+                <Comp className={cx('cssbuttons-io-button', classs, className)} {...props}>
+                    {children}
+                    <div className={cx('icon')}>
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" width="24" height="24">
+                            <path fill="none" d="M0 0h24v24H0z"></path>
+                            <path
+                                fill="currentColor"
+                                d="M16.172 11l-5.364-5.364 1.414-1.414L20 12l-7.778 7.778-1.414-1.414L16.172 13H4v-2z"
+                            ></path>
+                        </svg>
+                    </div>
+                </Comp>
+            )}
+        </>
+    );
+}
 
 export default Button;

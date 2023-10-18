@@ -45,7 +45,7 @@ const LIST_TOP = [
 ];
 
 function Header() {
-    const [isSignIn, setIsSignIn] = useState(true);
+    // const [isSignIn, setIsSignIn] = useState(true);
     // handle menu
     const [openMenu, setOpenMenu] = useState(false);
     const [openChildren, setOpenChildren] = useState(true);
@@ -70,42 +70,6 @@ function Header() {
         };
     }, []);
 
-    const list = (
-        <List
-            sx={{ minWidth: 300 }}
-            className="w-full max-w-xs text-center"
-            component="nav"
-            aria-labelledby="nested-list-subheader"
-            subheader={
-                <ListSubheader component="div" id="nested-list-subheader">
-                    <div className="text-2xl py-6">Menu</div>
-                </ListSubheader>
-            }
-        >
-            {LIST_TOP.map((item, index) => (
-                <>
-                    <ListItemButton key={index}>
-                        <ListItemText primary={item.title} />
-                    </ListItemButton>
-                </>
-            ))}
-
-            <ListItemButton onClick={toggleMenuChildren}>
-                <ListItemText primary="Contact" />
-                {openChildren ? <ExpandLess /> : <ExpandMore />}
-            </ListItemButton>
-            <Collapse in={openChildren} timeout="auto" unmountOnExit>
-                <List component="div" disablePadding>
-                    <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemText primary="Contact us" />
-                    </ListItemButton>
-                    <ListItemButton sx={{ pl: 4 }}>
-                        <ListItemText primary="About Duck" />
-                    </ListItemButton>
-                </List>
-            </Collapse>
-        </List>
-    );
     return (
         <>
             <div
@@ -144,12 +108,6 @@ function Header() {
                                     horizontal: 'right',
                                 }}
                                 overlap="circular"
-                                badgeStyle={{
-                                    border: '2px solid white',
-                                    padding: '0 4px',
-                                    right: -3,
-                                    top: 13,
-                                }}
                             >
                                 <ShoppingCartIcon />
                             </Badge>
@@ -160,7 +118,38 @@ function Header() {
                                 <Menu />
                             </IconButton>
                             <Drawer anchor="right" open={openMenu} onClose={toggleMenu()}>
-                                {list}
+                                <List
+                                    sx={{ minWidth: 300 }}
+                                    className="w-full max-w-xs text-center"
+                                    component="nav"
+                                    aria-labelledby="nested-list-subheader"
+                                    subheader={
+                                        <ListSubheader component="div" id="nested-list-subheader">
+                                            <div className="text-2xl py-6">Menu</div>
+                                        </ListSubheader>
+                                    }
+                                >
+                                    {LIST_TOP.map((item, index) => (
+                                        <ListItemButton key={index}>
+                                            <ListItemText primary={item.title} />
+                                        </ListItemButton>
+                                    ))}
+
+                                    <ListItemButton onClick={toggleMenuChildren}>
+                                        <ListItemText primary="Contact" />
+                                        {openChildren ? <ExpandLess /> : <ExpandMore />}
+                                    </ListItemButton>
+                                    <Collapse in={openChildren} timeout="auto" unmountOnExit>
+                                        <List component="div" disablePadding>
+                                            <ListItemButton sx={{ pl: 4 }}>
+                                                <ListItemText primary="Contact us" />
+                                            </ListItemButton>
+                                            <ListItemButton sx={{ pl: 4 }}>
+                                                <ListItemText primary="About Duck" />
+                                            </ListItemButton>
+                                        </List>
+                                    </Collapse>
+                                </List>
                             </Drawer>
                         </div>
                     </div>

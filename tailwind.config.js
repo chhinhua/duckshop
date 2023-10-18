@@ -29,9 +29,13 @@ module.exports = {
                 footer: '#787A91',
             },
             spacing: {
+                128: '32rem',
                 140: '35rem',
+                144: '36rem',
             },
+            darkSelector: '.dark-mode',
         },
     },
+    darkMode: 'class',
     plugins: [],
 };

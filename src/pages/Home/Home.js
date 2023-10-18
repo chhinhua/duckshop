@@ -9,33 +9,28 @@ import S4Baner3 from '../../assets/img/LandingPage/section-4-3.png';
 import S5BanerVideo1 from '../../assets/img/LandingPage/section-5.mp4';
 
 import ScrollAnimationElement from '../../components/ScrollAnimationElement/ScrollAnimationElement';
+import ButtonComp from '../../components/Button';
+import CardComp from '../../components/Card';
 
 import { useEffect, useRef } from 'react';
 
-import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
-import { CardActionArea, CardActions } from '@mui/material';
-import FavoriteIcon from '@mui/icons-material/Favorite';
-import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import IconButton from '@mui/material/IconButton';
-import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
+// import Button from '@mui/material/Button';
+// import { styled } from '@mui/material/styles';
 
-const CustomButton = styled(Button)(({ theme }) => ({
-    color: 'white',
-    backgroundColor: 'black',
-    '&:hover': {
-        backgroundColor: '#A4907C', // Bạn có thể thay đổi màu hover tùy ý
-    },
-    borderRadius: '3px',
-    fontSize: '1.2rem',
-    fontStyle: 'normal',
-    fontWeight: '500',
-    display: 'inline-flex',
-    textTransform: 'none',
-    border: '2px solid white',
-}));
+// const CustomButton = styled(Button)(({ theme }) => ({
+//     color: 'white',
+//     backgroundColor: 'black',
+//     '&:hover': {
+//         backgroundColor: '#A4907C', // Bạn có thể thay đổi màu hover tùy ý
+//     },
+//     borderRadius: '3px',
+//     fontSize: '1.2rem',
+//     fontStyle: 'normal',
+//     fontWeight: '500',
+//     display: 'inline-flex',
+//     textTransform: 'none',
+//     border: '2px solid white',
+// }));
 
 function Home() {
     const videoRef = useRef(null);
@@ -63,7 +58,7 @@ function Home() {
         <>
             {/* section banner */}
             <div
-                class="w-full h-full bg-cover bg-no-repeat bg-center py-80"
+                className="w-full h-full bg-cover bg-no-repeat bg-center py-80"
                 style={{ backgroundImage: `url(${S1banner1})` }}
             >
                 <div className="flex flex-col pl-32 select-none">
@@ -77,6 +72,7 @@ function Home() {
             </div>
 
             {/* End section banner */}
+
             {/* Start content */}
             <div className="mt-10 w-11/12 flex flex-col justify-center m-auto">
                 {/* Section 2 */}
@@ -85,7 +81,7 @@ function Home() {
                     <div className="uppercase text-xl font-semibold not-italic">This Weeks Highlights</div>
                 </div>
                 <div className="w-full mt-7">
-                    <div class="grid grid-cols-1 gap-4 md:grid-cols-3 sm:grid-cols-2">
+                    <div className="grid grid-cols-1 gap-4 md:grid-cols-3 sm:grid-cols-2">
                         {[
                             { title: 'Exclusive Shoes', action: 'Find Your Store', image: S2Baner1 },
                             { title: 'Exquisite Styles & Collections', action: 'Find Shop', image: S2Baner2 },
@@ -94,12 +90,12 @@ function Home() {
                         ].map((item, index) => (
                             <ScrollAnimationElement key={index}>
                                 <div
-                                    class={`${
+                                    className={`${
                                         index / 1 === 0 || index / 1 === 3 ? 'col-span-1' : 'md:col-span-2  col-span-1'
                                     } opacity-0 `}
                                 >
                                     <div
-                                        class="bg-cover bg-no-repeat bg-center relative rounded"
+                                        className="bg-cover bg-no-repeat bg-center relative rounded"
                                         style={{ backgroundImage: `url(${item.image})` }}
                                     >
                                         <div className="h-full flex flex-col">
@@ -107,7 +103,8 @@ function Home() {
                                                 {item.title}
                                             </span>
                                             <div className="absolute bottom-7 left-7 ">
-                                                <CustomButton variant="contained">{item.action}</CustomButton>
+                                                {/* <CustomButton variant="contained">{item.action}</CustomButton> */}
+                                                <ButtonComp>{item.action}</ButtonComp>
                                             </div>
                                         </div>
                                     </div>
@@ -126,28 +123,7 @@ function Home() {
                     {[S2Baner1, S2Baner2, S2Baner3, S2Baner4].map((item, index) => (
                         <ScrollAnimationElement key={index}>
                             <div className="opacity-0">
-                                <Card className="col-span-1">
-                                    <CardActionArea>
-                                        <CardMedia
-                                            component="img"
-                                            className="h-64 w-full transition-transform transform hover:scale-105"
-                                            image={item}
-                                            alt="Not found image"
-                                        />
-                                        <CardContent className="font-semibold text-lg">Giày thể thao</CardContent>
-                                    </CardActionArea>
-                                    <CardActions className="w-full grid grid-flow-row grid-cols-2 place-content-between ">
-                                        <div className="text-lg font-semibold pl-2">100 $</div>
-                                        <div className="pr-2">
-                                            <IconButton aria-label="person">
-                                                <FavoriteIcon />
-                                            </IconButton>
-                                            <IconButton aria-label="person">
-                                                <ShoppingCartIcon />
-                                            </IconButton>
-                                        </div>
-                                    </CardActions>
-                                </Card>
+                                <CardComp image={item} className="rounded" />
                             </div>
                         </ScrollAnimationElement>
                     ))}
@@ -166,15 +142,15 @@ function Home() {
                     ].map((item, index) => (
                         <ScrollAnimationElement key={index}>
                             <div className="opacity-0">
-                                <div class="col-span-1 hover:scale-105 duration-200 " key={index}>
+                                <div className="col-span-1 hover:scale-105 duration-200 " key={index}>
                                     <div
-                                        class="bg-cover bg-no-repeat bg-center relative rounded"
+                                        className="bg-cover bg-no-repeat bg-center relative rounded"
                                         style={{ backgroundImage: `url(${item.img})` }}
                                     >
                                         <div className="flex flex-col">
                                             <div className=" h-140">
                                                 <div className="absolute bottom-7 left-7 ">
-                                                    <CustomButton variant="contained">{item.title}</CustomButton>
+                                                    <ButtonComp variant="contained">{item.title}</ButtonComp>
                                                 </div>
                                             </div>
                                         </div>
@@ -198,7 +174,7 @@ function Home() {
                             See the fashion accessories for you
                         </span>
                         <div className="">
-                            <CustomButton variant="contained">See accessories</CustomButton>
+                            <ButtonComp custom>See accessories</ButtonComp>
                         </div>
                     </div>
                 </div>

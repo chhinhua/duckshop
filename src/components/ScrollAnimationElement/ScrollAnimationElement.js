@@ -45,9 +45,10 @@ function ScrollAnimationElement({ children }) {
     }, [isAnimated]);
 
     // Sử dụng React.cloneElement để truyền ref vào children
-    const childrenWithRef = React.Children.map(children, (child) => {
+    const childrenWithRef = React.Children.map(children, (child, index) => {
         return React.cloneElement(child, {
             ref: elementRef,
+            key: `custom-key-${index}`,
         });
     });
 
