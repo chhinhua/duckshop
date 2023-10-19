@@ -7,6 +7,7 @@ import S2Baner4 from '../../assets/img/LandingPage/section-2-4.png';
 import S4Baner1 from '../../assets/img/LandingPage/section-4-1.png';
 import S4Baner2 from '../../assets/img/LandingPage/section-4-2.png';
 import S4Baner3 from '../../assets/img/LandingPage/section-4-3.png';
+
 import CardComp from '../../components/Card';
 
 import Pagination from '@mui/material/Pagination';
@@ -14,10 +15,11 @@ import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
+
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 const LIST_ACTION = [
     'Shoes',
