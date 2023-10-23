@@ -33,25 +33,27 @@ import { useEffect, useRef } from 'react';
 // }));
 
 function Home() {
-    const videoRef = useRef(null);
+    const videoRef = useRef<HTMLVideoElement | null>(null);
 
     useEffect(() => {
         const video = videoRef.current;
 
-        // Khi component được mount, tự động phát video
-        video.play();
-
-        // Sử dụng sự kiện 'ended' để phát lại video khi kết thúc
-        const handleVideoEnded = () => {
+        if (video) {
+          // Khi component được mount, tự động phát video
+          video.play();
+    
+          // Sử dụng sự kiện 'ended' để phát lại video khi kết thúc
+          const handleVideoEnded = () => {
             video.play();
-        };
-
-        video.addEventListener('ended', handleVideoEnded);
-
-        // Sử dụng useEffect cleanup để loại bỏ sự kiện khi component unmount
-        return () => {
+          };
+    
+          video.addEventListener('ended', handleVideoEnded);
+    
+          // Sử dụng useEffect cleanup để loại bỏ sự kiện khi component unmount
+          return () => {
             video.removeEventListener('ended', handleVideoEnded);
-        };
+          };
+        }
     }, []);
 
     return (
@@ -150,7 +152,7 @@ function Home() {
                                         <div className="flex flex-col">
                                             <div className=" h-140">
                                                 <div className="absolute bottom-7 left-7 ">
-                                                    <ButtonComp variant="contained">{item.title}</ButtonComp>
+                                                    <ButtonComp >{item.title}</ButtonComp>
                                                 </div>
                                             </div>
                                         </div>

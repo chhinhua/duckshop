@@ -1,7 +1,12 @@
 import Header from '../components/Header/Header';
 import Footer from '../components/Footer/Footer';
+import { ReactNode } from 'react';
 
-function DefaultLayout({ children }) {
+interface DefaultLayoutProps {
+    children: ReactNode;
+}
+
+function DefaultLayout({ children }: DefaultLayoutProps) {
     return (
         <div>
             <Header />

@@ -1,8 +1,6 @@
-import React, { useState } from 'react';
+import { SetStateAction, useState } from 'react';
 
 import S2Baner1 from '../../assets/img/LandingPage/section-2-1.png';
-import S2Baner2 from '../../assets/img/LandingPage/section-2-2.png';
-import S2Baner3 from '../../assets/img/LandingPage/section-2-3.png';
 import S2Baner4 from '../../assets/img/LandingPage/section-2-4.png';
 import ButtonComp from '../../components/Button';
 
@@ -65,14 +63,14 @@ const DetailProduct = () => {
             setCurrentImageIndex(currentImageIndex - 1);
         }
     };
-    const handleChangePic = (index) => {
+    const handleChangePic = (index:number) => {
         setCurrentImageIndex(index);
     };
 
     //  handle size
     const [size, setSize] = useState('');
 
-    const handleChangeSize = (event) => {
+    const handleChangeSize = (event: { target: { value: SetStateAction<string>; }; }) => {
         setSize(event.target.value);
     };
 
@@ -152,23 +150,26 @@ const DetailProduct = () => {
                         <span>Select Size</span>
                     </div>
                     <div className="w-full grid grid-cols-3 gap-2">
-                        <FormControl sx={{ my: 1, width: '100%' }} className="col-span-2">
-                            <InputLabel id="demo-simple-select-autowidth-label">Size</InputLabel>
-                            <Select value={size} onChange={handleChangeSize} label="Age">
-                                <MenuItem value="">
-                                    <em>None</em>
-                                </MenuItem>
-                                {['XS', 'S', 'M', 'L', 'XL', '2XL'].map((item, index) => (
-                                    <MenuItem key={index} value={item}>
-                                        {item}
+                        <div className="mr-5 col-span-2 sm:col-span-2 md:col-span-3 xl:col-span-2">
+                            <FormControl sx={{ my: 1, width: '100%' }}>
+                                <InputLabel id="demo-simple-select-autowidth-label">Size</InputLabel>
+                                <Select value={size} onChange={handleChangeSize} label="Age">
+                                    <MenuItem value="">
+                                        <em>None</em>
                                     </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
-                        <div className="col-span-1 flex justify-end w-full">
+                                    {['XS', 'S', 'M', 'L', 'XL', '2XL'].map((item, index) => (
+                                        <MenuItem key={index} value={item}>
+                                            {item}
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        </div>
+                        <div className=" col-span-1 sm:col-span-1 md:col-span-3 md:justify-center xl:col-span-1 flex justify-end w-full">
                             <ButtonComp custom>
                                 <AddShoppingCart />
                             </ButtonComp>
+                            <ButtonComp custom>{isFavourite ? <Favorite /> : <FavoriteBorder />}</ButtonComp>
                         </div>
                     </div>
                     <div className="pt-10">

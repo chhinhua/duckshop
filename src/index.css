@@ -18,7 +18,6 @@ body {
     line-height: 1.5;
     /* Tối ưu tải phông chữ */
     text-rendering: optimizeSpeed;
-    color: var(--text-color);
 }
 
 button,
@@ -29,7 +28,6 @@ input,
 }
 
 a {
-    color: var(--text-color);
     text-decoration: none;
 }
 

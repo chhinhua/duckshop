@@ -1,6 +1,6 @@
 import classNames from 'classnames/bind';
 import styles from './Button.module.scss';
-import { Link } from 'react-router-dom';
+import { Link, LinkProps } from 'react-router-dom';
 
 import { useEffect } from 'react';
 
@@ -8,23 +8,30 @@ const cx = classNames.bind(styles);
 
 // ... passProps là gồm tất cả các giá trị mà cha truyền vào
 
+interface ButtonProps {
+    children: React.ReactNode;
+    className?: string;
+    to?: string;
+    href?: string;
+    onClick?: () => void;
+    disable?: boolean;
+    custom?: boolean;
+  }
+
 function Button({
     children,
     className,
-
     to,
     href,
-
     onClick,
-
     disable = false,
     custom = false,
-
     ...passProps
-}) {
-    let Comp = 'button';
+}:ButtonProps) {
+    let Comp: string | React.ForwardRefExoticComponent<LinkProps & React.RefAttributes<HTMLAnchorElement>> = 'button';
 
-    const props = {
+/* eslint-disable @typescript-eslint/no-explicit-any */
+    const props: any = {
         onClick,
         ...passProps,
     };
@@ -48,7 +55,7 @@ function Button({
     }
 
     // Add class by ES6
-    let classs = {
+    const classs = {
         disable,
     };
 

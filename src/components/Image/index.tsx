@@ -1,3 +1,4 @@
+import React from 'react';
 import { forwardRef, useState } from 'react';
 // import classNames from 'classnames';
 
@@ -7,7 +8,22 @@ import { forwardRef, useState } from 'react';
 // fallback: customImage = images.noImage
 // fallback: customImage : đổi tên để kh trùng. Gắn mặc định là images.noImage nếu không truyền từ ngoài vào
 
-const Image = forwardRef(({ src, alt, className, fallback: customImage, ...props }, ref) => {
+interface ImageProps {
+    src: string;
+    alt: string;
+    className?: string;
+    fallback?: string;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    [key: string]: any; // Sử dụng [key: string]: any để chấp nhận bất kỳ props nào
+  }
+
+  const Image = forwardRef(({
+    src,
+    alt,
+    className,
+    fallback: customImage = 'images.noImage', // Đặt mặc định nếu không được truyền
+    ...props
+  }: ImageProps, ref: React.Ref<HTMLImageElement>) => {
     const [fallback, setFallBack] = useState('');
 
     const handleError = () => {

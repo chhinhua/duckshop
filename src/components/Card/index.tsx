@@ -1,4 +1,3 @@
-import React from 'react';
 import classNames from 'classnames/bind';
 import styles from './Card.module.scss';
 import Image from '../Image';
@@ -8,8 +7,14 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
 
 const cx = classNames.bind(styles);
-
-const Card = ({ className, name = ' Name Product', price = 'Price Product', image, isFavourite = false }) => {
+interface CardProps {
+    className?: string;
+    name?: string;
+    price?: string;
+    image: string;
+    isFavourite?: boolean;
+  }
+  const Card: React.FC<CardProps> = ({ className, name = ' Name Product', price = 'Price Product', image, isFavourite = false }) => {
     return (
         <div className={cx('card', className)}>
             <Image src={image} alt="Your Image" className={cx('card__image')} />

@@ -50,15 +50,18 @@ function Listproducts() {
         };
     }, []);
     // change page
-    const [data, setData] = useState([]); // Dữ liệu từ API
+    // const [data, setData] = useState([]); // Dữ liệu từ API
     const [page, setPage] = useState(1); // Trang hiện tại
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [totalPages, setTotalPages] = useState(11); // Tổng số trang
 
     useEffect(() => {
         // Gọi API để lấy dữ liệu
     }, [page]);
 
-    const handlePageChange = (event, newPage) => {
+    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+        console.log(event);
+        
         setPage(newPage);
     };
     return (

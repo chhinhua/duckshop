@@ -1,11 +1,16 @@
-import React, { useRef, useEffect, useState } from 'react';
+import React, { useRef, useEffect, useState,ReactNode  } from 'react';
 
-function ScrollAnimationElement({ children }) {
-    const elementRef = useRef(null);
+interface ScrollAnimationElementProps {
+    children: ReactNode;
+  }
+
+function ScrollAnimationElement({ children }: ScrollAnimationElementProps) {
+    const elementRef = useRef<HTMLElement | null>(null);
     const [isAnimated, setIsAnimated] = useState(false);
 
     useEffect(() => {
-        const handleScroll = (entries, observer) => {
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        const handleScroll = (entries: IntersectionObserverEntry[], observer: IntersectionObserver) => {
             entries.forEach((entry) => {
                 const target = entry.target;
 
@@ -46,7 +51,7 @@ function ScrollAnimationElement({ children }) {
 
     // Sử dụng React.cloneElement để truyền ref vào children
     const childrenWithRef = React.Children.map(children, (child, index) => {
-        return React.cloneElement(child, {
+        return React.cloneElement(child as React.ReactElement, {
             ref: elementRef,
             key: `custom-key-${index}`,
         });
