@@ -8,7 +8,7 @@ import DetailProduct from '../pages/DetailProduct/DetailProduct';
 import LogIn from '../pages/LogIn/LogIn';
 import Register from '../pages/Register/Register';
 import Pay from '../pages/Pay';
-import Cart from '../pages/Cart';
+import Cart from '../pages/Cart/Cart';
 
 const publishRoute = [
     { path: config.Routes.home, component: Home },
