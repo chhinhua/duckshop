@@ -19,6 +19,8 @@ import ListItemText from '@mui/material/ListItemText';
 import Collapse from '@mui/material/Collapse';
 import ExpandLess from '@mui/icons-material/ExpandLess';
 import ExpandMore from '@mui/icons-material/ExpandMore';
+import { Link } from 'react-router-dom';
+import config from '../../../config';
 
 const LIST_TOP = [
     {
@@ -90,11 +92,15 @@ function Header() {
                         </Box>
                     </form>
                     <div className="flex w-full justify-center">
-                        <Image src={logo} className="h-full w-48 col-span-1 " />
+                        <Link to={config.Routes.home}>
+                            <Image src={logo} className="h-full w-48 col-span-1" />
+                        </Link>
                     </div>
                     <div className="flex justify-end items-center md:gap-3 gap-0 col-span-1">
                         <IconButton aria-label="person">
-                            <Person />
+                            <Link to={config.Routes.logIn}>
+                                <Person />
+                            </Link>
                         </IconButton>
                         <IconButton aria-label="favorite">
                             <Favorite />
