@@ -7,7 +7,7 @@ import Listproducts from '../pages/Listproducts/Listproducts';
 import DetailProduct from '../pages/DetailProduct/DetailProduct';
 import LogIn from '../pages/LogIn/LogIn';
 import Register from '../pages/Register/Register';
-import Pay from '../pages/Pay';
+import CheckOut from '../pages/CheckOut/CheckOut';
 import Cart from '../pages/Cart/Cart';
 
 const publishRoute = [
@@ -17,7 +17,7 @@ const publishRoute = [
     { path: config.Routes.logIn, component: LogIn },
     { path: config.Routes.register, component: Register },
     { path: config.Routes.cart, component: Cart },
-    { path: config.Routes.pay, component: Pay },
+    { path: config.Routes.checkOut, component: CheckOut },
     { path: config.Routes.error, component: Error404, layout: null },
 ];
 

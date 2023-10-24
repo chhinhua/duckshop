@@ -18,6 +18,8 @@ import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
 import Image from '../../components/Image';
 import { Button } from '@mui/material';
+import { Link } from 'react-router-dom';
+import config from '../../config';
 
 interface ProductCart {
     image: string;
@@ -41,7 +43,7 @@ const rows: Array<ProductCart> = [
 const Cart = () => {
     return (
         <div className="w-11/12 m-auto pt-32">
-            <div className="grid  grid-cols-12 gap-2">
+            <div className="grid grid-cols-12 gap-2">
                 {/* start list product */}
                 <div className="col-span-12 lg:col-span-8 ">
                     <div className="h-min bg-[#F5F5F5] px-6 py-3 mb-5 rounded">
@@ -95,7 +97,7 @@ const Cart = () => {
                     </Paper>
                 </div>
                 {/* end list product */}
-                {/* start sumary price */}
+                {/* start bill */}
                 <div className="col-span-12 mt-10 lg:mt-0 lg:col-span-4 lg:ml-10 space-y-5">
                     <h1 className="text-2xl font-semibold text-center">Summary</h1>
                     <div className="grid grid-cols-3">
@@ -112,11 +114,19 @@ const Cart = () => {
                         <span className="text-right">890 $</span>
                         <span className="absolute left-0 bottom-5 h-0.5 bg-gray-200 w-full"></span>
                     </div>
-                    <Button style={{ background: 'black' }} variant="contained" fullWidth color="primary" size="large">
-                        Member Checkout
-                    </Button>
+                    <Link to={config.Routes.checkOut}>
+                        <Button
+                            style={{ background: 'black' }}
+                            variant="contained"
+                            fullWidth
+                            color="primary"
+                            size="large"
+                        >
+                            Member Checkout
+                        </Button>
+                    </Link>
                 </div>
-                {/* end sumary price */}
+                {/* end bill */}
             </div>
         </div>
     );

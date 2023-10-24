@@ -5,7 +5,7 @@ const Routes = {
     logIn: '/dang-nhap',
     register: '/dang-ki',
     cart: '/gio-hang',
-    pay: '/thanh-toan',
+    checkOut: '/thanh-toan',
 
     error: '*',
 };

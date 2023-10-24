@@ -97,27 +97,29 @@ function Header() {
                         </Link>
                     </div>
                     <div className="flex justify-end items-center md:gap-3 gap-0 col-span-1">
-                        <IconButton aria-label="person">
-                            <Link to={config.Routes.logIn}>
+                        <Link to={config.Routes.logIn}>
+                            <IconButton aria-label="person">
                                 <Person />
-                            </Link>
-                        </IconButton>
+                            </IconButton>
+                        </Link>
                         <IconButton aria-label="favorite">
                             <Favorite />
                         </IconButton>
-                        <IconButton aria-label="cart">
-                            <Badge
-                                badgeContent={1}
-                                color="secondary"
-                                anchorOrigin={{
-                                    vertical: 'top',
-                                    horizontal: 'right',
-                                }}
-                                overlap="circular"
-                            >
-                                <ShoppingCartIcon />
-                            </Badge>
-                        </IconButton>
+                        <Link to={config.Routes.cart}>
+                            <IconButton aria-label="cart">
+                                <Badge
+                                    badgeContent={1}
+                                    color="secondary"
+                                    anchorOrigin={{
+                                        vertical: 'top',
+                                        horizontal: 'right',
+                                    }}
+                                    overlap="circular"
+                                >
+                                    <ShoppingCartIcon />
+                                </Badge>
+                            </IconButton>
+                        </Link>
 
                         <div>
                             <IconButton aria-label="favorite" onClick={toggleMenu()}>
