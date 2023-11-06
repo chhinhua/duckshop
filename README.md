@@ -9,7 +9,7 @@ cd my-project
 yarn add -D tailwindcss postcss autoprefixer
 yarn tailwindcss init -p
 
-/_ tailwind.config.cjs _/
+/_ tailwind.config.js _/
 /** @type {import('tailwindcss').Config} \*/
 module.exports = {
 content: [

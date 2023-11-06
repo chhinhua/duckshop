@@ -5,14 +5,14 @@ import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
 
-type FormData = {
+interface FormData {
     email: string;
     phone: string;
     fName: string;
     lName: string;
     address1: string;
     address2: string;
-};
+}
 const Pay = () => {
     const {
         register,

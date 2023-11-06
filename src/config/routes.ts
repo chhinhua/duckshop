@@ -6,7 +6,7 @@ const Routes = {
     register: '/dang-ki',
     cart: '/gio-hang',
     checkOut: '/thanh-toan',
-
+    profile: '/trang-cua-ban',
     error: '*',
 };
 

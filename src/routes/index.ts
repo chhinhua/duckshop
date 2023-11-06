@@ -9,6 +9,7 @@ import LogIn from '../pages/LogIn/LogIn';
 import Register from '../pages/Register/Register';
 import CheckOut from '../pages/CheckOut/CheckOut';
 import Cart from '../pages/Cart/Cart';
+import Profile from '../pages/Profile/Profile';
 
 const publishRoute = [
     { path: config.Routes.home, component: Home },
@@ -18,6 +19,7 @@ const publishRoute = [
     { path: config.Routes.register, component: Register },
     { path: config.Routes.cart, component: Cart },
     { path: config.Routes.checkOut, component: CheckOut },
+    { path: config.Routes.profile, component: Profile },
     { path: config.Routes.error, component: Error404, layout: null },
 ];
 
