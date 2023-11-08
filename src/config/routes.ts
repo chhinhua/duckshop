@@ -1,9 +1,10 @@
 const Routes = {
     home: '/',
-    listProducts: '/ds-san-pham',
-    detailProduct: '/chi-tiet-san-pham',
     logIn: '/dang-nhap',
     register: '/dang-ki',
+    getOTPRegister: '/dang-ki/OTP',
+    listProducts: '/ds-san-pham',
+    detailProduct: '/chi-tiet-san-pham',
     cart: '/gio-hang',
     checkOut: '/thanh-toan',
     profile: '/trang-cua-ban',

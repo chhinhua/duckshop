@@ -9,6 +9,7 @@ import Dashboard from './Dashboard/Dashboard';
 import Wishlist from './Wishlist/Wishlist';
 import PurchaseHistory from './PurchaseHistory/PurchaseHistory';
 import Settings from './Settings/Settings';
+import AddressList from './AddressList/AddressList';
 
 const Profile = () => {
     const [valuePage, setValuePage] = React.useState('1');
@@ -31,10 +32,11 @@ const Profile = () => {
                 <TabContext value={valuePage}>
                     <Box sx={{ borderBottom: 2, borderColor: '#FFEEE8' }}>
                         <TabList onChange={handleChange} centered>
-                            <Tab label="Dashboard" value="1" />
-                            <Tab label="Wishlist" value="2" />
-                            <Tab label="Purchase History" value="3" />
-                            <Tab label="Settings" value="4" />
+                            <Tab label="Trang của bạn" value="1" />
+                            <Tab label="Ds yêu thích" value="2" />
+                            <Tab label="Ds địa chỉ" value="3" />
+                            <Tab label="Lịch sử mua" value="4" />
+                            <Tab label="Tài khoản của bạn" value="5" />
                         </TabList>
                     </Box>
                     <TabPanel value="1" sx={{ padding: 0 }}>
@@ -44,9 +46,12 @@ const Profile = () => {
                         <Wishlist />
                     </TabPanel>
                     <TabPanel value="3" sx={{ padding: 0 }}>
-                        <PurchaseHistory />
+                        <AddressList />
                     </TabPanel>
                     <TabPanel value="4" sx={{ padding: 0 }}>
+                        <PurchaseHistory />
+                    </TabPanel>
+                    <TabPanel value="5" sx={{ padding: 0 }}>
                         <Settings />
                     </TabPanel>
                 </TabContext>

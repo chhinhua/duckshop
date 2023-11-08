@@ -13,24 +13,8 @@ import ButtonComp from '../../components/Button';
 import CardComp from '../../components/Card';
 
 import { useEffect, useRef } from 'react';
-
-// import Button from '@mui/material/Button';
-// import { styled } from '@mui/material/styles';
-
-// const CustomButton = styled(Button)(({ theme }) => ({
-//     color: 'white',
-//     backgroundColor: 'black',
-//     '&:hover': {
-//         backgroundColor: '#A4907C', // Bạn có thể thay đổi màu hover tùy ý
-//     },
-//     borderRadius: '3px',
-//     fontSize: '1.2rem',
-//     fontStyle: 'normal',
-//     fontWeight: '500',
-//     display: 'inline-flex',
-//     textTransform: 'none',
-//     border: '2px solid white',
-// }));
+import { Link } from 'react-router-dom';
+import config from '../../config';
 
 function Home() {
     const videoRef = useRef<HTMLVideoElement | null>(null);
@@ -39,20 +23,20 @@ function Home() {
         const video = videoRef.current;
 
         if (video) {
-          // Khi component được mount, tự động phát video
-          video.play();
-    
-          // Sử dụng sự kiện 'ended' để phát lại video khi kết thúc
-          const handleVideoEnded = () => {
+            // Khi component được mount, tự động phát video
             video.play();
-          };
-    
-          video.addEventListener('ended', handleVideoEnded);
-    
-          // Sử dụng useEffect cleanup để loại bỏ sự kiện khi component unmount
-          return () => {
-            video.removeEventListener('ended', handleVideoEnded);
-          };
+
+            // Sử dụng sự kiện 'ended' để phát lại video khi kết thúc
+            const handleVideoEnded = () => {
+                video.play();
+            };
+
+            video.addEventListener('ended', handleVideoEnded);
+
+            // Sử dụng useEffect cleanup để loại bỏ sự kiện khi component unmount
+            return () => {
+                video.removeEventListener('ended', handleVideoEnded);
+            };
         }
     }, []);
 
@@ -104,10 +88,9 @@ function Home() {
                                             <span className="w-full h-96 flex items-center justify-center text-center text-4xl font-medium not-italic tracking-widest text-white uppercase">
                                                 {item.title}
                                             </span>
-                                            <div className="absolute bottom-7 left-7 ">
-                                                {/* <CustomButton variant="contained">{item.action}</CustomButton> */}
+                                            <Link to={config.Routes.listProducts} className="absolute bottom-7 left-7 ">
                                                 <ButtonComp>{item.action}</ButtonComp>
-                                            </div>
+                                            </Link>
                                         </div>
                                     </div>
                                 </div>
@@ -125,7 +108,7 @@ function Home() {
                     {[S2Baner1, S2Baner2, S2Baner3, S2Baner4].map((item, index) => (
                         <ScrollAnimationElement key={index}>
                             <div className="opacity-0">
-                                <CardComp image={item} className="rounded" />
+                                <CardComp image={item} />
                             </div>
                         </ScrollAnimationElement>
                     ))}
@@ -151,9 +134,12 @@ function Home() {
                                     >
                                         <div className="flex flex-col">
                                             <div className=" h-140">
-                                                <div className="absolute bottom-7 left-7 ">
-                                                    <ButtonComp >{item.title}</ButtonComp>
-                                                </div>
+                                                <Link
+                                                    to={config.Routes.listProducts}
+                                                    className="absolute bottom-7 left-7 "
+                                                >
+                                                    <ButtonComp>{item.title}</ButtonComp>
+                                                </Link>
                                             </div>
                                         </div>
                                     </div>
@@ -175,9 +161,9 @@ function Home() {
                         <span className="w-full h-auto mb-4 lg:text-4xl md:text-2xl text-xl font-medium not-italic tracking-widest text-white uppercase">
                             See the fashion accessories for you
                         </span>
-                        <div className="">
+                        <Link to={config.Routes.listProducts}>
                             <ButtonComp custom>See accessories</ButtonComp>
-                        </div>
+                        </Link>
                     </div>
                 </div>
             </ScrollAnimationElement>

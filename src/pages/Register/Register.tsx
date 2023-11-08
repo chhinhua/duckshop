@@ -1,183 +1,105 @@
-import { useState } from 'react';
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
-import MenuItem from '@mui/material/MenuItem';
-import Select from '@mui/material/Select';
-import InputLabel from '@mui/material/InputLabel';
-import FormControl from '@mui/material/FormControl';
 
 import config from '../../config';
+import InputText from '../../components/InputText/InputText';
 
-type FormData = {
+import { useAppDispatch } from '../../redux/hook';
+import { setRegister } from './registerSlice';
+type TResgister = {
     email: string;
     userName: string;
     passWord: string;
-    fName: string;
-    lName: string;
-    gender: string;
 };
 
 const Register = () => {
+    const dispatch = useAppDispatch();
+    const navigate = useNavigate();
     const {
         register,
         // setValue,
         handleSubmit,
         formState: { errors },
-    } = useForm<FormData>({
+    } = useForm<TResgister>({
         defaultValues: {
             email: '',
             userName: '',
             passWord: '',
-            fName: '',
-            lName: '',
-            gender: '',
         },
     });
 
-    const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
-    // show pass
-    const [showPassword, setShowPassword] = useState(false);
-
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
+    const onSubmit: SubmitHandler<TResgister> = (data) => {
+        console.log(data);
+        // call api dang ki va gui OTP
+        dispatch(setRegister(data));
+        toast.success('Đã gửi mã OTP');
+        navigate(config.Routes.getOTPRegister);
+    };
 
     return (
-        <div className="m-auto pt-32">
+        <div className="m-auto pt-32 ">
             <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">
                 <div className="sm:mx-auto sm:w-full sm:max-w-sm">
                     <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        <strong>BECOME A DUCK MEMBER</strong>
+                        <strong>TRỞ THÀNH THÀNH VIÊN DUCK</strong>
                     </h2>
                     <h5 className="text-center text-md leading-9 tracking-tight text-gray-400">
-                        Create your Duck Member profile and get first access to the very best of Duck products,
-                        inspiration and community.
+                        Tạo hồ sơ Thành viên Duck của bạn và có quyền truy cập đầu tiên vào những sản phẩm, nguồn cảm
+                        hứng và cộng đồng tốt nhất của Duck.
                     </h5>
                 </div>
 
                 <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                         {/* start input email */}
-                        <TextField
-                            label="Email"
-                            type="email"
-                            fullWidth
-                            error={errors.email ? true : false}
-                            {...register('email', {
-                                required: 'Email is required',
-                                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            })}
-                            autoComplete="username"
+                        <InputText
+                            labelInput="Email"
+                            errorInput={errors.email ? true : false}
+                            isRequired
+                            errorFormMessage={errors.email?.message}
+                            register={{
+                                ...register('email', {
+                                    required: 'email is required',
+                                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                }),
+                            }}
+                            autoComplete="email"
                         />
-                        {errors.email && (
-                            <p className="text-red-500" role="alert">
-                                {errors.email.message}
-                            </p>
-                        )}
                         {/* end input email */}
                         {/* start input userName */}
-                        <TextField
-                            label="UserName"
-                            type="text"
-                            fullWidth
-                            error={errors.userName ? true : false}
-                            {...register('userName', {
-                                required: 'UserName is required',
-                                pattern: /^[A-Za-z0-9]{4,}$/,
-                            })}
-                            autoComplete="username"
+                        <InputText
+                            labelInput="Username phải hơn 4 kí tự"
+                            errorInput={errors.userName ? true : false}
+                            isRequired
+                            errorFormMessage={errors.userName?.message}
+                            register={{
+                                ...register('userName', {
+                                    required: 'UserName is required',
+                                    pattern: /^[A-Za-z0-9]{4,}$/,
+                                }),
+                            }}
                         />
-                        {errors.userName && (
-                            <p className="text-red-500" role="alert">
-                                {errors.userName.message}
-                            </p>
-                        )}
                         {/* end input userName */}
                         {/* start input password */}
-                        <TextField
-                            label="Password"
-                            type={showPassword ? 'text' : 'password'}
-                            fullWidth
-                            error={errors.passWord ? true : false}
-                            {...register('passWord', {
-                                required: 'Password is required',
-                                pattern:
-                                    /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9!@#$%^&*()_+{}[]|:;<>,.?~\\-]{8,}$/,
-                            })}
-                            InputProps={{
-                                endAdornment: (
-                                    <InputAdornment position="end">
-                                        <IconButton onClick={handleClickShowPassword} edge="end">
-                                            {showPassword ? <VisibilityOff /> : <Visibility />}
-                                        </IconButton>
-                                    </InputAdornment>
-                                ),
+                        <InputText
+                            labelInput="Mật khẩu phải đủ chữ hoa, thường và kí tự đặc biệt và số"
+                            errorInput={errors.passWord ? true : false}
+                            isRequired
+                            typeInput="password"
+                            errorFormMessage={errors.passWord?.message}
+                            register={{
+                                ...register('passWord', {
+                                    required: 'passWord is required',
+                                    pattern:
+                                        /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9!@#$%^&*()_+{}[]|:;<>,.?~\\-]{8,}$/,
+                                }),
                             }}
-                            autoComplete="current-password"
+                            autoComplete="password"
                         />
-                        {errors.passWord && (
-                            <p className="text-red-500" role="alert">
-                                {errors.passWord.message}
-                            </p>
-                        )}
                         {/* end input password */}
-                        {/* start input firtname */}
-                        <TextField
-                            label="First Name"
-                            type="text"
-                            fullWidth
-                            error={errors.fName ? true : false}
-                            {...register('fName', {
-                                required: 'First Name is required',
-                            })}
-                        />
-                        {errors.fName && (
-                            <p className="text-red-500" role="alert">
-                                {errors.fName.message}
-                            </p>
-                        )}
-                        {/* end input firtname */}
-                        {/* start input lastname */}
-                        <TextField
-                            label="Last Name"
-                            type="text"
-                            fullWidth
-                            error={errors.lName ? true : false}
-                            {...register('lName', {
-                                required: 'Last Name is required',
-                            })}
-                        />
-                        {errors.lName && (
-                            <p className="text-red-500" role="alert">
-                                {errors.lName.message}
-                            </p>
-                        )}
-                        {/* end input lastname */}
-                        {/* start input Gender */}
-                        <FormControl fullWidth error={errors.gender ? true : false}>
-                            <InputLabel>Gender</InputLabel>
-                            <Select
-                                label="Gender"
-                                {...register('gender', {
-                                    required: 'Gender is required',
-                                })}
-                                defaultValue=""
-                            >
-                                <MenuItem value="Male">Male</MenuItem>
-                                <MenuItem value="Female">Female</MenuItem>
-                            </Select>
-                        </FormControl>
-                        {errors.gender && (
-                            <p className="text-red-500" role="alert">
-                                {errors.gender.message}
-                            </p>
-                        )}
-                        {/* end input Gender */}
                         <Button
                             style={{ background: 'black' }}
                             type="submit"
@@ -186,17 +108,17 @@ const Register = () => {
                             color="primary"
                             size="large"
                         >
-                            Join Us
+                            Đăng kí
                         </Button>
                     </form>
 
-                    <p className="mt-10 text-center text-sm text-gray-500">
-                        Already a Member?
+                    <p className="mt-10 text-center text-sm text-gray-400">
+                        Bạn đã có tài khoản?
                         <Link
                             to={config.Routes.logIn}
                             className="pl-1 font-semibold leading-6 text-gray-600 hover:text-black underline"
                         >
-                            Sign In.
+                            Đăng nhập.
                         </Link>
                     </p>
                 </div>

@@ -22,6 +22,7 @@ export default {
                 headerProfile: '#FFEEE8',
             },
             spacing: {
+                18: '4.5rem',
                 120: '30rem',
                 128: '32rem',
                 140: '35rem',

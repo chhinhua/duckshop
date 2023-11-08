@@ -21,6 +21,9 @@ import Checkbox from '@mui/material/Checkbox';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
+import Drawer from '@mui/material/Drawer';
+import Button from '@mui/material/Button';
+
 const LIST_ACTION = [
     'Shoes',
     'Sports Bras',
@@ -29,11 +32,6 @@ const LIST_ACTION = [
     'Jackets',
     'Trousers & Tights',
     'Shorts',
-    'Tracksuits',
-    'Jumpsuits & Rompers',
-    'Skirts & Dresses',
-    'Socks',
-    'Accessories & Equipment',
 ];
 
 function Listproducts() {
@@ -61,28 +59,40 @@ function Listproducts() {
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         console.log(event);
-        
+
         setPage(newPage);
     };
+    // handle menu
+    const [openMenu, setOpenMenu] = useState(false);
+
+    const toggleMenu = () => () => {
+        setOpenMenu((prev) => !prev);
+    };
+
     return (
         <>
             <div className="w-11/12 m-auto pt-32">
                 {/* start section 1 */}
-                <div className="text-center w-full">
-                    <strong>Showing 1 - 12 out of 2,356 Products</strong>
+                <div
+                    className={`${
+                        scroll
+                            ? 'bg-header shadow-md fixed duration-200 ease-in top-18 left-0 w-full '
+                            : 'bg-transparent grid-cols-2'
+                    }   pb-2 z-50 grid`}
+                >
+                    <strong className={`${scroll ? 'hidden' : ''} `}>Showing 1 - 12 out of 2,356 Products</strong>
+                    <div className={`${scroll ? 'm-auto w-11/12 flex justify-end' : 'w-full flex justify-end'}`}>
+                        <Button variant="outlined" onClick={toggleMenu()}>
+                            <div className="text-lg normal-case">Filter </div>
+                        </Button>
+                    </div>
                 </div>
                 {/* end section 1 */}
                 {/* start section 2 */}
                 <div className="h-full">
                     {/* start navigation  */}
-                    <nav
-                        className={`${
-                            scroll
-                                ? 'bg-header shadow-xl fixed duration-200 ease-in top-20 left-0 w-full '
-                                : 'bg-transparent'
-                        }  shadow-xl p-4 mb-3 z-50`}
-                    >
-                        <div className={`${scroll ? 'm-auto w-11/12' : 'w-full'}  flex flex-row flex-wrap  gap-2`}>
+                    <div>
+                        <Drawer anchor="right" open={openMenu} onClose={toggleMenu()}>
                             {/* Start Select Popular */}
                             <div>
                                 <Accordion /*defaultExpanded */>
@@ -169,15 +179,15 @@ function Listproducts() {
                                 </Accordion>
                             </div>
                             {/* End Select Filter */}
-                        </div>
-                    </nav>
+                        </Drawer>
+                    </div>
                     {/* end navigation  */}
                     {/* start list item */}
                     <div className="col-span-5 px-3 xl:col-span-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
                             {[S2Baner1, S2Baner2, S2Baner3, S2Baner4, S4Baner1, S4Baner2, S4Baner3].map(
                                 (item, index) => (
-                                    <CardComp key={index} image={item} className="rounded" isFavourite={true} />
+                                    <CardComp key={index} image={item} isFavourite={true} />
                                 ),
                             )}
                         </div>

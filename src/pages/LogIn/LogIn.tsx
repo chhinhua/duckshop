@@ -1,14 +1,17 @@
-import { useState } from 'react';
+import config from '../../config';
+import InputText from '../../components/InputText/InputText';
+import { loginApi } from '../../apis/authApi';
+
 import { useForm, SubmitHandler } from 'react-hook-form';
 
-import TextField from '@mui/material/TextField';
-import IconButton from '@mui/material/IconButton';
-import InputAdornment from '@mui/material/InputAdornment';
-import Visibility from '@mui/icons-material/Visibility';
-import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
-import config from '../../config';
+import { toast } from 'react-toastify';
+import { useNavigate } from 'react-router-dom';
+import { useEffect } from 'react';
+
+import { useAppDispatch } from '../../redux/hook';
+import { setIsLogin } from './loginSlice';
 
 type FormData = {
     email: string;
@@ -16,6 +19,9 @@ type FormData = {
 };
 
 const LogIn = () => {
+    const navigate = useNavigate();
+    const dispatch = useAppDispatch();
+
     const {
         register,
         // setValue,
@@ -24,12 +30,37 @@ const LogIn = () => {
     } = useForm<FormData>({
         defaultValues: {},
     });
+    // handle successful login
+    useEffect(() => {
+        const token = localStorage.getItem('token');
+        if (token) {
+            // chuyen qua page home
+            navigate('/');
+            dispatch(setIsLogin(true));
+        } else {
+            dispatch(setIsLogin(false));
+        }
+    }, []);
 
-    const onSubmit: SubmitHandler<FormData> = (data) => console.log(data);
-    // show pass
-    const [showPassword, setShowPassword] = useState(false);
+    const onSubmit: SubmitHandler<FormData> = async (data) => {
+        const response = await loginApi(data.email, data.passWord);
+        console.log(response);
 
-    const handleClickShowPassword = () => setShowPassword((show) => !show);
+        if (response && response.data && response.data.token) {
+            // handle save token
+            localStorage.setItem('token', response.data.token);
+            toast.success('Login Success');
+            // set redux
+            dispatch(setIsLogin(true));
+            // chuyen next page home
+            navigate('/');
+        } else {
+            // error
+            if (response && response.status === 400) {
+                toast.error(response.data.error);
+            }
+        }
+    };
 
     return (
         <div className="m-auto pt-32">
@@ -43,49 +74,37 @@ const LogIn = () => {
                 <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                         <div className="mt-2">
-                            <TextField
-                                label="Email"
-                                type="text"
-                                fullWidth
-                                error={errors.email ? true : false}
-                                {...register('email', {
-                                    required: 'Email is required',
-                                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                                })}
+                            <InputText
+                                labelInput="Email"
+                                errorInput={errors.email ? true : false}
+                                isRequired
+                                errorFormMessage={errors.email?.message}
+                                register={{
+                                    ...register('email', {
+                                        required: 'email is required',
+                                        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                    }),
+                                }}
+                                autoComplete="username"
                             />
-                            {errors.email && (
-                                <p className="text-red-500" role="alert">
-                                    {errors.email.message}
-                                </p>
-                            )}
                         </div>
 
                         <div className="mt-2">
-                            <TextField
-                                label="Password"
-                                type={showPassword ? 'text' : 'password'}
-                                fullWidth
-                                error={errors.passWord ? true : false}
-                                {...register('passWord', {
-                                    required: 'Password is required',
-                                    pattern:
-                                        /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9!@#$%^&*()_+{}[]|:;<>,.?~\\-]{8,}$/,
-                                })}
-                                InputProps={{
-                                    endAdornment: (
-                                        <InputAdornment position="end">
-                                            <IconButton onClick={handleClickShowPassword} edge="end">
-                                                {showPassword ? <VisibilityOff /> : <Visibility />}
-                                            </IconButton>
-                                        </InputAdornment>
-                                    ),
+                            <InputText
+                                labelInput="Password"
+                                errorInput={errors.passWord ? true : false}
+                                isRequired
+                                typeInput="password"
+                                errorFormMessage={errors.passWord?.message}
+                                register={{
+                                    ...register('passWord', {
+                                        required: 'passWord is required',
+                                        pattern:
+                                            /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9!@#$%^&*()_+{}[]|:;<>,.?~\\-]{8,}$/,
+                                    }),
                                 }}
+                                autoComplete="password"
                             />
-                            {errors.passWord && (
-                                <p className="text-red-500" role="alert">
-                                    {errors.passWord.message}
-                                </p>
-                            )}
                         </div>
                         <a href="#" className="text-sm font-semibold  text-gray-600 hover:text-black float-right">
                             Forgot password?

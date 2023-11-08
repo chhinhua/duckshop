@@ -21,7 +21,7 @@ const currentYear = new Date().getFullYear();
 
 function Footer() {
     return (
-        <div className="bg-footer text-white w-full pt-10 pb-5 bottom-0 left-0 mt-10">
+        <div className="bg-footer text-white  pt-10 pb-5 bottom-0 left-0 mt-10">
             <footer className="relative w-11/12 m-auto">
                 <div className="mx-auto w-full">
                     <div className="grid grid-cols-1 justify-between gap-4 md:grid-cols-2">
@@ -36,9 +36,7 @@ function Footer() {
                                     </Typography>
                                     {items.map((link) => (
                                         <li key={link}>
-                                            <Typography
-                                                className="py-1.5 font-normal opacity-60 transition-colors hover:opacity-100"
-                                            >
+                                            <Typography className="py-1.5 font-normal opacity-60 transition-colors hover:opacity-100">
                                                 {link}
                                             </Typography>
                                         </li>
