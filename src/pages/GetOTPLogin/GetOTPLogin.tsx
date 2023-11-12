@@ -4,77 +4,52 @@ import Button from '@mui/material/Button';
 import { toast } from 'react-toastify';
 
 import InputText from '../../components/InputText/InputText';
-import { useAppSelector } from '../../redux/hook';
-import { getDataRegister } from '../Register/registerSlice';
-import { loginApi, sendOTPRegister, verifyOTPRegister } from '../../apis/authApi';
-import { useState } from 'react';
-import { useAppDispatch } from '../../redux/hook';
-import { setIsLogin } from '../LogIn/loginSlice';
 import config from '../../config';
 
-type TGetOTPRegister = {
+import { sendOTPRegister, verifyOTPRegister } from '../../apis/authApi';
+
+type TGetOTPLogin = {
     otp: string;
+    email: string;
 };
 
 const GetOTPRegister = () => {
-    const [verify, setVerify] = useState(false);
-    const dispatch = useAppDispatch();
     const navigate = useNavigate();
-    const dataRegister = useAppSelector(getDataRegister);
-
     const {
         register,
-        // setValue,
         handleSubmit,
+        getValues,
         formState: { errors },
-    } = useForm<TGetOTPRegister>({
+    } = useForm<TGetOTPLogin>({
         defaultValues: {
             otp: '',
+            email: '',
         },
     });
 
     // send OTP
-    const onSubmit: SubmitHandler<TGetOTPRegister> = async (data) => {
+    const onSubmit: SubmitHandler<TGetOTPLogin> = async (data) => {
         // call api kiem tra OTP
-        if (dataRegister.email !== '') {
-            const response = await verifyOTPRegister(dataRegister.email, data.otp);
-            if (response.status === 200) {
-                toast.success(response.data);
-                setVerify(true);
-            } else {
-                toast.error(response.data.message);
-            }
+        const response = await verifyOTPRegister(data.email, data.otp);
+
+        if (response.status === 200) {
+            toast.success(response.data);
+            navigate(config.Routes.logIn);
         } else {
-            toast.error('Do đã refresh nên mất lưu trữ email');
-            navigate(config.Routes.getOTPLogIn);
-            setVerify(false);
+            toast.error(response.data.message);
         }
     };
 
     //Send Again OTP
     const handleSendAgainOTP = async () => {
         // call api voi Email
-        const response = await sendOTPRegister(dataRegister.email);
-        if (response.status === 200) {
-            toast.success(response.data);
-        } else {
-            toast.error('Loi roi');
-        }
-    };
-    // login
-    const handleLogin = async () => {
-        const response = await loginApi(dataRegister.email, dataRegister.passWord);
+        const response = await sendOTPRegister(getValues().email);
 
-        if (response && response.data && response.data.jwt) {
-            toast.success('Đăng nhập thành công');
-            // set redux
-            dispatch(setIsLogin(true));
-            // chuyen next page home
-            navigate('/');
-        }
-        // error
-        if (response && response.status) {
+        if (response.status) {
             toast.error(response.data.message);
+        }
+        if (response.data) {
+            toast.warning(response.data);
         }
     };
     return (
@@ -91,6 +66,21 @@ const GetOTPRegister = () => {
 
                 <div className="mt-5 sm:mx-auto sm:w-full sm:max-w-sm">
                     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                        {/* start input email */}
+                        <InputText
+                            labelInput="Email"
+                            errorInput={errors.email ? true : false}
+                            isRequired
+                            errorFormMessage={errors.email?.message}
+                            register={{
+                                ...register('email', {
+                                    required: 'email is required',
+                                    pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                }),
+                            }}
+                            autoComplete="email"
+                        />
+                        {/* end input email */}
                         {/* start input otp */}
                         <InputText
                             labelInput="OTP"
@@ -105,20 +95,15 @@ const GetOTPRegister = () => {
                             }}
                         />
                         {/* end input otp */}
-                        <div className="grid grid-cols-2 gap-2">
-                            <Button type="submit" variant="contained" fullWidth size="large">
-                                Xác thực
-                            </Button>
-                            <Button
-                                variant="contained"
-                                fullWidth
-                                size="large"
-                                disabled={verify ? false : true}
-                                onClick={handleLogin}
-                            >
-                                Đăng nhập ngay
-                            </Button>
-                        </div>
+                        <Button
+                            style={{ background: 'black' }}
+                            type="submit"
+                            variant="contained"
+                            fullWidth
+                            size="large"
+                        >
+                            Xác thực
+                        </Button>{' '}
                         <Button variant="outlined" fullWidth size="large" onClick={handleSendAgainOTP}>
                             Gửi lại mã
                         </Button>

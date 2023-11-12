@@ -11,6 +11,11 @@ interface IInitialStateLogin {
 const initialState: IInitialStateLogin = {
     isLogin: false,
 };
+// Thêm vào hàm reducer để cập nhật state từ giá trị được lưu trữ
+const savedIsLogin = localStorage.getItem('isLogin');
+if (savedIsLogin) {
+    initialState.isLogin = JSON.parse(savedIsLogin);
+}
 
 export const loginSlice = createSlice({
     name: 'login',
@@ -18,6 +23,8 @@ export const loginSlice = createSlice({
     reducers: {
         setIsLogin: (state, action: PayloadAction<boolean>) => {
             state.isLogin = action.payload;
+            // Lưu giá trị mới vào localStorage khi có thay đổi
+            localStorage.setItem('isLogin', JSON.stringify(action.payload));
         },
     },
 });

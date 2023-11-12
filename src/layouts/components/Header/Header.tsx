@@ -25,7 +25,8 @@ function Header() {
     const navaigate = useNavigate();
 
     const handleLogout = () => {
-        localStorage.removeItem('token');
+        localStorage.removeItem('accessToken');
+        localStorage.removeItem('tokenType');
         dispatch(setIsLogin(false));
         navaigate('/');
         handlePopoverClose();
@@ -65,9 +66,11 @@ function Header() {
                 } h-18 flex flex-col justify-center items-center w-full z-50`}
             >
                 <div className="w-11/12 grid grid-flow-col grid-cols-3 place-content-between ">
-                    <Link to={config.Routes.home}>
-                        <Image src={logo} className="h-full w-48 col-span-1" />
-                    </Link>
+                    <div className="h-full w-48 col-span-1">
+                        <Link to={config.Routes.home}>
+                            <Image src={logo} className="h-full w-full" />
+                        </Link>
+                    </div>
                     <form className="w-full h-full col-span-1 mt-2.5">
                         <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
                             <Search className="mr-1 my-0.5" />
@@ -84,11 +87,7 @@ function Header() {
                         {isLogin ? (
                             <>
                                 <IconButton onClick={handlePopoverToggle}>
-                                    <Avatar
-                                        alt="Đức"
-                                        src="/static/images/avatar/1.jpg"
-                                        sx={{ width: 32, height: 32 }}
-                                    />
+                                    <Avatar alt="Đức" sx={{ width: 32, height: 32 }} />
                                 </IconButton>
                                 <Popper open={open} anchorEl={anchorEl} onMouseLeave={handlePopoverClose}>
                                     <div className="flex flex-col text-sm bg-white rounded">

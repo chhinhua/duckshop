@@ -1,19 +1,19 @@
 import axios from 'axios';
 
 const instance = axios.create({
-    baseURL: 'https://reqres.in',
+    baseURL: 'http://localhost:8080/api/v1',
     timeout: 30000, // Thời gian timeout cho mỗi request
 });
 // Add a request interceptor
 instance.interceptors.request.use(
     function (config) {
         // Do something before request is sent
-        const token = localStorage.getItem('token'); // Lấy token từ localStorage
+        const accessToken = localStorage.getItem('accessToken'); // Lấy token từ localStorage
+        const tokenType = localStorage.getItem('tokenType'); // Lấy tokenType từ localStorage
 
-        if (token) {
-            config.headers['Authorization'] = `Bearer ${token}`;
+        if (accessToken) {
+            config.headers['Authorization'] = `${tokenType} ${accessToken}`;
         }
-        console.log('check config>>>', config);
         return config;
     },
     function (error) {
@@ -41,7 +41,7 @@ instance.interceptors.response.use(
             // The request was made but no response was received
             // `error.request` is an instance of XMLHttpRequest in the browser
             // and an instance of http.ClientRequest in node.js
-            console.log(error.request);
+            console.log('check API error >>>', error.request);
         } else {
             // Something happened in setting up the request that triggered an Error
             console.log('Error', error.message);

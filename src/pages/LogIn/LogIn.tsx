@@ -18,6 +18,8 @@ type FormData = {
     passWord: string;
 };
 
+const MESS_XACTHUC = 'Tài khoản chưa được xác thực';
+
 const LogIn = () => {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
@@ -32,32 +34,31 @@ const LogIn = () => {
     });
     // handle successful login
     useEffect(() => {
-        const token = localStorage.getItem('token');
-        if (token) {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
             // chuyen qua page home
             navigate('/');
-            dispatch(setIsLogin(true));
-        } else {
-            dispatch(setIsLogin(false));
         }
     }, []);
 
-    const onSubmit: SubmitHandler<FormData> = async (data) => {
+    const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
         const response = await loginApi(data.email, data.passWord);
         console.log(response);
 
-        if (response && response.data && response.data.token) {
-            // handle save token
-            localStorage.setItem('token', response.data.token);
-            toast.success('Login Success');
+        if (response && response.data && response.data.jwt) {
+            toast.success('Đăng nhập thành công');
             // set redux
             dispatch(setIsLogin(true));
             // chuyen next page home
             navigate('/');
+        }
+        // error
+        if (response.data.message === MESS_XACTHUC) {
+            toast.error(response.data.message);
+            navigate(config.Routes.getOTPLogIn);
         } else {
-            // error
-            if (response && response.status === 400) {
-                toast.error(response.data.error);
+            if (response && response.status) {
+                toast.error(response.data.message);
             }
         }
     };
@@ -75,14 +76,14 @@ const LogIn = () => {
                     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                         <div className="mt-2">
                             <InputText
-                                labelInput="Email"
+                                labelInput="Email hoặc username"
                                 errorInput={errors.email ? true : false}
                                 isRequired
                                 errorFormMessage={errors.email?.message}
                                 register={{
                                     ...register('email', {
                                         required: 'email is required',
-                                        pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                                        pattern: /^(?=.*[A-Za-z0-9])[A-Za-z0-9@._-]{4,}$/,
                                     }),
                                 }}
                                 autoComplete="username"
@@ -99,16 +100,18 @@ const LogIn = () => {
                                 register={{
                                     ...register('passWord', {
                                         required: 'passWord is required',
-                                        pattern:
-                                            /^(?=.*[A-Z])(?=.*[a-z])(?=.*[0-9])[A-Za-z0-9!@#$%^&*()_+{}[]|:;<>,.?~\\-]{8,}$/,
+                                        pattern: /^[a-zA-Z0-9]{8,}$/,
                                     }),
                                 }}
                                 autoComplete="password"
                             />
                         </div>
-                        <a href="#" className="text-sm font-semibold  text-gray-600 hover:text-black float-right">
-                            Forgot password?
-                        </a>
+                        <Link
+                            to={config.Routes.getOTPLogIn}
+                            className="text-sm font-semibold  text-gray-600 hover:text-black float-right"
+                        >
+                            Xác nhận bằng Email
+                        </Link>
                         <Button
                             style={{ background: 'black' }}
                             type="submit"
@@ -122,12 +125,12 @@ const LogIn = () => {
                     </form>
 
                     <p className="mt-10 text-center text-sm text-gray-500">
-                        Not a member?
+                        Chưa có tài khoản?
                         <Link
                             to={config.Routes.register}
                             className="pl-1 font-semibold leading-6 text-gray-600 hover:text-black underline"
                         >
-                            Join Us.
+                            Đăng kí.
                         </Link>
                     </p>
                 </div>
