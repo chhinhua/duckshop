@@ -14,6 +14,7 @@ interface IProps {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     register: any;
     autoComplete?: string;
+    [key: string]: unknown;
 }
 
 const InputText = (propsCh: IProps) => {
@@ -25,6 +26,7 @@ const InputText = (propsCh: IProps) => {
         errorFormMessage,
         autoComplete,
         register,
+        ...props
     } = propsCh;
 
     // show pass
@@ -54,6 +56,7 @@ const InputText = (propsCh: IProps) => {
                         ),
                 }}
                 {...register}
+                {...props}
             />
             {errorInput && isRequired === false && (
                 <p className="text-red-500" role="alert">

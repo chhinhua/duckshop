@@ -1,13 +1,5 @@
 import React, { useEffect, useState } from 'react';
 
-import S2Baner1 from '../../assets/img/LandingPage/section-2-1.png';
-import S2Baner2 from '../../assets/img/LandingPage/section-2-2.png';
-import S2Baner3 from '../../assets/img/LandingPage/section-2-3.png';
-import S2Baner4 from '../../assets/img/LandingPage/section-2-4.png';
-import S4Baner1 from '../../assets/img/LandingPage/section-4-1.png';
-import S4Baner2 from '../../assets/img/LandingPage/section-4-2.png';
-import S4Baner3 from '../../assets/img/LandingPage/section-4-3.png';
-
 import CardComp from '../../components/Card';
 
 import Pagination from '@mui/material/Pagination';
@@ -23,6 +15,10 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
+
+import { getAllProductWithinPagination } from '../../apis/productApi';
+import { toast } from 'react-toastify';
+import IProduct from '../../interface/product';
 
 const LIST_ACTION = [
     'Shoes',
@@ -48,13 +44,27 @@ function Listproducts() {
         };
     }, []);
     // change page
-    // const [data, setData] = useState([]); // Dữ liệu từ API
+    const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
     const [page, setPage] = useState(1); // Trang hiện tại
-    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const [totalPages, setTotalPages] = useState(11); // Tổng số trang
+    const [totalProducts, setTotalProducts] = useState(10); // Tổng số trang
+    const itemsPerPage = 8;
+
+    const getAllProducts = async (pageNo: number) => {
+        await getAllProductWithinPagination(pageNo, itemsPerPage)
+            .then((response) => {
+                // setData(response.data.content);
+                // setTotalPages(response.data.totalPages);
+                // setTotalProducts(response.data.totalElements);
+                console.log('check data', response);
+            })
+            .catch((error) => {
+                toast.error(error.response?.data.message ?? 'Mất kết nối server!');
+            });
+    };
 
     useEffect(() => {
-        // Gọi API để lấy dữ liệu
+        getAllProducts(page);
     }, [page]);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
@@ -80,7 +90,9 @@ function Listproducts() {
                             : 'bg-transparent grid-cols-2'
                     }   pb-2 z-50 grid`}
                 >
-                    <strong className={`${scroll ? 'hidden' : ''} `}>Showing 1 - 12 out of 2,356 Products</strong>
+                    <strong className={`${scroll ? 'hidden' : ''} `}>
+                        Đang hiển thị {itemsPerPage} trong {totalProducts} sản phẩm
+                    </strong>
                     <div className={`${scroll ? 'm-auto w-11/12 flex justify-end' : 'w-full flex justify-end'}`}>
                         <Button variant="outlined" onClick={toggleMenu()}>
                             <div className="text-lg normal-case">Filter </div>
@@ -185,11 +197,9 @@ function Listproducts() {
                     {/* start list item */}
                     <div className="col-span-5 px-3 xl:col-span-4">
                         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
-                            {[S2Baner1, S2Baner2, S2Baner3, S2Baner4, S4Baner1, S4Baner2, S4Baner3].map(
-                                (item, index) => (
-                                    <CardComp key={index} image={item} isFavourite={true} />
-                                ),
-                            )}
+                            {data.map((item, index) => (
+                                <CardComp key={index} itemProduct={item} />
+                            ))}
                         </div>
                     </div>
                     {/* end list item */}

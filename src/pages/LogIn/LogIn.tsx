@@ -11,7 +11,7 @@ import { useNavigate } from 'react-router-dom';
 import { useEffect } from 'react';
 
 import { useAppDispatch } from '../../redux/hook';
-import { setIsLogin } from './loginSlice';
+import { setInfoUser, setIsLogin } from './loginSlice';
 
 type FormData = {
     email: string;
@@ -49,6 +49,7 @@ const LogIn = () => {
             toast.success('Đăng nhập thành công');
             // set redux
             dispatch(setIsLogin(true));
+            dispatch(setInfoUser({ userNameUser: response.data.user.username, idUser: response.data.user.id }));
             // chuyen next page home
             navigate('/');
         }

@@ -21,23 +21,48 @@ import { Button } from '@mui/material';
 import { Link } from 'react-router-dom';
 import config from '../../config';
 
+interface IValue {
+    valueId: number;
+    valueName: string;
+    imageUrl: string;
+}
+interface IOption {
+    optionId: number;
+    optionName: string;
+    values: Array<IValue>;
+}
 interface ProductCart {
-    image: string;
+    id?: string;
     name: string;
-    size: string;
-    color: string;
-    quantity: number;
+    description?: string;
     price: number;
+    quantity: number;
+    quantityAvailable?: number;
+    categoryId?: string;
+    slug?: string;
+    promotionalPrice?: string;
+    sold?: number;
+    rating?: number;
+    numberOfRatings?: number;
+    favoriteCount?: number;
+    isActive?: boolean;
+    isSelling?: boolean;
+    createdDate?: string;
+    lastModifiedDate?: string;
+    createdBy?: string;
+    lastModifiedBy?: string;
+    listImages?: Array<string>;
+    options?: Array<IOption>;
 }
 
 const rows: Array<ProductCart> = [
-    { image: S2Baner1, name: 'Name Product', size: 'L', color: 'red', quantity: 1, price: 100 },
-    { image: S2Baner2, name: 'Name Product', size: 'L', color: 'red', quantity: 1, price: 100 },
-    { image: S2Baner3, name: 'Name Product', size: 'L', color: 'red', quantity: 1, price: 100 },
-    { image: S2Baner4, name: 'Name Product', size: 'L', color: 'red', quantity: 1, price: 100 },
-    { image: S4Baner1, name: 'Name Product', size: 'L', color: 'red', quantity: 1, price: 100 },
-    { image: S4Baner2, name: 'Name Product', size: 'L', color: 'red', quantity: 1, price: 100 },
-    { image: S4Baner3, name: 'Name Product', size: 'L', color: 'red', quantity: 1, price: 100 },
+    { name: 'Name Product', quantity: 1, price: 100 },
+    { name: 'Name Product', quantity: 1, price: 100 },
+    { name: 'Name Product', quantity: 1, price: 100 },
+    { name: 'Name Product', quantity: 1, price: 100 },
+    { name: 'Name Product', quantity: 1, price: 100 },
+    { name: 'Name Product', quantity: 1, price: 100 },
+    { name: 'Name Product', quantity: 1, price: 100 },
 ];
 
 const Cart = () => {

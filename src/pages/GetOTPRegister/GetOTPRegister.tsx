@@ -9,7 +9,7 @@ import { getDataRegister } from '../Register/registerSlice';
 import { loginApi, sendOTPRegister, verifyOTPRegister } from '../../apis/authApi';
 import { useState } from 'react';
 import { useAppDispatch } from '../../redux/hook';
-import { setIsLogin } from '../LogIn/loginSlice';
+import { setInfoUser, setIsLogin } from '../LogIn/loginSlice';
 import config from '../../config';
 
 type TGetOTPRegister = {
@@ -69,6 +69,7 @@ const GetOTPRegister = () => {
             toast.success('Đăng nhập thành công');
             // set redux
             dispatch(setIsLogin(true));
+            dispatch(setInfoUser({ userNameUser: response.data.user.username, idUser: response.data.user.id }));
             // chuyen next page home
             navigate('/');
         }

@@ -9,22 +9,18 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
-import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
 
 import config from '../../config';
+import IProduct from '../../interface/product';
 
-interface CardProps {
-    name?: string;
-    price?: string;
-    favoriteCount?: number;
-    image: string;
-    isFavourite?: boolean;
-}
-const Card = (propsCh: CardProps) => {
-    const { name = ' Name Product', price = '100.000', favoriteCount = 4.5, image, isFavourite = false } = propsCh;
+const Card = (props: { itemProduct: IProduct }) => {
+    const { itemProduct } = props;
+    const navigate = useNavigate();
+
     // yeu thich
-    const [favourite, setFavourite] = useState(isFavourite);
+    const [favourite, setFavourite] = useState(false);
     const handleAddCart = useCallback(() => {
         // call api day vao gio hang
         // fake
@@ -35,9 +31,13 @@ const Card = (propsCh: CardProps) => {
         // fake
         setFavourite((prev) => !prev);
     }, [favourite]);
+    // chi tiet san pham
+    const handleNextDetailPage = () => {
+        navigate(`${config.Routes.detailProduct}#${itemProduct.id}`);
+    };
     return (
         <div className="shadow-lg p-2 rounded-lg">
-            <Link to={config.Routes.detailProduct}>
+            <div onClick={handleNextDetailPage}>
                 <Box
                     sx={{
                         height: 270, // Chiều cao cố định
@@ -55,16 +55,16 @@ const Card = (propsCh: CardProps) => {
                             height: '100%',
                             transition: 'transform 0.2s',
                         }}
-                        image={image}
+                        image={itemProduct.listImages[0]}
                     />
                 </Box>
-            </Link>
+            </div>
             <CardContent>
                 <div className="font-medium text-base mb-3 grid gap-1">
-                    <div>{name}</div>
+                    <div>{itemProduct.name}</div>
                     <div className="flex justify-between">
-                        <span>{price} VNĐ</span>
-                        <Rating defaultValue={favoriteCount} precision={0.5} readOnly />
+                        <span>{itemProduct.price} VNĐ</span>
+                        <Rating defaultValue={itemProduct.rating} precision={0.5} readOnly />
                     </div>
                 </div>
             </CardContent>

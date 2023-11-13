@@ -1,8 +1,4 @@
-import { SetStateAction, useState } from 'react';
-
-import S2Baner1 from '../../assets/img/LandingPage/section-2-1.png';
-import S2Baner4 from '../../assets/img/LandingPage/section-2-4.png';
-import ButtonComp from '../../components/Button';
+import { SetStateAction, useEffect, useState } from 'react';
 
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
@@ -23,9 +19,11 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import NavigateBefore from '@mui/icons-material/NavigateBefore';
 import NavigateNext from '@mui/icons-material/NavigateNext';
-import AddShoppingCart from '@mui/icons-material/AddShoppingCart';
-import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import Favorite from '@mui/icons-material/Favorite';
+import ShoppingCart from '@mui/icons-material/ShoppingCart';
+import { useLocation } from 'react-router-dom';
+import { getSingleProduct } from '../../apis/productApi';
+import IProduct from '../../interface/product';
+import { toast } from 'react-toastify';
 
 const BootstrapButton = styled(Button)({
     backgroundColor: 'transparent',
@@ -45,17 +43,40 @@ const BootstrapButton = styled(Button)({
 });
 
 const DetailProduct = () => {
-    const isFavourite = false;
+    // handle get id
+    const location = useLocation();
+    const idProduct = location.hash.substring(1);
+    // handle data
+    const [product, setProduct] = useState<IProduct>(); // Dữ liệu từ API
 
-    const [currentImageIndex, setCurrentImageIndex] = useState(0);
-    const images = [S2Baner1, S2Baner4, S2Baner1, S2Baner4, S2Baner1, S2Baner4, S2Baner1, S2Baner4, S2Baner1, S2Baner4];
+    const getProduct = async (id: string) => {
+        await getSingleProduct(id)
+            .then((response) => {
+                setProduct(response.data);
+
+                console.log('check data', response.data);
+            })
+            .catch((error) => {
+                toast.error(error.response?.data.message ?? 'Mất kết nối server!');
+            });
+    };
+    useEffect(() => {
+        getProduct(idProduct);
+    }, []);
+
+    // handle image
+    const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
+    const [picColor, setPicColor] = useState<string>();
+    const images = product?.listImages || [];
 
     const handleNextClick = () => {
+        setPicColor('');
         // Xử lý sự kiện khi người dùng bấm nút "Next"
         const newIndex = (currentImageIndex + 1) % images.length;
         setCurrentImageIndex(newIndex);
     };
     const handlePreviousClick = () => {
+        setPicColor('');
         if (currentImageIndex === 0) {
             setCurrentImageIndex(images.length - 1); // Đặt lại thành chỉ số của ảnh cuối cùng
         } else {
@@ -63,14 +84,18 @@ const DetailProduct = () => {
             setCurrentImageIndex(currentImageIndex - 1);
         }
     };
-    const handleChangePic = (index:number) => {
+    const handleChangePic = (index: number) => {
+        setPicColor('');
         setCurrentImageIndex(index);
+    };
+    const handleChangePicColor = (pic: string) => {
+        setPicColor(pic);
     };
 
     //  handle size
-    const [size, setSize] = useState('');
+    const [size, setSize] = useState<string>('');
 
-    const handleChangeSize = (event: { target: { value: SetStateAction<string>; }; }) => {
+    const handleChangeSize = (event: { target: { value: SetStateAction<string> } }) => {
         setSize(event.target.value);
     };
 
@@ -92,29 +117,16 @@ const DetailProduct = () => {
                 {/* End list image product */}
                 {/* Start image product */}
                 <div className="col-span-12 md:col-span-6 relative flex gap-1">
-                    {/* <img
-                        src={images[currentImageIndex]}
-                        alt={images[currentImageIndex]}
-                        className="w-full h-144 rounded-lg"
-                    /> */}
                     <div
                         className="w-full h-144 bg-cover bg-no-repeat bg-center relative rounded-md"
-                        style={{ backgroundImage: `url(${images[currentImageIndex]})` }}
+                        style={{ backgroundImage: picColor ? `url(${picColor})` : `url(${images[currentImageIndex]})` }}
                     >
                         <div className="w-full flex justify-end ">
-                            <IconButton>
-                                <NavigateBefore
-                                    className="bg-white rounded-full"
-                                    onClick={handlePreviousClick}
-                                    sx={{ fontSize: 35 }}
-                                />
+                            <IconButton onClick={handlePreviousClick}>
+                                <NavigateBefore className="bg-white rounded-full" sx={{ fontSize: 35 }} />
                             </IconButton>
-                            <IconButton>
-                                <NavigateNext
-                                    className="bg-white rounded-full text-lg"
-                                    onClick={handleNextClick}
-                                    sx={{ fontSize: 35 }}
-                                />
+                            <IconButton onClick={handleNextClick}>
+                                <NavigateNext className="bg-white rounded-full text-lg" sx={{ fontSize: 35 }} />
                             </IconButton>
                         </div>
                     </div>
@@ -122,56 +134,53 @@ const DetailProduct = () => {
                 {/* End image product */}
                 {/* Start info prođuct */}
                 <div className="col-span-12 md:col-span-6 lg:col-span-5 md:ml-10 ">
-                    <div className="text-2xl not-italic font-medium">Nike Air Max 97 SE</div>
-                    <div className="text-base not-italic font-medium">Men's Shoes</div>
-                    <div className="text-base not-italic font-medium">100 $</div>
+                    <div className="text-xl not-italic font-medium">{product?.name}</div>
+                    <div className="text-base not-italic font-medium">{product?.price} VNĐ</div>
 
                     <div className="mt-10">
-                        <span>Select Color</span>
+                        <span>Chọn Màu</span>
                     </div>
 
                     <div className="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-2 xl:grid-cols-3 gap-2">
-                        {['Green', 'Red', 'Black', 'White', 'Blue', 'Purple'].map((item, index) => (
-                            <BootstrapButton>
+                        {product?.options[0].values.map((item, index) => (
+                            <BootstrapButton key={index} onClick={() => handleChangePicColor(item.imageUrl)}>
                                 <Card
                                     key={index}
                                     sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
                                 >
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <CardContent>{item}</CardContent>
+                                        <CardContent>{item.valueName}</CardContent>
                                     </Box>
-                                    <CardMedia component="img" sx={{ width: 70 }} image={S2Baner1} alt={S2Baner1} />
+                                    <CardMedia
+                                        component="img"
+                                        sx={{ width: 70 }}
+                                        image={item.imageUrl || null}
+                                        alt={item.valueId}
+                                    />
                                 </Card>
                             </BootstrapButton>
                         ))}
                     </div>
 
                     <div className="mt-10">
-                        <span>Select Size</span>
+                        <span>Chọn Size</span>
                     </div>
-                    <div className="w-full grid grid-cols-3 gap-2">
-                        <div className="mr-5 col-span-2 sm:col-span-2 md:col-span-3 xl:col-span-2">
-                            <FormControl sx={{ my: 1, width: '100%' }}>
-                                <InputLabel id="demo-simple-select-autowidth-label">Size</InputLabel>
-                                <Select value={size} onChange={handleChangeSize} label="Age">
-                                    <MenuItem value="">
-                                        <em>None</em>
-                                    </MenuItem>
-                                    {['XS', 'S', 'M', 'L', 'XL', '2XL'].map((item, index) => (
-                                        <MenuItem key={index} value={item}>
-                                            {item}
-                                        </MenuItem>
-                                    ))}
-                                </Select>
-                            </FormControl>
-                        </div>
-                        <div className=" col-span-1 sm:col-span-1 md:col-span-3 md:justify-center xl:col-span-1 flex justify-end w-full">
-                            <ButtonComp custom>
-                                <AddShoppingCart />
-                            </ButtonComp>
-                            <ButtonComp custom>{isFavourite ? <Favorite /> : <FavoriteBorder />}</ButtonComp>
-                        </div>
-                    </div>
+                    <FormControl sx={{ my: 1, width: '100%' }}>
+                        <InputLabel id="demo-simple-select-autowidth-label">Size</InputLabel>
+                        <Select value={size} onChange={handleChangeSize} label="Age">
+                            <MenuItem value="">
+                                <em>None</em>
+                            </MenuItem>
+                            {product?.options[1].values.map((item, index) => (
+                                <MenuItem key={index} value={item.valueId}>
+                                    {item.valueName}
+                                </MenuItem>
+                            ))}
+                        </Select>
+                    </FormControl>
+                    <Button fullWidth variant="contained" sx={{ height: 50 }}>
+                        <ShoppingCart />
+                    </Button>
                     <div className="pt-10">
                         <Accordion>
                             <AccordionSummary
@@ -183,8 +192,13 @@ const DetailProduct = () => {
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>
-                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Suspendisse malesuada lacus
-                                    ex, sit amet blandit leo lobortis eget.
+                                    Đơn hàng từ 5.000.000₫ trở lên của bạn sẽ được giao hàng tiêu chuẩn miễn phí.
+                                    <br /> <br />
+                                    Giao hàng tiêu chuẩn 4-5 ngày làm việc Chuyển phát nhanh 2-4 ngày làm việc Đơn hàng
+                                    được xử lý và giao từ Thứ Hai đến Thứ Sáu (trừ ngày lễ)
+                                    <br />
+                                    <br />
+                                    Thành viên Duck được hưởng lợi nhuận miễn phí.
                                 </Typography>
                             </AccordionDetails>
                         </Accordion>
@@ -197,12 +211,7 @@ const DetailProduct = () => {
                                 <Typography>Product Information</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
-                                <Typography>
-                                    Layer on style with the Air Max 97. The cracked leather and soft suede update the
-                                    iconic design while the original look (inspired by Japanese bullet trains and water
-                                    droplets) still takes centre stage. Easy-to-style colours let you hit the streets
-                                    quickly.
-                                </Typography>
+                                <Typography>{product?.description}</Typography>
                             </AccordionDetails>
                         </Accordion>
                         <Accordion>

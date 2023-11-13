@@ -3,6 +3,10 @@ import axios from 'axios';
 const instance = axios.create({
     baseURL: 'http://localhost:8080/api/v1',
     timeout: 30000, // Thời gian timeout cho mỗi request
+    headers: {
+        'Access-Control-Allow-Origin': '*',
+        'Access-Control-Allow-Methods': 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    },
 });
 // Add a request interceptor
 instance.interceptors.request.use(
@@ -41,7 +45,7 @@ instance.interceptors.response.use(
             // The request was made but no response was received
             // `error.request` is an instance of XMLHttpRequest in the browser
             // and an instance of http.ClientRequest in node.js
-            console.log('check API error >>>', error.request);
+            console.log('check API error >>>', error);
         } else {
             // Something happened in setting up the request that triggered an Error
             console.log('Error', error.message);

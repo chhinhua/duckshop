@@ -14,11 +14,11 @@ import Popper from '@mui/material/Popper';
 import { Link, useNavigate } from 'react-router-dom';
 import config from '../../../config';
 
-import { useAppSelector, useAppDispatch } from '../../../redux/hook';
-import { selectIsLogin, setIsLogin } from '../../../pages/LogIn/loginSlice';
+import { useAppDispatch } from '../../../redux/hook';
+import { setIsLogin } from '../../../pages/LogIn/loginSlice';
 
 function Header() {
-    const isLogin = useAppSelector(selectIsLogin);
+    const [checkLogin, setCheckLogin] = useState<boolean>(false);
     const dispatch = useAppDispatch();
 
     // handle logged
@@ -27,10 +27,17 @@ function Header() {
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('tokenType');
+        localStorage.removeItem('infoUser');
         dispatch(setIsLogin(false));
         navaigate('/');
         handlePopoverClose();
     };
+
+    // check login
+    const check = localStorage.getItem('isLogin');
+    useEffect(() => {
+        check === 'true' ? setCheckLogin(true) : setCheckLogin(false);
+    }, [check]);
 
     // handle scroll to fix header
     const [scroll, setScroll] = useState(false);
@@ -84,12 +91,17 @@ function Header() {
                     </form>
 
                     <div className="flex justify-end items-center md:gap-3 gap-0 col-span-1">
-                        {isLogin ? (
+                        {checkLogin ? (
                             <>
                                 <IconButton onClick={handlePopoverToggle}>
                                     <Avatar alt="Đức" sx={{ width: 32, height: 32 }} />
                                 </IconButton>
-                                <Popper open={open} anchorEl={anchorEl} onMouseLeave={handlePopoverClose}>
+                                <Popper
+                                    open={open}
+                                    anchorEl={anchorEl}
+                                    onMouseLeave={handlePopoverClose}
+                                    sx={{ zIndex: 60 }}
+                                >
                                     <div className="flex flex-col text-sm bg-white rounded">
                                         <Link
                                             to={config.Routes.profile}
