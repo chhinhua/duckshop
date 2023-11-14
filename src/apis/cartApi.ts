@@ -1,21 +1,21 @@
 /* eslint-disable no-useless-catch */
 import axios from './axiosConfig.js';
 
-export const addToCart = async (quantity: number, productId: number, skuId?: number) => {
+export const addToCart = async (quantity: number, productId: number, valueNames: Array<string> | null) => {
     try {
         const response = await axios.post('/cart', {
             quantity,
             productId,
-            skuId,
+            valueNames,
         });
         return response;
     } catch (error) {
         throw error;
     }
 };
-export const getCartForSignedInUser = async (idUser: number) => {
+export const getCartByToken = async () => {
     try {
-        const response = await axios.get(`/cart/${idUser}`);
+        const response = await axios.get(`/cart`);
         return response;
     } catch (error) {
         throw error;

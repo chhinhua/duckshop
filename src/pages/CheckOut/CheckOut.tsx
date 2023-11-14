@@ -1,17 +1,21 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
 
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { useState } from 'react';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+
+import config from '../../config';
+import Textarea from '../../components/Textarea/Textarea';
 
 interface FormData {
-    email: string;
-    phone: string;
-    fName: string;
-    lName: string;
-    address1: string;
-    address2: string;
+    paymentType: string;
+    note: string;
+    address: string;
 }
 const Pay = () => {
     const {
@@ -21,12 +25,9 @@ const Pay = () => {
         formState: { errors },
     } = useForm<FormData>({
         defaultValues: {
-            email: '',
-            phone: '',
-            fName: '',
-            lName: '',
-            address1: '',
-            address2: '',
+            paymentType: '',
+            note: '',
+            address: '',
         },
     });
 
@@ -47,84 +48,51 @@ const Pay = () => {
                 <div>
                     <div className="mb-5 font-semibold text-xl">What's your contact information?</div>
                     <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                        {/* start input email */}
-                        <TextField
-                            label="Email"
-                            type="email"
-                            fullWidth
-                            required
-                            error={errors.email ? true : false}
-                            {...register('email', {
-                                required: 'Email is required',
-                                pattern: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
-                            })}
-                            autoComplete="username"
-                        />
-                        <p className="text-gray-400 text-sm">A confirmation email will be sent after checkout.</p>
-                        {/* end input email */}
-                        {/* start input phone */}
-                        <TextField
-                            label="Phone"
-                            type="text"
-                            fullWidth
-                            required
-                            error={errors.phone ? true : false}
-                            {...register('phone', {
-                                required: 'Phone is required',
-                                pattern: /^[0-9]{10,}$/,
-                            })}
-                            autoComplete="phone"
-                        />
-                        <p className="text-gray-400 text-sm">A carrier might contact you to confirm delivery.</p>
-                        {/* end input phone */}
-                        <div className="font-semibold text-xl">Enter your name and address:</div>
+                        {/* start input PaymentType */}
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-helper-label">Hình thức thanh toán</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                input={<OutlinedInput label="Hình thức thanh toán" />}
+                                fullWidth
+                                error={errors.paymentType ? true : false}
+                                defaultValue={''}
+                                {...register('paymentType', {
+                                    required: 'PaymentType is required',
+                                })}
+                            >
+                                <MenuItem value={config.PaymentType.Offilne}>{config.PaymentType.Offilne}</MenuItem>
+                                <MenuItem value={config.PaymentType.Online}>{config.PaymentType.Online}</MenuItem>
+                            </Select>
+                        </FormControl>
+                        {/* end input PaymentType */}
+                        {/* start input address */}
+                        <FormControl fullWidth>
+                            <InputLabel id="demo-simple-select-helper-label">Địa chỉ</InputLabel>
+                            <Select
+                                labelId="demo-simple-select-label"
+                                id="demo-simple-select"
+                                input={<OutlinedInput label="Địa chỉ" />}
+                                fullWidth
+                                error={errors.address ? true : false}
+                                defaultValue={''}
+                                {...register('address', {
+                                    required: 'address is required',
+                                })}
+                            >
+                                <MenuItem value={'1'}>Địa chỉ 1</MenuItem>
+                                <MenuItem value={'2'}>Địa chỉ 2</MenuItem>
+                            </Select>
+                        </FormControl>
+                        {/* end input address */}
                         {/* start input firtname */}
-                        <TextField
-                            label="First Name"
-                            type="text"
-                            fullWidth
-                            required
-                            error={errors.fName ? true : false}
-                            {...register('fName', {
-                                required: 'First Name is required',
-                            })}
+                        <Textarea
+                            register={{
+                                ...register('note'),
+                            }}
                         />
                         {/* end input firtname */}
-                        {/* start input lastname */}
-                        <TextField
-                            label="Last Name"
-                            type="text"
-                            fullWidth
-                            required
-                            error={errors.lName ? true : false}
-                            {...register('lName', {
-                                required: 'Last Name is required',
-                            })}
-                        />
-                        {/* end input lastname */}
-                        {/* start input address1 */}
-                        <TextField
-                            label="Address 1"
-                            type="text"
-                            fullWidth
-                            required
-                            error={errors.address1 ? true : false}
-                            {...register('address1', {
-                                required: 'Address is required',
-                            })}
-                            autoComplete="address"
-                        />
-                        {/* end input address1 */}
-                        {/* start input address2 */}
-                        <TextField
-                            label="Address 2"
-                            type="text"
-                            fullWidth
-                            error={errors.address2 ? true : false}
-                            {...register('address2')}
-                            autoComplete="address"
-                        />
-                        {/* end input address2 */}
                         <Button
                             style={{ background: isChecked ? 'black' : '', height: '50px' }}
                             type="submit"

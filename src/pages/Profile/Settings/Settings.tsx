@@ -12,6 +12,13 @@ import { styled } from '@mui/material/styles';
 import MuiAlert, { AlertProps } from '@mui/material/Alert';
 import Snackbar from '@mui/material/Snackbar';
 import AlertTitle from '@mui/material/AlertTitle';
+import Select from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import OutlinedInput from '@mui/material/OutlinedInput';
+
+import config from '../../../config';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -33,9 +40,8 @@ interface FormData {
     email: string;
     phone: string;
     userName: string;
-    fName: string;
-    lName: string;
-    address: string;
+    name: string;
+    gender: string;
 }
 interface FormPassWord {
     currentPassWord: string;
@@ -63,9 +69,8 @@ const Settings = () => {
             email: '',
             phone: '',
             userName: '',
-            fName: '',
-            lName: '',
-            address: '',
+            name: '',
+            gender: '',
         },
     });
     const {
@@ -183,30 +188,18 @@ const Settings = () => {
                         <div className="mb-5 font-semibold text-xl">Account settings</div>
                         <form className="space-y-6" onSubmit={handleSubmitForm1(onSubmit1)}>
                             {/* start input FullName */}
-                            <div className="grid grid-cols-2 gap-5">
-                                <InputText
-                                    labelInput="First Name"
-                                    errorInput={formStateForm1.errors.fName ? true : false}
-                                    isRequired
-                                    errorFormMessage={formStateForm1.errors.fName?.message}
-                                    register={{
-                                        ...registerForm1('fName', {
-                                            required: 'First Name is required',
-                                        }),
-                                    }}
-                                />
-                                <InputText
-                                    labelInput="Last Name"
-                                    errorInput={formStateForm1.errors.lName ? true : false}
-                                    isRequired
-                                    errorFormMessage={formStateForm1.errors.lName?.message}
-                                    register={{
-                                        ...registerForm1('lName', {
-                                            required: 'Last Name is required',
-                                        }),
-                                    }}
-                                />
-                            </div>
+                            <InputText
+                                labelInput="Name"
+                                errorInput={formStateForm1.errors.name ? true : false}
+                                isRequired
+                                errorFormMessage={formStateForm1.errors.name?.message}
+                                register={{
+                                    ...registerForm1('name', {
+                                        required: ' Name is required',
+                                    }),
+                                }}
+                            />
+
                             {/* end input FullName */}
                             {/* start input Username */}
                             <InputText
@@ -239,20 +232,26 @@ const Settings = () => {
                             />
 
                             {/* end input email */}
-                            {/* start input address */}
-                            <InputText
-                                labelInput="Address"
-                                errorInput={formStateForm1.errors.address ? true : false}
-                                isRequired
-                                errorFormMessage={formStateForm1.errors.address?.message}
-                                autoComplete="address"
-                                register={{
-                                    ...registerForm1('address', {
-                                        required: 'Address is required',
-                                    }),
-                                }}
-                            />
-                            {/* end input address */}
+                            {/* start input gender */}
+                            <FormControl fullWidth>
+                                <InputLabel id="demo-simple-select-helper-label">Giới tính</InputLabel>
+                                <Select
+                                    labelId="demo-simple-select-label"
+                                    id="demo-simple-select"
+                                    label="Age"
+                                    input={<OutlinedInput label="Giới tính" />}
+                                    fullWidth
+                                    {...registerForm1('gender', {
+                                        required: 'Gender is required',
+                                    })}
+                                    error={formStateForm1.errors.gender ? true : false}
+                                >
+                                    <MenuItem value={config.Gender.NAM}>{config.Gender.NAM}</MenuItem>
+                                    <MenuItem value={config.Gender.NU}>{config.Gender.NU}</MenuItem>
+                                    <MenuItem value={config.Gender.ORTHER}>{config.Gender.ORTHER}</MenuItem>
+                                </Select>
+                            </FormControl>
+                            {/* end input gender */}
                             {/* start input phone */}
                             <InputText
                                 labelInput="Phone must contain 10 digits"

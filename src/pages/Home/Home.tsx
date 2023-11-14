@@ -10,7 +10,6 @@ import S5BanerVideo1 from '../../assets/img/LandingPage/section-5.mp4';
 
 import ScrollAnimationElement from '../../components/ScrollAnimationElement/ScrollAnimationElement';
 import ButtonComp from '../../components/Button';
-import CardComp from '../../components/Card';
 
 import { useEffect, useRef } from 'react';
 import { Link } from 'react-router-dom';

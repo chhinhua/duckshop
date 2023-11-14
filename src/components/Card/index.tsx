@@ -14,6 +14,9 @@ import { useCallback, useState } from 'react';
 
 import config from '../../config';
 import IProduct from '../../interface/product';
+import { addToCart } from '../../apis/cartApi';
+
+import { toast } from 'react-toastify';
 
 const Card = (props: { itemProduct: IProduct }) => {
     const { itemProduct } = props;
@@ -21,9 +24,28 @@ const Card = (props: { itemProduct: IProduct }) => {
 
     // yeu thich
     const [favourite, setFavourite] = useState(false);
-    const handleAddCart = useCallback(() => {
-        // call api day vao gio hang
-        // fake
+    const handleAddCart = useCallback(async () => {
+        // call api day vao gio hang not style
+        if (itemProduct.id) {
+            const quantity: number = 1; // so luong san pham
+            const productId: number = +itemProduct.id; //id san pham
+            const valueNames: Array<string> | null = null; //style san pham
+            try {
+                const resonse = await addToCart(quantity, productId, valueNames);
+
+                if (
+                    resonse &&
+                    resonse.status === 201 &&
+                    resonse.data &&
+                    resonse.data.product &&
+                    resonse.data.product.name
+                ) {
+                    toast.success('Đã thêm vào giỏ hàng');
+                }
+            } catch {
+                toast.error('Lỗi không thêm được sản phẩm');
+            }
+        }
     }, []);
     const handleChangeFavorite = useCallback(() => {
         // call api yeu thich

@@ -1,6 +1,8 @@
 import React, { useEffect, useState } from 'react';
 
 import CardComp from '../../components/Card';
+import { getAllProductWithinPagination } from '../../apis/productApi';
+import IProduct from '../../interface/product';
 
 import Pagination from '@mui/material/Pagination';
 import Accordion from '@mui/material/Accordion';
@@ -10,15 +12,12 @@ import Typography from '@mui/material/Typography';
 import FormGroup from '@mui/material/FormGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
-
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 
-import { getAllProductWithinPagination } from '../../apis/productApi';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+
 import { toast } from 'react-toastify';
-import IProduct from '../../interface/product';
 
 const LIST_ACTION = [
     'Shoes',
@@ -45,22 +44,24 @@ function Listproducts() {
     }, []);
     // change page
     const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
-    const [page, setPage] = useState(1); // Trang hiện tại
-    const [totalPages, setTotalPages] = useState(11); // Tổng số trang
-    const [totalProducts, setTotalProducts] = useState(10); // Tổng số trang
+    const [page, setPage] = useState<number>(1); // Trang hiện tại
+    const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
+    const [totalProducts, setTotalProducts] = useState<number>(0); // Tổng số san pham
     const itemsPerPage = 8;
 
     const getAllProducts = async (pageNo: number) => {
-        await getAllProductWithinPagination(pageNo, itemsPerPage)
-            .then((response) => {
-                // setData(response.data.content);
-                // setTotalPages(response.data.totalPages);
-                // setTotalProducts(response.data.totalElements);
-                console.log('check data', response);
-            })
-            .catch((error) => {
-                toast.error(error.response?.data.message ?? 'Mất kết nối server!');
-            });
+        try {
+            const response = await getAllProductWithinPagination(pageNo, itemsPerPage);
+            const { content, totalPages, totalElements } = response.data;
+
+            setData(content);
+            setTotalPages(totalPages);
+            setTotalProducts(totalElements);
+
+            console.log('check data', response);
+        } catch (error) {
+            toast.error('Đang bảo trì quay lại sau');
+        }
     };
 
     useEffect(() => {
@@ -68,8 +69,6 @@ function Listproducts() {
     }, [page]);
 
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        console.log(event);
-
         setPage(newPage);
     };
     // handle menu
