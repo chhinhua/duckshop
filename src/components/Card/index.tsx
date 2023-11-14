@@ -1,5 +1,3 @@
-// import Image from '../Image';
-// import ButtonComp from '../Button';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import Favorite from '@mui/icons-material/Favorite';
@@ -9,14 +7,13 @@ import CardMedia from '@mui/material/CardMedia';
 import Button from '@mui/material/Button';
 import Box from '@mui/material/Box';
 import Rating from '@mui/material/Rating';
+
+import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
 
 import config from '../../config';
 import IProduct from '../../interface/product';
-import { addToCart } from '../../apis/cartApi';
-
-import { toast } from 'react-toastify';
 
 const Card = (props: { itemProduct: IProduct }) => {
     const { itemProduct } = props;
@@ -24,29 +21,6 @@ const Card = (props: { itemProduct: IProduct }) => {
 
     // yeu thich
     const [favourite, setFavourite] = useState(false);
-    const handleAddCart = useCallback(async () => {
-        // call api day vao gio hang not style
-        if (itemProduct.id) {
-            const quantity: number = 1; // so luong san pham
-            const productId: number = +itemProduct.id; //id san pham
-            const valueNames: Array<string> | null = null; //style san pham
-            try {
-                const resonse = await addToCart(quantity, productId, valueNames);
-
-                if (
-                    resonse &&
-                    resonse.status === 201 &&
-                    resonse.data &&
-                    resonse.data.product &&
-                    resonse.data.product.name
-                ) {
-                    toast.success('Đã thêm vào giỏ hàng');
-                }
-            } catch {
-                toast.error('Lỗi không thêm được sản phẩm');
-            }
-        }
-    }, []);
     const handleChangeFavorite = useCallback(() => {
         // call api yeu thich
 
@@ -55,11 +29,15 @@ const Card = (props: { itemProduct: IProduct }) => {
     }, [favourite]);
     // chi tiet san pham
     const handleNextDetailPage = () => {
-        navigate(`${config.Routes.detailProduct}#${itemProduct.id}`);
+        if (itemProduct.id) {
+            navigate(`${config.Routes.detailProduct}#${itemProduct.id}`);
+        } else {
+            toast.error('Đang bảo trì');
+        }
     };
     return (
         <div className="shadow-lg p-2 rounded-lg">
-            <div onClick={handleNextDetailPage}>
+            <div onClick={handleNextDetailPage} className="cursor-pointer">
                 <Box
                     sx={{
                         height: 270, // Chiều cao cố định
@@ -91,7 +69,7 @@ const Card = (props: { itemProduct: IProduct }) => {
                 </div>
             </CardContent>
             <CardActions>
-                <Button fullWidth variant="outlined" onClick={handleAddCart}>
+                <Button fullWidth variant="outlined" onClick={handleNextDetailPage}>
                     <ShoppingCart />
                 </Button>
                 <Button onClick={handleChangeFavorite}>

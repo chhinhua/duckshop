@@ -1,8 +1,9 @@
 import { SetStateAction, useEffect, useState } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
+import { toast } from 'react-toastify';
 
 import IconButton from '@mui/material/IconButton';
 import Button from '@mui/material/Button';
-import { styled } from '@mui/material/styles';
 import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
@@ -16,53 +17,82 @@ import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
 import Typography from '@mui/material/Typography';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-
 import NavigateBefore from '@mui/icons-material/NavigateBefore';
 import NavigateNext from '@mui/icons-material/NavigateNext';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
-import { useLocation } from 'react-router-dom';
+
 import { getSingleProduct } from '../../apis/productApi';
 import IProduct from '../../interface/product';
-import { toast } from 'react-toastify';
 
-const BootstrapButton = styled(Button)({
-    backgroundColor: 'transparent',
-    borderColor: '#B9B4C7',
-    color: '#000',
-    '&:hover': {
-        boxShadow: 'none',
-        backgroundColor: 'transparent',
-    },
-    '&:active': {
-        boxShadow: 'none',
-        borderColor: '#000',
-    },
-    '&:focus': {
-        boxShadow: '0 0 0 0.2rem rgba(0,0,0,.15)',
-    },
-});
+import BootstrapButton from './BootstrapButton';
+import config from '../../config';
+import { addToCart } from '../../apis/cartApi';
+import OutlinedInput from '@mui/material/OutlinedInput';
 
 const DetailProduct = () => {
+    const navigate = useNavigate();
     // handle get id
     const location = useLocation();
     const idProduct = location.hash.substring(1);
     // handle data
     const [product, setProduct] = useState<IProduct>(); // Dữ liệu từ API
 
-    const getProduct = async (id: string) => {
-        await getSingleProduct(id)
-            .then((response) => {
-                setProduct(response.data);
+    const getProduct = async (id: number) => {
+        try {
+            if (idProduct && !isNaN(+idProduct)) {
+                // tồn tai ma san pham và phải là số
+                const response = await getSingleProduct(id);
 
-                console.log('check data', response.data);
-            })
-            .catch((error) => {
-                toast.error(error.response?.data.message ?? 'Mất kết nối server!');
-            });
+                if (response && response.data) {
+                    setProduct(response.data);
+                }
+                if (response.status !== 200) {
+                    toast.error(response.data.message);
+                    navigate(config.Routes.listProducts);
+                }
+            } else {
+                navigate(config.Routes.listProducts);
+            }
+        } catch {
+            toast.error('Đang bảo trì');
+        }
     };
     useEffect(() => {
-        getProduct(idProduct);
-    }, []);
+        getProduct(+idProduct);
+    }, [idProduct]);
+
+    //  handle size, color
+    const [color, setColor] = useState<string>('');
+    const [size, setSize] = useState<string>('');
+
+    const handleChangeSize = (event: { target: { value: SetStateAction<string> } }) => {
+        setSize(event.target.value);
+    };
+
+    // handle handleAddCart
+    const handleAddCart = async () => {
+        // call api day vao gio hang  style
+        if (idProduct) {
+            const quantity: number = 1; // so luong san pham
+            const productId: number = +idProduct; //id san pham
+            const valueNames: Array<string> | null = [color, size]; //style san pham
+            try {
+                const resonse = await addToCart(quantity, productId, valueNames);
+
+                if (
+                    resonse &&
+                    resonse.status === 201 &&
+                    resonse.data &&
+                    resonse.data.product &&
+                    resonse.data.product.name
+                ) {
+                    toast.success('Đã thêm vào giỏ hàng');
+                }
+            } catch {
+                toast.error('Lỗi không thêm được sản phẩm');
+            }
+        }
+    };
 
     // handle image
     const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
@@ -88,15 +118,10 @@ const DetailProduct = () => {
         setPicColor('');
         setCurrentImageIndex(index);
     };
-    const handleChangePicColor = (pic: string) => {
-        setPicColor(pic);
-    };
-
-    //  handle size
-    const [size, setSize] = useState<string>('');
-
-    const handleChangeSize = (event: { target: { value: SetStateAction<string> } }) => {
-        setSize(event.target.value);
+    // handle change color imgColor
+    const handleChangePicColor = (pic: { valueName: string; imageUrl: string }) => {
+        setPicColor(pic.imageUrl);
+        setColor(pic.valueName);
     };
 
     return (
@@ -137,13 +162,13 @@ const DetailProduct = () => {
                     <div className="text-xl not-italic font-medium">{product?.name}</div>
                     <div className="text-base not-italic font-medium">{product?.price} VNĐ</div>
 
+                    {/* start list color */}
                     <div className="mt-10">
                         <span>Chọn Màu</span>
                     </div>
-
                     <div className="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-2 xl:grid-cols-3 gap-2">
                         {product?.options[0].values.map((item, index) => (
-                            <BootstrapButton key={index} onClick={() => handleChangePicColor(item.imageUrl)}>
+                            <BootstrapButton key={index} onClick={() => handleChangePicColor(item)}>
                                 <Card
                                     key={index}
                                     sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
@@ -161,24 +186,32 @@ const DetailProduct = () => {
                             </BootstrapButton>
                         ))}
                     </div>
+                    {/* end list color */}
 
-                    <div className="mt-10">
+                    {/* start sỉze */}
+                    <div className="mt-10 mb-2">
                         <span>Chọn Size</span>
                     </div>
-                    <FormControl sx={{ my: 1, width: '100%' }}>
-                        <InputLabel id="demo-simple-select-autowidth-label">Size</InputLabel>
-                        <Select value={size} onChange={handleChangeSize} label="Age">
-                            <MenuItem value="">
-                                <em>None</em>
-                            </MenuItem>
+                    <FormControl fullWidth>
+                        <InputLabel id="demo-simple-select-helper-label">Kích cỡ</InputLabel>
+                        <Select
+                            labelId="demo-simple-select-label"
+                            id="demo-simple-select"
+                            input={<OutlinedInput label="Kích cỡ" />}
+                            fullWidth
+                            value={size}
+                            onChange={handleChangeSize}
+                        >
                             {product?.options[1].values.map((item, index) => (
-                                <MenuItem key={index} value={item.valueId}>
+                                <MenuItem key={index} value={item.valueName}>
                                     {item.valueName}
                                 </MenuItem>
                             ))}
                         </Select>
                     </FormControl>
-                    <Button fullWidth variant="contained" sx={{ height: 50 }}>
+                    {/* end sỉze */}
+
+                    <Button fullWidth variant="contained" sx={{ height: 50, marginTop: 2 }} onClick={handleAddCart}>
                         <ShoppingCart />
                     </Button>
                     <div className="pt-10">

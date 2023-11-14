@@ -11,7 +11,7 @@ export const getAllProductWithinPagination = async (pageNo: number, pageSize: nu
     }
 };
 
-export const getSingleProduct = async (id: string) => {
+export const getSingleProduct = async (id: number) => {
     try {
         const response = await axios.get(`/products/${id}`);
 
