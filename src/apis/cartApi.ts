@@ -13,6 +13,7 @@ export const addToCart = async (quantity: number, productId: number, valueNames:
         throw error;
     }
 };
+
 export const getCartByToken = async () => {
     try {
         const response = await axios.get(`/cart`);
@@ -21,7 +22,14 @@ export const getCartByToken = async () => {
         throw error;
     }
 };
-
+export const getCountOfItems = async () => {
+    try {
+        const response = await axios.get(`/cart/items/count`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
 export const clearAllCartItemForSignedInUser = async () => {
     try {
         const response = await axios.delete(`/cart/clear`);

@@ -12,6 +12,8 @@ import { useEffect } from 'react';
 
 import { useAppDispatch } from '../../redux/hook';
 import { setInfoUser, setIsLogin } from './loginSlice';
+import { getCountOfItems } from '../../apis/cartApi';
+import { setToTalProductCart } from '../Cart/totalProducCartSlice';
 
 type FormData = {
     email: string;
@@ -26,11 +28,13 @@ const LogIn = () => {
 
     const {
         register,
-        // setValue,
         handleSubmit,
         formState: { errors },
     } = useForm<FormData>({
-        defaultValues: {},
+        defaultValues: {
+            email: '',
+            passWord: '',
+        },
     });
     // handle successful login
     useEffect(() => {
@@ -42,25 +46,41 @@ const LogIn = () => {
     }, []);
 
     const onSubmit: SubmitHandler<FormData> = async (data: FormData) => {
-        const response = await loginApi(data.email, data.passWord);
-        console.log(response);
-
-        if (response && response.data && response.data.jwt) {
-            toast.success('Đăng nhập thành công');
-            // set redux
-            dispatch(setIsLogin(true));
-            dispatch(setInfoUser({ userNameUser: response.data.user.username, idUser: response.data.user.id }));
-            // chuyen next page home
-            navigate('/');
-        }
-        // error
-        if (response.data.message === MESS_XACTHUC) {
-            toast.error(response.data.message);
-            navigate(config.Routes.getOTPLogIn);
+        const regexEmailOrUserName = /^(?=.*[A-Za-z0-9])[A-Za-z0-9@._-]{4,}$/;
+        const regexPass = /^[a-zA-Z0-9]{8,}$/;
+        if (!regexEmailOrUserName.test(data.email)) {
+            toast.error('Email chưa đúng định dạng');
+        } else if (!regexPass.test(data.passWord)) {
+            toast.error('Mật khẩu phải trên 8 kí tự và không chứa kí tự đặc biệt');
         } else {
-            if (response && response.status) {
-                toast.error(response.data.message);
+            const response = await loginApi(data.email, data.passWord);
+
+            if (response?.data?.jwt) {
+                toast.success('Đăng nhập thành công');
+                // set redux
+                dispatch(setIsLogin(true));
+                dispatch(setInfoUser({ userNameUser: response.data.user.username, idUser: response.data.user.id }));
+                getTotalItemOfCart();
+                // chuyen next page home
+                navigate('/');
             }
+            // error
+            if (response.data.message === MESS_XACTHUC) {
+                toast.error(response.data.message);
+                navigate(config.Routes.getOTPLogIn);
+            } else {
+                if (response && response.status) {
+                    toast.error(response.data.message);
+                }
+            }
+        }
+    };
+
+    // handle số lượng sản phẩm trong giỏ hàng
+    const getTotalItemOfCart = async () => {
+        const totalProductInCart = await getCountOfItems();
+        if (totalProductInCart.status === 200) {
+            dispatch(setToTalProductCart(+totalProductInCart.data));
         }
     };
 
@@ -84,7 +104,6 @@ const LogIn = () => {
                                 register={{
                                     ...register('email', {
                                         required: 'email is required',
-                                        pattern: /^(?=.*[A-Za-z0-9])[A-Za-z0-9@._-]{4,}$/,
                                     }),
                                 }}
                                 autoComplete="username"
@@ -101,7 +120,6 @@ const LogIn = () => {
                                 register={{
                                     ...register('passWord', {
                                         required: 'passWord is required',
-                                        pattern: /^[a-zA-Z0-9]{8,}$/,
                                     }),
                                 }}
                                 autoComplete="password"

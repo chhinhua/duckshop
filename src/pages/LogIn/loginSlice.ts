@@ -15,11 +15,16 @@ const initialState: IInitialStateLogin = {
     idUser: '',
     userNameUser: '',
 };
-// Thêm vào hàm reducer để cập nhật state từ giá trị được lưu trữ
+// Lấy giá trị khi có từ localStorage
 const savedIsLogin = localStorage.getItem('isLogin');
-
+const savedInfoUser = localStorage.getItem('infoUser');
 if (savedIsLogin) {
     initialState.isLogin = JSON.parse(savedIsLogin);
+}
+if (savedInfoUser) {
+    const dataInfo = JSON.parse(savedInfoUser);
+    initialState.idUser = dataInfo.idUser;
+    initialState.userNameUser = dataInfo.userName;
 }
 
 export const loginSlice = createSlice({

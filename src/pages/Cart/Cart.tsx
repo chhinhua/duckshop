@@ -20,7 +20,13 @@ import { changeItemQuantity, deleteCartItemByID } from '../../apis/cartItemApi';
 import QuantityProduct from './QuantityProduct';
 import DeleteProduct from './DeleteProduct';
 
+import { getCountOfItems } from '../../apis/cartApi';
+import { useDispatch } from 'react-redux';
+import { setToTalProductCart } from './totalProducCartSlice';
+
 const Cart = () => {
+    const dispatch = useDispatch();
+
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [listProduct, setListProduct] = useState<Array<productCart>>([]);
@@ -47,6 +53,7 @@ const Cart = () => {
     };
     const handleDeleteProduct = async (idItemInCart: number) => {
         const response = await deleteCartItemByID(idItemInCart);
+        getTotalItemOfCart();
         if (response.status === 200) {
             toast.success(response.data);
         } else {
@@ -55,6 +62,13 @@ const Cart = () => {
         setIsLoading((prev) => !prev);
     };
 
+    // handle số lượng sản phẩm trong giỏ hàng
+    const getTotalItemOfCart = async () => {
+        const totalProductInCart = await getCountOfItems();
+        if (totalProductInCart.status === 200) {
+            dispatch(setToTalProductCart(+totalProductInCart.data));
+        }
+    };
     return (
         <div className="w-11/12 m-auto pt-32">
             <div className="grid grid-cols-12 gap-2">

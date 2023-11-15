@@ -25,11 +25,14 @@ import IProduct from '../../interface/product';
 
 import BootstrapButton from './BootstrapButton';
 import config from '../../config';
-import { addToCart } from '../../apis/cartApi';
+import { addToCart, getCountOfItems } from '../../apis/cartApi';
 import OutlinedInput from '@mui/material/OutlinedInput';
 import Image from '../../components/Image';
+import { useDispatch } from 'react-redux';
+import { setToTalProductCart } from '../Cart/totalProducCartSlice';
 
 const DetailProduct = () => {
+    const dispatch = useDispatch();
     const navigate = useNavigate();
     // handle get id
     const location = useLocation();
@@ -78,6 +81,12 @@ const DetailProduct = () => {
             const valueNames: Array<string> = [color, size]; //style san pham
             try {
                 const resonse = await addToCart(quantity, productId, valueNames);
+                // handle số lượng sản phẩm trong giỏ hàng
+                getTotalItemOfCart();
+
+                // handle defaut value
+                setSize('');
+                setColor('');
 
                 if (resonse?.status === 201 && resonse?.data?.product?.name) {
                     toast.success('Đã thêm vào giỏ hàng');
@@ -87,6 +96,13 @@ const DetailProduct = () => {
             } catch {
                 toast.error('Lỗi không thêm được sản phẩm');
             }
+        }
+    };
+    // handle số lượng sản phẩm trong giỏ hàng
+    const getTotalItemOfCart = async () => {
+        const totalProductInCart = await getCountOfItems();
+        if (totalProductInCart.status === 200) {
+            dispatch(setToTalProductCart(+totalProductInCart.data));
         }
     };
 

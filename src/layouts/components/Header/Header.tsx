@@ -14,29 +14,32 @@ import Popper from '@mui/material/Popper';
 import { Link, useNavigate } from 'react-router-dom';
 import config from '../../../config';
 
-import { useAppDispatch } from '../../../redux/hook';
-import { setIsLogin } from '../../../pages/LogIn/loginSlice';
+import { useAppDispatch, useAppSelector } from '../../../redux/hook';
+import { selectIsLogin, setIsLogin } from '../../../pages/LogIn/loginSlice';
+import { selectToTalProductCart } from '../../../pages/Cart/totalProducCartSlice';
 
 function Header() {
-    const [checkLogin, setCheckLogin] = useState<boolean>(false);
     const dispatch = useAppDispatch();
-
-    // handle logged
     const navaigate = useNavigate();
 
+    // handle logged
     const handleLogout = () => {
         localStorage.removeItem('accessToken');
         localStorage.removeItem('tokenType');
         localStorage.removeItem('infoUser');
+        localStorage.removeItem('totalProductInCart');
         dispatch(setIsLogin(false));
         navaigate('/');
         handlePopoverClose();
     };
+    // check total product in cart
+    const totalProductCart = useAppSelector(selectToTalProductCart);
 
     // check login
-    const check = localStorage.getItem('isLogin');
+    const [checkLogin, setCheckLogin] = useState<boolean>(false);
+    const check = useAppSelector(selectIsLogin);
     useEffect(() => {
-        check === 'true' ? setCheckLogin(true) : setCheckLogin(false);
+        check ? setCheckLogin(true) : setCheckLogin(false);
     }, [check]);
 
     // handle scroll to fix header
@@ -93,6 +96,21 @@ function Header() {
                     <div className="flex justify-end items-center md:gap-3 gap-0 col-span-1">
                         {checkLogin ? (
                             <>
+                                <Link to={config.Routes.cart}>
+                                    <IconButton aria-label="cart">
+                                        <Badge
+                                            badgeContent={totalProductCart}
+                                            color="secondary"
+                                            anchorOrigin={{
+                                                vertical: 'top',
+                                                horizontal: 'right',
+                                            }}
+                                            overlap="circular"
+                                        >
+                                            <ShoppingCartIcon />
+                                        </Badge>
+                                    </IconButton>
+                                </Link>
                                 <IconButton onClick={handlePopoverToggle}>
                                     <Avatar alt="Đức" sx={{ width: 32, height: 32 }} />
                                 </IconButton>
@@ -117,21 +135,6 @@ function Header() {
                                         </div>
                                     </div>
                                 </Popper>
-                                <Link to={config.Routes.cart}>
-                                    <IconButton aria-label="cart">
-                                        <Badge
-                                            badgeContent={1}
-                                            color="secondary"
-                                            anchorOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            overlap="circular"
-                                        >
-                                            <ShoppingCartIcon />
-                                        </Badge>
-                                    </IconButton>
-                                </Link>
                             </>
                         ) : (
                             <>
