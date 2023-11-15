@@ -3,15 +3,17 @@ import Add from '@mui/icons-material/Add';
 import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
 
 interface IProps {
-    value: number;
+    valueQuantity: number;
+    idItem: number;
+    handleChangeItemQuantity: (idItemInCart: number, quantity: number) => Promise<void>;
 }
 
 const QuantityProduct = (props: IProps) => {
-    const { value } = props;
-    const [quantity, setQuantity] = useState<number>(value);
+    const { valueQuantity, idItem, handleChangeItemQuantity } = props;
+    const [quantity, setQuantity] = useState<number>(valueQuantity);
     //  change quantity
     const handleDecrease = useCallback(() => {
         setQuantity((prev) => {
@@ -28,6 +30,10 @@ const QuantityProduct = (props: IProps) => {
     const handleChange = useCallback((e: { target: { value: string } }) => {
         setQuantity(+e.target.value);
     }, []);
+
+    useEffect(() => {
+        handleChangeItemQuantity(idItem, quantity);
+    }, [quantity]);
     return (
         <div className="flex">
             <Button variant="text" onClick={handleDecrease}>

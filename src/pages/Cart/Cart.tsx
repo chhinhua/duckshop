@@ -5,9 +5,7 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
-import IconButton from '@mui/material/IconButton';
 
-import DeleteIcon from '@mui/icons-material/Delete';
 import Image from '../../components/Image';
 import Button from '@mui/material/Button';
 import { Link } from 'react-router-dom';
@@ -19,12 +17,16 @@ import React from 'react';
 import { toast } from 'react-toastify';
 
 import QuantityProduct from './QuantityProduct';
+import { changeItemQuantity, deleteCartItemByID } from '../../apis/cartItemApi';
+import DeleteProduct from './DeleteProduct';
 
 const Cart = () => {
+    const [isLoading, setIsLoading] = useState<boolean>(true);
     const [totalPrice, setTotalPrice] = useState<number>(0);
     const [listProduct, setListProduct] = useState<Array<productCart>>([]);
     const getListProduct = async () => {
         const response = await getCartByToken();
+
         if (response.status === 200) {
             setListProduct(response?.data?.cartItems);
             setTotalPrice(response?.data?.totalPrice);
@@ -33,8 +35,31 @@ const Cart = () => {
         }
     };
     useEffect(() => {
-        getListProduct();
-    }, []);
+        if (isLoading) {
+            getListProduct();
+        }
+
+        return () => {
+            setIsLoading(false);
+        };
+    }, [isLoading]);
+
+    const handleChangeItemQuantity = async (idItemInCart: number, quantity: number) => {
+        const response = await changeItemQuantity(idItemInCart, quantity);
+        if (response.status !== 200) {
+            toast.error(response.data.message);
+        }
+        setIsLoading(true);
+    };
+    const handleDeleteProduct = async (idItemInCart: number) => {
+        const response = await deleteCartItemByID(idItemInCart);
+        if (response.status === 200) {
+            toast.success(response.data);
+        } else {
+            toast.error(response.data.message);
+        }
+        setIsLoading(true);
+    };
 
     return (
         <div className="w-11/12 m-auto pt-32">
@@ -86,13 +111,18 @@ const Cart = () => {
                                                 </span>
                                             </TableCell>
                                             <TableCell align="center">
-                                                <QuantityProduct value={item.quantity} />
+                                                <QuantityProduct
+                                                    valueQuantity={item.quantity}
+                                                    idItem={item.id}
+                                                    handleChangeItemQuantity={handleChangeItemQuantity}
+                                                />
                                             </TableCell>
                                             <TableCell align="left">{item.subTotal.toLocaleString('vi-VN')}</TableCell>
                                             <TableCell align="left">
-                                                <IconButton aria-label="delete">
-                                                    <DeleteIcon />
-                                                </IconButton>
+                                                <DeleteProduct
+                                                    idItem={item.id}
+                                                    handleDeleteProduct={handleDeleteProduct}
+                                                />
                                             </TableCell>
                                         </TableRow>
                                     ))}
