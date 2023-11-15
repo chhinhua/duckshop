@@ -174,27 +174,6 @@ const DetailProduct = () => {
                     <div className="text-xl not-italic font-medium">{product?.name}</div>
                     <div className="text-base not-italic font-medium">{product?.price} VNĐ</div>
 
-                    {/* start list color */}
-                    <div className="mt-10">
-                        <span>Chọn Màu</span>
-                    </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-2 xl:grid-cols-3 gap-2">
-                        {product?.options[0].values.map((item, index) => (
-                            <BootstrapButton key={index} onClick={() => handleChangePicColor(item)}>
-                                <Card
-                                    key={index}
-                                    sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
-                                >
-                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <CardContent>{item.valueName}</CardContent>
-                                    </Box>
-                                    <Image className="h-16" src={item.imageUrl} alt={item.valueName} />
-                                </Card>
-                            </BootstrapButton>
-                        ))}
-                    </div>
-                    {/* end list color */}
-
                     {/* start sỉze */}
                     <div className="mt-10 mb-2">
                         <span>Chọn Size</span>
@@ -217,8 +196,34 @@ const DetailProduct = () => {
                         </Select>
                     </FormControl>
                     {/* end sỉze */}
+                    {/* start list color */}
+                    <div className="mt-10">
+                        <span>Chọn Màu</span>
+                    </div>
+                    <div className="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-2 xl:grid-cols-3 gap-2">
+                        {product?.options[0].values.map((item, index) => (
+                            <BootstrapButton key={index} onClick={() => handleChangePicColor(item)}>
+                                <Card
+                                    key={index}
+                                    sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
+                                >
+                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <CardContent>{item.valueName}</CardContent>
+                                    </Box>
+                                    <Image className="h-16" src={item.imageUrl} alt={item.valueName} />
+                                </Card>
+                            </BootstrapButton>
+                        ))}
+                    </div>
+                    {/* end list color */}
 
-                    <Button fullWidth variant="contained" sx={{ height: 50, marginTop: 2 }} onClick={handleAddCart}>
+                    <Button
+                        disabled={color && size ? false : true}
+                        fullWidth
+                        variant="contained"
+                        sx={{ height: 50, marginTop: 2 }}
+                        onClick={handleAddCart}
+                    >
                         <ShoppingCart />
                     </Button>
                     <div className="pt-10">

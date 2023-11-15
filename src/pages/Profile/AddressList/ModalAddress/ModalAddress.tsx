@@ -1,10 +1,14 @@
-import InputText from '../../../../components/InputText/InputText';
-
-import { useForm, SubmitHandler } from 'react-hook-form';
-
 import Box from '@mui/material/Box';
 import Modal from '@mui/material/Modal';
 import Button from '@mui/material/Button';
+
+import { useForm, SubmitHandler } from 'react-hook-form';
+import { toast } from 'react-toastify';
+
+import IAddress from '../../../../interface/address';
+import { addNewAddressForCurrentUser, getOneAddressByAddressID } from '../../../../apis/addressApi';
+import InputText from '../../../../components/InputText/InputText';
+import { useEffect } from 'react';
 
 const style = {
     position: 'absolute',
@@ -19,45 +23,50 @@ const style = {
     p: 4,
 };
 
-interface Address {
-    fullName: string;
-    phoneNumber: string;
-    city: string;
-    district: string;
-    ward: string;
-    other_details: string;
-    is_default?: boolean;
-}
-
 interface IPropsAddress {
     open: boolean;
     handleClose: () => void;
+    idAddressUpdate: number | null;
 }
 
 const ModalAddress = (propsCh: IPropsAddress) => {
-    const { open, handleClose } = propsCh;
+    const { open, handleClose, idAddressUpdate } = propsCh;
+    // get info address
+    const handleGetInfoAddress = async () => {
+        if (idAddressUpdate !== null) {
+            const response = await getOneAddressByAddressID(idAddressUpdate);
+            setValue('fullName', response.data.fullName);
+            setValue('phoneNumber', response.data.phoneNumber);
+            setValue('city', response.data.city);
+            setValue('district', response.data.district);
+            setValue('ward', response.data.ward);
+            setValue('orderDetails', response.data.orderDetails);
+        }
+    };
+    useEffect(() => {
+        if (idAddressUpdate !== null) {
+            handleGetInfoAddress();
+        }
+    }, []);
     // form
     const {
         register: registerForm,
         handleSubmit: handleSubmitForm,
         formState: formStateForm,
-    } = useForm<Address>({
-        defaultValues: {
-            fullName: '',
-            phoneNumber: '',
-            city: '',
-            district: '',
-            ward: '',
-            other_details: '',
-        },
+        setValue,
+    } = useForm<IAddress>({
+        defaultValues: {},
     });
-    const onSubmit: SubmitHandler<Address> = (data) => {
-        console.log(data);
-
+    const onSubmit: SubmitHandler<IAddress> = async (data) => {
         //  call api doi update thong tin
-        //
-        //
-
+        const response = await addNewAddressForCurrentUser(data);
+        if (response) {
+            if (response.status === 200) {
+                toast.success('Thêm thành công');
+            } else {
+                toast.error(response.data.message);
+            }
+        }
         handleClose();
     };
     return (
@@ -128,12 +137,12 @@ const ModalAddress = (propsCh: IPropsAddress) => {
                         />
                         <InputText
                             labelInput="Địa chỉ cụ thể"
-                            errorInput={formStateForm.errors.other_details ? true : false}
+                            errorInput={formStateForm.errors.orderDetails ? true : false}
                             isRequired
-                            errorFormMessage={formStateForm.errors.other_details?.message}
+                            errorFormMessage={formStateForm.errors.orderDetails?.message}
                             register={{
-                                ...registerForm('other_details', {
-                                    required: 'other_details is required',
+                                ...registerForm('orderDetails', {
+                                    required: 'orderDetails is required',
                                 }),
                             }}
                             autoComplete="street-address"
