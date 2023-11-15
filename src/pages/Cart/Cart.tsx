@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import Image from '../../components/Image';
 import config from '../../config';
 import { getCartByToken } from '../../apis/cartApi';
-import productCart from '../../interface/productCart';
+import IProductCart from '../../interface/IProductCart';
 import { changeItemQuantity, deleteCartItemByID } from '../../apis/cartItemApi';
 
 import QuantityProduct from './QuantityProduct';
@@ -29,7 +29,7 @@ const Cart = () => {
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
     const [totalPrice, setTotalPrice] = useState<number>(0);
-    const [listProduct, setListProduct] = useState<Array<productCart>>([]);
+    const [listProduct, setListProduct] = useState<Array<IProductCart>>([]);
     const getListProduct = async () => {
         const response = await getCartByToken();
 

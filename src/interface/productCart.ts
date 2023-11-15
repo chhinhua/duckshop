@@ -15,7 +15,7 @@ export interface ISku {
     optionValues: Array<IValue>;
 }
 
-export default interface productCart {
+export default interface IProductCart {
     cartId: number;
     id: number;
     imageUrl: string;
