@@ -5,19 +5,19 @@ import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import Paper from '@mui/material/Paper';
+import Button from '@mui/material/Button';
+
+import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
 
 import Image from '../../components/Image';
-import Button from '@mui/material/Button';
-import { Link } from 'react-router-dom';
 import config from '../../config';
-import { useEffect, useState } from 'react';
 import { getCartByToken } from '../../apis/cartApi';
 import productCart from '../../interface/productCart';
-import React from 'react';
-import { toast } from 'react-toastify';
+import { changeItemQuantity, deleteCartItemByID } from '../../apis/cartItemApi';
 
 import QuantityProduct from './QuantityProduct';
-import { changeItemQuantity, deleteCartItemByID } from '../../apis/cartItemApi';
 import DeleteProduct from './DeleteProduct';
 
 const Cart = () => {
@@ -35,13 +35,7 @@ const Cart = () => {
         }
     };
     useEffect(() => {
-        if (isLoading) {
-            getListProduct();
-        }
-
-        return () => {
-            setIsLoading(false);
-        };
+        getListProduct();
     }, [isLoading]);
 
     const handleChangeItemQuantity = async (idItemInCart: number, quantity: number) => {
@@ -49,7 +43,7 @@ const Cart = () => {
         if (response.status !== 200) {
             toast.error(response.data.message);
         }
-        setIsLoading(true);
+        setIsLoading((prev) => !prev);
     };
     const handleDeleteProduct = async (idItemInCart: number) => {
         const response = await deleteCartItemByID(idItemInCart);
@@ -58,7 +52,7 @@ const Cart = () => {
         } else {
             toast.error(response.data.message);
         }
-        setIsLoading(true);
+        setIsLoading((prev) => !prev);
     };
 
     return (
@@ -82,7 +76,7 @@ const Cart = () => {
                                     <TableRow>
                                         <TableCell></TableCell>
                                         <TableCell align="left">Tên</TableCell>
-                                        <TableCell align="left">Số lượng</TableCell>
+                                        <TableCell align="center">Số lượng</TableCell>
                                         <TableCell align="left">Giá</TableCell>
                                         <TableCell></TableCell>
                                     </TableRow>

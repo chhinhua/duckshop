@@ -1,6 +1,5 @@
 import HorizontalRule from '@mui/icons-material/HorizontalRule';
 import Add from '@mui/icons-material/Add';
-import TextField from '@mui/material/TextField';
 import Button from '@mui/material/Button';
 
 import { useCallback, useEffect, useState } from 'react';
@@ -14,11 +13,12 @@ interface IProps {
 const QuantityProduct = (props: IProps) => {
     const { valueQuantity, idItem, handleChangeItemQuantity } = props;
     const [quantity, setQuantity] = useState<number>(valueQuantity);
+    const [disableDecrease, setDisableDecrease] = useState<boolean>(true);
     //  change quantity
     const handleDecrease = useCallback(() => {
         setQuantity((prev) => {
             if (prev - 1 <= 0) {
-                return 0;
+                return prev;
             } else {
                 return prev - 1;
             }
@@ -33,19 +33,14 @@ const QuantityProduct = (props: IProps) => {
 
     useEffect(() => {
         handleChangeItemQuantity(idItem, quantity);
+        quantity <= 1 ? setDisableDecrease(false) : setDisableDecrease(true);
     }, [quantity]);
     return (
         <div className="flex">
-            <Button variant="text" onClick={handleDecrease}>
+            <Button variant="text" onClick={handleDecrease} disabled={disableDecrease ? false : true}>
                 <HorizontalRule fontSize="small" />
             </Button>
-            <TextField
-                variant="outlined"
-                sx={{ maxWidth: '80px' }}
-                size="small"
-                value={quantity}
-                onChange={handleChange}
-            />
+            <input className="rounded border-2 h-10 w-14 text-center" value={quantity} onChange={handleChange} />
             <Button variant="text" onClick={handleIncrease}>
                 <Add fontSize="small" />
             </Button>

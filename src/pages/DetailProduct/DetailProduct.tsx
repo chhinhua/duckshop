@@ -11,7 +11,6 @@ import Select from '@mui/material/Select';
 import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
 import CardContent from '@mui/material/CardContent';
-import CardMedia from '@mui/material/CardMedia';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -28,6 +27,7 @@ import BootstrapButton from './BootstrapButton';
 import config from '../../config';
 import { addToCart } from '../../apis/cartApi';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import Image from '../../components/Image';
 
 const DetailProduct = () => {
     const navigate = useNavigate();
@@ -75,18 +75,14 @@ const DetailProduct = () => {
         if (idProduct) {
             const quantity: number = 1; // so luong san pham
             const productId: number = +idProduct; //id san pham
-            const valueNames: Array<string> | null = [color, size]; //style san pham
+            const valueNames: Array<string> = [color, size]; //style san pham
             try {
                 const resonse = await addToCart(quantity, productId, valueNames);
 
-                if (
-                    resonse &&
-                    resonse.status === 201 &&
-                    resonse.data &&
-                    resonse.data.product &&
-                    resonse.data.product.name
-                ) {
+                if (resonse?.status === 201 && resonse?.data?.product?.name) {
                     toast.success('Đã thêm vào giỏ hàng');
+                } else {
+                    toast.success(resonse.data.message);
                 }
             } catch {
                 toast.error('Lỗi không thêm được sản phẩm');
@@ -96,7 +92,7 @@ const DetailProduct = () => {
 
     // handle image
     const [currentImageIndex, setCurrentImageIndex] = useState<number>(0);
-    const [picColor, setPicColor] = useState<string>();
+    const [picColor, setPicColor] = useState<string>('');
     const images = product?.listImages || [];
 
     const handleNextClick = () => {
@@ -143,7 +139,7 @@ const DetailProduct = () => {
                 {/* Start image product */}
                 <div className="col-span-12 md:col-span-6 relative flex gap-1">
                     <div
-                        className="w-full h-144 bg-cover bg-no-repeat bg-center relative rounded-md"
+                        className="w-full h-144 bg-cover bg-no-repeat bg-center relative rounded-md border-2"
                         style={{ backgroundImage: picColor ? `url(${picColor})` : `url(${images[currentImageIndex]})` }}
                     >
                         <div className="w-full flex justify-end ">
@@ -151,7 +147,7 @@ const DetailProduct = () => {
                                 <NavigateBefore className="bg-white rounded-full" sx={{ fontSize: 35 }} />
                             </IconButton>
                             <IconButton onClick={handleNextClick}>
-                                <NavigateNext className="bg-white rounded-full text-lg" sx={{ fontSize: 35 }} />
+                                <NavigateNext className="bg-white rounded-full" sx={{ fontSize: 35 }} />
                             </IconButton>
                         </div>
                     </div>
@@ -176,12 +172,7 @@ const DetailProduct = () => {
                                     <Box sx={{ display: 'flex', flexDirection: 'column' }}>
                                         <CardContent>{item.valueName}</CardContent>
                                     </Box>
-                                    <CardMedia
-                                        component="img"
-                                        sx={{ width: 70 }}
-                                        image={item.imageUrl || null}
-                                        alt={item.valueId}
-                                    />
+                                    <Image className="h-16" src={item.imageUrl} alt={item.valueName} />
                                 </Card>
                             </BootstrapButton>
                         ))}

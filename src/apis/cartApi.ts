@@ -1,7 +1,7 @@
 /* eslint-disable no-useless-catch */
 import axios from './axiosConfig.js';
 
-export const addToCart = async (quantity: number, productId: number, valueNames: Array<string> | null) => {
+export const addToCart = async (quantity: number, productId: number, valueNames: Array<string>) => {
     try {
         const response = await axios.post('/cart', {
             quantity,
