@@ -1,6 +1,13 @@
 import IAddress from './address';
 import IProductCart from './productCart';
-export interface IOrder {
+export interface IOrderCheckOut {
+    total: number;
+    paymentType: string; //(VNPay) OR (Cash on Delivery)
+    note: string;
+    addressId: number;
+}
+
+export default interface IOrder {
     address: IAddress;
     createdDate: string;
     id: number;

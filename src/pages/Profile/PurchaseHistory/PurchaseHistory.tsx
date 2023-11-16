@@ -15,7 +15,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 
 import { Fragment, useEffect, useState } from 'react';
 import { getHistoryOrderForCurrentUser } from '../../../apis/orderApi';
-import { IOrder } from '../../../interface/order';
+import IOrder from '../../../interface/order';
 import IProductCart from '../../../interface/productCart';
 import Image from '../../../components/Image';
 
@@ -98,6 +98,8 @@ const PurchaseHistory = () => {
 
     const handleGetListHistory = async () => {
         const response = await getHistoryOrderForCurrentUser();
+        console.log(response.data);
+
         setListHistory(response.data);
     };
     useEffect(() => {
@@ -118,7 +120,7 @@ const PurchaseHistory = () => {
                             </TableRow>
                         </TableHead>
                         <TableBody>
-                            {listHistory.map((item, index) => (
+                            {listHistory.map((item: IOrder, index) => (
                                 <Row key={index} item={item} />
                             ))}
                         </TableBody>

@@ -1,5 +1,5 @@
 /* eslint-disable no-useless-catch */
-import { IOrder } from '../interface/order.js';
+import { IOrderCheckOut } from '../interface/order.js';
 import axios from './axiosConfig.js';
 
 export const getHistoryOrderForCurrentUser = async () => {
@@ -47,13 +47,13 @@ export const getListOrderByUserID = async (idUserName: string) => {
     }
 };
 
-export const addOrderByToken = async (data: IOrder) => {
+export const addOrderByToken = async (data: IOrderCheckOut) => {
     try {
         const response = await axios.post('/orders', {
             total: data.total,
             paymentType: data.paymentType,
             note: data.note,
-            addressId: data.address.id,
+            addressId: data.addressId,
         });
         return response;
     } catch (error) {

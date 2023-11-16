@@ -57,8 +57,6 @@ function Listproducts() {
             setData(content);
             setTotalPages(totalPages);
             setTotalProducts(totalElements);
-
-            console.log('check data', response);
         } catch (error) {
             toast.error('Đang bảo trì quay lại sau');
         }

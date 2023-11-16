@@ -16,8 +16,8 @@ export interface ISku {
 }
 
 export default interface IProductCart {
-    cartId: number;
     id: number;
+    orderId: number;
     imageUrl: string;
     price: number;
     product: IProductChildrenCart;

@@ -16,13 +16,11 @@ import { useCallback, useState } from 'react';
 
 const Profile = () => {
     const [valuePage, setValuePage] = useState('1');
-    const [isLoading, setIsLoading] = useState(false);
     const handleChange = useCallback(
         (event: React.SyntheticEvent, newValue: string) => {
             setValuePage(newValue);
-            setIsLoading((prev) => !prev);
         },
-        [valuePage, isLoading],
+        [valuePage],
     );
     return (
         <div className="w-full m-auto pt-32">
@@ -40,10 +38,10 @@ const Profile = () => {
                     <Box sx={{ borderBottom: 2, borderColor: '#FFEEE8' }}>
                         <TabList onChange={handleChange} centered>
                             <Tab label="Trang của bạn" value="1" />
-                            <Tab label="Ds yêu thích" value="2" />
-                            <Tab label="Ds địa chỉ" value="3" />
+                            <Tab label="Yêu thích" value="2" />
+                            <Tab label="Địa chỉ" value="3" />
                             <Tab label="Lịch sử mua" value="4" />
-                            <Tab label="Tài khoản của bạn" value="5" />
+                            <Tab label="Tài khoản" value="5" />
                             <Tab label="Mật khẩu" value="6" />
                         </TabList>
                     </Box>
@@ -63,7 +61,7 @@ const Profile = () => {
                         <Settings />
                     </TabPanel>
                     <TabPanel value="6" sx={{ padding: 0 }}>
-                        <ManagerPass isLoading={isLoading} />
+                        <ManagerPass />
                     </TabPanel>
                 </TabContext>
             </div>

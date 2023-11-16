@@ -1,6 +1,6 @@
-const Gender = {
-    Online: 'VNPay',
-    Offilne: 'Thanh toán khi nhận hàng',
+const PaymentType = {
+    VNPay: 'VNPay',
+    CashOnDelivery: 'Thanh toán khi nhận hàng',
 };
 
-export default Gender;
+export default PaymentType;

@@ -14,7 +14,7 @@ import React, { useEffect, useState } from 'react';
 import Image from '../../components/Image';
 import config from '../../config';
 import { getCartByToken } from '../../apis/cartApi';
-import IProductCart from '../../interface/IProductCart';
+import IProductCart from '../../interface/productCart';
 import { changeItemQuantity, deleteCartItemByID } from '../../apis/cartItemApi';
 
 import QuantityProduct from './QuantityProduct';
@@ -96,7 +96,7 @@ const Cart = () => {
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {listProduct.map((item, index) => (
+                                    {listProduct.map((item: IProductCart, index) => (
                                         <TableRow
                                             key={index}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
