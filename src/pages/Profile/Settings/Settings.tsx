@@ -57,6 +57,7 @@ const Settings = () => {
         const response = await updateAccountProfileOfSignedinAccount(data);
         if (response.status === 200) {
             toast.success('Cập nhật thông tin thành công');
+            // cap nhat infoUser trong local
             if (savedInfoUser) {
                 const dataInfo = JSON.parse(savedInfoUser);
                 if (dataInfo.userName !== data.username) {
@@ -66,11 +67,6 @@ const Settings = () => {
         } else {
             toast.error(response.data.message || response.data.phoneNumber);
         }
-
-        console.log(response);
-
-        //
-        // cap nhat infoUser trong local
     };
 
     return (
