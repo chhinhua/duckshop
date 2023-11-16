@@ -47,9 +47,9 @@ const ManagerPass = () => {
     return (
         <>
             {/* start section 2 */}
-            <div className="py-10 h-full w-full sm:w-7/12 m-auto text-center">
+            <div className="py-10 h-full w-full sm:w-7/12 m-auto text-center ">
                 <div className="mb-5 font-semibold text-xl">Đổi mật khẩu</div>
-                <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                <form className="space-y-6 mb-10" onSubmit={handleSubmit(onSubmit)}>
                     {/* start input password */}
                     <InputText
                         labelInput="Mật khẩu hiện tại"

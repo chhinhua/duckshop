@@ -12,13 +12,24 @@ import Settings from './Settings/Settings';
 import AddressList from './AddressList/AddressList';
 import ManagerPass from './ManagerPass/ManagerPass';
 
-import { useCallback, useState } from 'react';
+import { useCallback, useEffect, useState } from 'react';
+import config from '../../config';
+import { useLocation } from 'react-router-dom';
 
 const Profile = () => {
-    const [valuePage, setValuePage] = useState('1');
+    // handle get id
+    const location = useLocation();
+    const infoPage = location.hash.substring(1);
+
+    const [valuePage, setValuePage] = useState(infoPage);
+    useEffect(() => {
+        setValuePage(location.hash.substring(1));
+    }, [location.hash]);
     const handleChange = useCallback(
         (event: React.SyntheticEvent, newValue: string) => {
             setValuePage(newValue);
+            // Xóa fragment identifier khi component được mount
+            window.location.hash = `#${newValue}`;
         },
         [valuePage],
     );
@@ -37,30 +48,30 @@ const Profile = () => {
                 <TabContext value={valuePage}>
                     <Box sx={{ borderBottom: 2, borderColor: '#FFEEE8' }}>
                         <TabList onChange={handleChange} centered>
-                            <Tab label="Trang của bạn" value="1" />
-                            <Tab label="Yêu thích" value="2" />
-                            <Tab label="Địa chỉ" value="3" />
-                            <Tab label="Lịch sử mua" value="4" />
-                            <Tab label="Tài khoản" value="5" />
-                            <Tab label="Mật khẩu" value="6" />
+                            <Tab label="Trang của bạn" value={config.PageInProfile.homeProfile} />
+                            <Tab label="Yêu thích" value={config.PageInProfile.favouriteProfile} />
+                            <Tab label="Địa chỉ" value={config.PageInProfile.addressProfile} />
+                            <Tab label="Lịch sử mua" value={config.PageInProfile.historyPaymentProfile} />
+                            <Tab label="Tài khoản" value={config.PageInProfile.accountProfile} />
+                            <Tab label="Mật khẩu" value={config.PageInProfile.passWordProfile} />
                         </TabList>
                     </Box>
-                    <TabPanel value="1" sx={{ padding: 0 }}>
+                    <TabPanel value={config.PageInProfile.homeProfile} sx={{ padding: 0 }}>
                         <Dashboard />
                     </TabPanel>
-                    <TabPanel value="2" sx={{ padding: 0 }}>
+                    <TabPanel value={config.PageInProfile.favouriteProfile} sx={{ padding: 0 }}>
                         <Wishlist />
                     </TabPanel>
-                    <TabPanel value="3" sx={{ padding: 0 }}>
+                    <TabPanel value={config.PageInProfile.addressProfile} sx={{ padding: 0 }}>
                         <AddressList />
                     </TabPanel>
-                    <TabPanel value="4" sx={{ padding: 0 }}>
+                    <TabPanel value={config.PageInProfile.historyPaymentProfile} sx={{ padding: 0 }}>
                         <PurchaseHistory />
                     </TabPanel>
-                    <TabPanel value="5" sx={{ padding: 0 }}>
+                    <TabPanel value={config.PageInProfile.accountProfile} sx={{ padding: 0 }}>
                         <Settings />
                     </TabPanel>
-                    <TabPanel value="6" sx={{ padding: 0 }}>
+                    <TabPanel value={config.PageInProfile.passWordProfile} sx={{ padding: 0 }}>
                         <ManagerPass />
                     </TabPanel>
                 </TabContext>

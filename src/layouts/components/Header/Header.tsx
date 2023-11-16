@@ -3,6 +3,7 @@ import Image from '../../../components/Image';
 import logo from '../../../assets/img/BG 2.png';
 
 import Badge from '@mui/material/Badge';
+import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import Search from '@mui/icons-material/Search';
@@ -21,6 +22,13 @@ import { selectToTalProductCart } from '../../../pages/Cart/totalProducCartSlice
 function Header() {
     const dispatch = useAppDispatch();
     const navaigate = useNavigate();
+    // get userName
+    let userName: string = '';
+    const savedInfoUser = localStorage.getItem('infoUser');
+    if (savedInfoUser) {
+        const dataInfo = JSON.parse(savedInfoUser);
+        userName = dataInfo.userName;
+    }
 
     // handle logged
     const handleLogout = () => {
@@ -111,9 +119,12 @@ function Header() {
                                         </Badge>
                                     </IconButton>
                                 </Link>
-                                <IconButton onClick={handlePopoverToggle}>
+                                <Button onClick={handlePopoverToggle}>
                                     <Avatar alt="Đức" sx={{ width: 32, height: 32 }} />
-                                </IconButton>
+                                    <span className="text-base ml-1 font-medium normal-case text-black">
+                                        {userName}
+                                    </span>
+                                </Button>
                                 <Popper
                                     open={open}
                                     anchorEl={anchorEl}
@@ -122,10 +133,18 @@ function Header() {
                                 >
                                     <div className="flex flex-col text-sm bg-white rounded">
                                         <Link
-                                            to={config.Routes.profile}
+                                            to={config.Routes.profile + '#' + config.PageInProfile.homeProfile}
                                             className="hover:bg-slate-100 hover:text-red-400 p-3"
                                         >
                                             Tài khoản của tôi
+                                        </Link>
+                                        <Link
+                                            to={
+                                                config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile
+                                            }
+                                            className="hover:bg-slate-100 hover:text-red-400 p-3"
+                                        >
+                                            Đơn mua
                                         </Link>
                                         <div
                                             className="hover:bg-slate-100 hover:text-red-400 p-3"
