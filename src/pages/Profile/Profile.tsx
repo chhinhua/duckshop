@@ -1,22 +1,29 @@
-import * as React from 'react';
 import Avatar from '@mui/material/Avatar';
 import Box from '@mui/material/Box';
 import Tab from '@mui/material/Tab';
 import TabContext from '@mui/lab/TabContext';
 import TabList from '@mui/lab/TabList';
 import TabPanel from '@mui/lab/TabPanel';
+
 import Dashboard from './Dashboard/Dashboard';
 import Wishlist from './Wishlist/Wishlist';
 import PurchaseHistory from './PurchaseHistory/PurchaseHistory';
 import Settings from './Settings/Settings';
 import AddressList from './AddressList/AddressList';
+import ManagerPass from './ManagerPass/ManagerPass';
+
+import { useCallback, useState } from 'react';
 
 const Profile = () => {
-    const [valuePage, setValuePage] = React.useState('1');
-
-    const handleChange = (event: React.SyntheticEvent, newValue: string) => {
-        setValuePage(newValue);
-    };
+    const [valuePage, setValuePage] = useState('1');
+    const [isLoading, setIsLoading] = useState(false);
+    const handleChange = useCallback(
+        (event: React.SyntheticEvent, newValue: string) => {
+            setValuePage(newValue);
+            setIsLoading((prev) => !prev);
+        },
+        [valuePage, isLoading],
+    );
     return (
         <div className="w-full m-auto pt-32">
             <div className="bg-headerProfile h-60 flex place-items-end place-content-center">
@@ -37,6 +44,7 @@ const Profile = () => {
                             <Tab label="Ds địa chỉ" value="3" />
                             <Tab label="Lịch sử mua" value="4" />
                             <Tab label="Tài khoản của bạn" value="5" />
+                            <Tab label="Mật khẩu" value="6" />
                         </TabList>
                     </Box>
                     <TabPanel value="1" sx={{ padding: 0 }}>
@@ -53,6 +61,9 @@ const Profile = () => {
                     </TabPanel>
                     <TabPanel value="5" sx={{ padding: 0 }}>
                         <Settings />
+                    </TabPanel>
+                    <TabPanel value="6" sx={{ padding: 0 }}>
+                        <ManagerPass isLoading={isLoading} />
                     </TabPanel>
                 </TabContext>
             </div>

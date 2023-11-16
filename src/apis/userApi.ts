@@ -19,7 +19,7 @@ export const getUserByUserNameOrEmail = async (userNameOrEmail: string) => {
         throw error;
     }
 };
-export const changePassWord = async (passWord: string) => {
+export const changePassWordByToken = async (passWord: string) => {
     try {
         const response = await axios.put(`/users/password/change?newPassword=${passWord}`);
         return response;
