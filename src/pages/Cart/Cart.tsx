@@ -103,7 +103,7 @@ const Cart = () => {
                                         >
                                             <TableCell component="th" scope="row">
                                                 <Image
-                                                    src={item}
+                                                    src={item.imageUrl}
                                                     className="sm:h-24 sm:w-24 lg:h-36 lg:w-36  h-16 w-16"
                                                 />
                                             </TableCell>

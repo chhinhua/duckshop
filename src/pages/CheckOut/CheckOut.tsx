@@ -21,8 +21,13 @@ import { addOrderByToken } from '../../apis/orderApi';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
 import { checkOutVNPay } from '../../apis/vnpayApi';
+import { useSelector } from 'react-redux';
 
 const Pay = () => {
+    
+    const userName = useSelector(state => state.user.userNameUser);
+
+
     const dispatch = useDispatch();
     const {
         register,
@@ -91,7 +96,6 @@ const Pay = () => {
             const note = encodeURIComponent(data.note);
             const total = totalPrice;
             const addressId = data.addressId;
-            const username = "chhinhua13"; // lấy tên username
             const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${username}&addressId=${addressId}&note=${note}`;
             
             // Redirect to the specified URL

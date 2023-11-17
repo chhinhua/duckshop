@@ -91,7 +91,7 @@ const DetailProduct = () => {
                 if (resonse?.status === 201 && resonse?.data?.product?.name) {
                     toast.success('Đã thêm vào giỏ hàng');
                 } else {
-                    toast.success(resonse.data.message);
+                    toast.info(resonse.data.message);
                 }
             } catch {
                 toast.error('Lỗi không thêm được sản phẩm');
