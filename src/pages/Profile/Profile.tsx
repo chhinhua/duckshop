@@ -33,14 +33,22 @@ const Profile = () => {
         },
         [valuePage],
     );
+    let userName: string = '';
+    let avatarUrl: string = '';
+    const savedInfoUser = localStorage.getItem('infoUser');
+    if (savedInfoUser) {
+        const dataInfo = JSON.parse(savedInfoUser);
+        userName = dataInfo.userName;
+        avatarUrl = dataInfo.avatarUrl;
+    }
     return (
         <div className="w-full m-auto pt-32">
             <div className="bg-headerProfile h-60 flex place-items-end place-content-center">
                 <div className="w-11/12 bg-white h-3/4 flex place-items-center place-content-center border-2 border-headerProfile">
-                    <Avatar alt="Remy Sharp" src="/static/images/avatar/1.jpg" sx={{ width: 76, height: 76 }} />
+                    <Avatar alt="Remy Sharp" src={avatarUrl} sx={{ width: 76, height: 76 }} />
                     <div className="ml-5">
-                        <div className="uppercase font-semibold text-2xl">Le Van Anh Duc</div>
-                        <div className="text-sm text-gray-400">Customer</div>
+                        <div className="uppercase font-semibold text-2xl">{userName}</div>
+                        <div className="text-sm text-gray-400">Khách hàng</div>
                     </div>
                 </div>
             </div>

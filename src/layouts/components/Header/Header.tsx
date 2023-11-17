@@ -24,10 +24,12 @@ function Header() {
     const navaigate = useNavigate();
     // get userName
     let userName: string = '';
+    let avatarUrl: string = '';
     const savedInfoUser = localStorage.getItem('infoUser');
     if (savedInfoUser) {
         const dataInfo = JSON.parse(savedInfoUser);
         userName = dataInfo.userName;
+        avatarUrl = dataInfo.avatarUrl;
     }
 
     // handle logged
@@ -120,7 +122,7 @@ function Header() {
                                     </IconButton>
                                 </Link>
                                 <Button onClick={handlePopoverToggle}>
-                                    <Avatar alt="Đức" sx={{ width: 32, height: 32 }} />
+                                    <Avatar src={avatarUrl} alt="Đức" sx={{ width: 32, height: 32 }} />
                                     <span className="text-base ml-1 font-medium normal-case text-black">
                                         {userName}
                                     </span>

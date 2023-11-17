@@ -35,24 +35,12 @@ const UploadImage = () => {
     };
     return (
         <>
-            <Image src={selectedImage || S2Baner1} className="w-full xs:h-96 h-52 " />
-            <Button
-                component="label"
-                variant="outlined"
-                fullWidth
-                startIcon={<CloudUploadIcon />}
-                sx={{
-                    backgroundColor: 'black',
-                    color: 'white',
-                    '&:hover': {
-                        color: 'black',
-                        backgroundColor: '#fff',
-                    },
-                }}
-            >
-                Upload file
-                <VisuallyHiddenInput type="file" onChange={handleImageChange} />
-            </Button>
+            <div className="w-full">
+                <Button component="label" variant="text" fullWidth sx={{ borderRadius: '100%' }}>
+                    <VisuallyHiddenInput type="file" onChange={handleImageChange} />
+                    <Image src={selectedImage || S2Baner1} className="w-full md:h-72 h-80 rounded-[100%] " />
+                </Button>
+            </div>
         </>
     );
 };

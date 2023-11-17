@@ -14,11 +14,8 @@ import { IInfoProfileUser } from '../../../interface/user';
 import UploadImage from './UploadImage/UploadImage';
 import { getUserByUserNameOrEmail, updateAccountProfileOfSignedinAccount } from '../../../apis/userApi';
 import { toast } from 'react-toastify';
-import { useDispatch } from 'react-redux';
-import { setInfoUser } from '../../LogIn/loginSlice';
 
 const Settings = () => {
-    const dispatch = useDispatch();
     const savedInfoUser = localStorage.getItem('infoUser');
     // get data info user
     const handlegetInfoUser = async () => {
@@ -58,12 +55,6 @@ const Settings = () => {
         if (response.status === 200) {
             toast.success('Cập nhật thông tin thành công');
             // cap nhat infoUser trong local
-            if (savedInfoUser) {
-                const dataInfo = JSON.parse(savedInfoUser);
-                if (dataInfo.userName !== data.username) {
-                    dispatch(setInfoUser({ idUser: dataInfo.idUser, userNameUser: data.username }));
-                }
-            }
         } else {
             toast.error(response.data.message || response.data.phoneNumber);
         }
@@ -97,7 +88,7 @@ const Settings = () => {
                         {/* end input FullName */}
                         {/* start input Username */}
                         <InputText
-                            labelInput="Enter your username more than 4 characters"
+                            labelInput="User Name"
                             errorInput={errors.username ? true : false}
                             isRequired
                             errorFormMessage={errors.username?.message}
@@ -107,7 +98,9 @@ const Settings = () => {
                                     pattern: /^[A-Za-z0-9]{4,}$/,
                                 }),
                             }}
+                            disabled
                         />
+
                         {/* end input Username */}
                         {/* start input email */}
                         <InputText

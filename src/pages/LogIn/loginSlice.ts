@@ -7,6 +7,7 @@ interface IInitialStateLogin {
     isLogin: boolean;
     idUser: string;
     userNameUser: string;
+    avatarUrl: string | null;
 }
 
 // Define the initial state using that type
@@ -14,6 +15,7 @@ const initialState: IInitialStateLogin = {
     isLogin: false,
     idUser: '',
     userNameUser: '',
+    avatarUrl: '',
 };
 // Lấy giá trị khi có từ localStorage
 const savedIsLogin = localStorage.getItem('isLogin');
@@ -25,6 +27,7 @@ if (savedInfoUser) {
     const dataInfo = JSON.parse(savedInfoUser);
     initialState.idUser = dataInfo.idUser;
     initialState.userNameUser = dataInfo.userName;
+    initialState.avatarUrl = dataInfo.avatarUrl;
 }
 
 export const loginSlice = createSlice({
@@ -36,14 +39,23 @@ export const loginSlice = createSlice({
             // Lưu giá trị mới vào localStorage khi có thay đổi
             localStorage.setItem('isLogin', JSON.stringify(action.payload));
         },
-        setInfoUser: (state, action: PayloadAction<{ idUser: string; userNameUser: string }>) => {
+        setInfoUser: (
+            state,
+            action: PayloadAction<{ idUser: string; userNameUser: string; avatarUrl: string | null }>,
+        ) => {
             state.idUser = action.payload.idUser;
             state.userNameUser = action.payload.userNameUser;
+            state.avatarUrl = action.payload.avatarUrl;
+
             // Lưu giá trị mới vào localStorage khi có thay đổi
             if (action.payload.idUser && action.payload.userNameUser) {
                 localStorage.setItem(
                     'infoUser',
-                    JSON.stringify({ userName: action.payload.userNameUser, idUser: action.payload.idUser }),
+                    JSON.stringify({
+                        userName: action.payload.userNameUser,
+                        idUser: action.payload.idUser,
+                        avatarUrl: action.payload.avatarUrl,
+                    }),
                 );
             }
         },
@@ -57,5 +69,6 @@ export const { setInfoUser } = loginSlice.actions;
 export const selectIsLogin = (state: RootState) => state.login.isLogin;
 export const selectIDUser = (state: RootState) => state.login.idUser;
 export const selectUserNameUser = (state: RootState) => state.login.userNameUser;
+export const selectAvatarUrl = (state: RootState) => state.login.avatarUrl;
 
 export default loginSlice.reducer;

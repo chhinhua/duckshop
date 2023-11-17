@@ -59,7 +59,14 @@ const LogIn = () => {
                 toast.success('Đăng nhập thành công');
                 // set redux
                 dispatch(setIsLogin(true));
-                dispatch(setInfoUser({ userNameUser: response.data.user.username, idUser: response.data.user.id }));
+                dispatch(
+                    setInfoUser({
+                        userNameUser: response.data.user.username,
+                        idUser: response.data.user.id,
+                        avatarUrl: response.data.user.avatarUrl,
+                    }),
+                );
+
                 getTotalItemOfCart();
                 // chuyen next page home
                 navigate('/');

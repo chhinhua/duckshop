@@ -69,7 +69,13 @@ const GetOTPRegister = () => {
             toast.success('Đăng nhập thành công');
             // set redux
             dispatch(setIsLogin(true));
-            dispatch(setInfoUser({ userNameUser: response.data.user.username, idUser: response.data.user.id }));
+            dispatch(
+                setInfoUser({
+                    userNameUser: response.data.user.username,
+                    idUser: response.data.user.id,
+                    avatarUrl: response.data.user.avatarUrl,
+                }),
+            );
             // chuyen next page home
             navigate('/');
         }

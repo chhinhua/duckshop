@@ -19,16 +19,6 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 
 import { toast } from 'react-toastify';
 
-const LIST_ACTION = [
-    'Shoes',
-    'Sports Bras',
-    'Tops & T-Shirts',
-    'Hoodies & Sweatshirts',
-    'Jackets',
-    'Trousers & Tights',
-    'Shorts',
-];
-
 function Listproducts() {
     // handle scroll to fix header
     const [scroll, setScroll] = useState(false);
@@ -82,17 +72,15 @@ function Listproducts() {
                 {/* start section 1 */}
                 <div
                     className={`${
-                        scroll
-                            ? 'bg-header shadow-md fixed duration-200 ease-in top-18 left-0 w-full '
-                            : 'bg-transparent grid-cols-2'
-                    }   pb-2 z-50 grid`}
+                        scroll ? 'fixed duration-200 ease-in top-18 left-0 w-full ' : ' grid-cols-2'
+                    }   z-50 grid bg-transparen`}
                 >
                     <strong className={`${scroll ? 'hidden' : ''} `}>
                         Đang hiển thị {itemsPerPage} trong {totalProducts} sản phẩm
                     </strong>
-                    <div className={`${scroll ? 'm-auto w-11/12 flex justify-end' : 'w-full flex justify-end'}`}>
-                        <Button variant="outlined" onClick={toggleMenu()}>
-                            <div className="text-lg normal-case">Filter </div>
+                    <div className={`${scroll ? ' flex justify-end' : 'w-full flex justify-end'}`}>
+                        <Button variant="contained" onClick={toggleMenu()}>
+                            <div className="text-lg normal-case">Lọc sản phẩm</div>
                         </Button>
                     </div>
                 </div>
@@ -100,96 +88,75 @@ function Listproducts() {
                 {/* start section 2 */}
                 <div className="h-full">
                     {/* start navigation  */}
-                    <div>
-                        <Drawer anchor="right" open={openMenu} onClose={toggleMenu()}>
-                            {/* Start Select Popular */}
-                            <div>
-                                <Accordion /*defaultExpanded */>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography>Popular</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <FormGroup>
-                                            {LIST_ACTION.map((item, index) => (
-                                                <FormControlLabel control={<Checkbox />} label={item} key={index} />
-                                            ))}
-                                        </FormGroup>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </div>
-                            {/* End Select Popular */}
-                            {/* Start Select Gender */}
-                            <div>
-                                <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography>Gender</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <FormGroup>
-                                            <FormControlLabel control={<Checkbox defaultChecked />} label="All" />
-                                            <FormControlLabel control={<Checkbox />} label="Men" />
-                                            <FormControlLabel control={<Checkbox />} label="Women" />
-                                        </FormGroup>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </div>
-                            {/* End Select Gender */}
-                            {/* Start Select Category */}
-                            <div>
-                                <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography>Category</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <FormGroup>
-                                            <FormControlLabel control={<Checkbox />} label="Shoes" />
-                                            <FormControlLabel control={<Checkbox />} label="Sandal" />
-                                            <FormControlLabel control={<Checkbox />} label="T-Shirts" />
-                                            <FormControlLabel control={<Checkbox />} label="Trousers" />
-                                            <FormControlLabel control={<Checkbox />} label="Dress" />
-                                            <FormControlLabel control={<Checkbox />} label="Accessory" />
-                                            <FormControlLabel control={<Checkbox />} label="Backpack" />
-                                        </FormGroup>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </div>
-                            {/* End Select Category */}
-                            {/* Start Select Filter */}
-                            <div>
-                                <Accordion>
-                                    <AccordionSummary
-                                        expandIcon={<ExpandMoreIcon />}
-                                        aria-controls="panel1a-content"
-                                        id="panel1a-header"
-                                    >
-                                        <Typography>Filter</Typography>
-                                    </AccordionSummary>
-                                    <AccordionDetails>
-                                        <FormGroup>
-                                            <FormControlLabel control={<Checkbox />} label="Price high to low" />
-                                            <FormControlLabel control={<Checkbox />} label="Price low to high" />
-                                            <FormControlLabel control={<Checkbox />} label="Latest" />
-                                            <FormControlLabel control={<Checkbox />} label="Many reviews" />
-                                            <FormControlLabel control={<Checkbox />} label="High stars" />
-                                        </FormGroup>
-                                    </AccordionDetails>
-                                </Accordion>
-                            </div>
-                            {/* End Select Filter */}
-                        </Drawer>
-                    </div>
+                    <Drawer anchor="right" open={openMenu} onClose={toggleMenu()}>
+                        {/* Start Select Gender */}
+                        <div className="w-96">
+                            <Accordion defaultExpanded>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >
+                                    <Typography>Gender</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <FormGroup>
+                                        <FormControlLabel control={<Checkbox defaultChecked />} label="All" />
+                                        <FormControlLabel control={<Checkbox />} label="Men" />
+                                        <FormControlLabel control={<Checkbox />} label="Women" />
+                                    </FormGroup>
+                                </AccordionDetails>
+                            </Accordion>
+                        </div>
+                        {/* End Select Gender */}
+                        {/* Start Select Category */}
+                        <div>
+                            <Accordion defaultExpanded>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >
+                                    <Typography>Category</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <FormGroup>
+                                        <FormControlLabel control={<Checkbox defaultChecked />} label="All" />
+                                        <FormControlLabel control={<Checkbox />} label="Shoes" />
+                                        <FormControlLabel control={<Checkbox />} label="Sandal" />
+                                        <FormControlLabel control={<Checkbox />} label="T-Shirts" />
+                                        <FormControlLabel control={<Checkbox />} label="Trousers" />
+                                        <FormControlLabel control={<Checkbox />} label="Dress" />
+                                        <FormControlLabel control={<Checkbox />} label="Accessory" />
+                                        <FormControlLabel control={<Checkbox />} label="Backpack" />
+                                    </FormGroup>
+                                </AccordionDetails>
+                            </Accordion>
+                        </div>
+                        {/* End Select Category */}
+                        {/* Start Select Filter */}
+                        <div>
+                            <Accordion>
+                                <AccordionSummary
+                                    expandIcon={<ExpandMoreIcon />}
+                                    aria-controls="panel1a-content"
+                                    id="panel1a-header"
+                                >
+                                    <Typography>Filter</Typography>
+                                </AccordionSummary>
+                                <AccordionDetails>
+                                    <FormGroup>
+                                        <FormControlLabel control={<Checkbox />} label="Price high to low" />
+                                        <FormControlLabel control={<Checkbox />} label="Price low to high" />
+                                        <FormControlLabel control={<Checkbox />} label="Latest" />
+                                        <FormControlLabel control={<Checkbox />} label="Many reviews" />
+                                        <FormControlLabel control={<Checkbox />} label="High stars" />
+                                    </FormGroup>
+                                </AccordionDetails>
+                            </Accordion>
+                        </div>
+                        {/* End Select Filter */}
+                    </Drawer>
                     {/* end navigation  */}
                     {/* start list item */}
                     <div className="col-span-5 px-3 xl:col-span-4">

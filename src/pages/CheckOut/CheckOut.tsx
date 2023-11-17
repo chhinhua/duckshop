@@ -9,16 +9,21 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Select from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 
+import { toast } from 'react-toastify';
+
 import config from '../../config';
 import Textarea from '../../components/Textarea/Textarea';
 import { IOrderCheckOut } from '../../interface/order';
 import IAddress from '../../interface/address';
 import { getListAddressOffCurrentUser } from '../../apis/addressApi';
-import { toast } from 'react-toastify';
 import { getCartByToken } from '../../apis/cartApi';
 import { addOrderByToken } from '../../apis/orderApi';
+import { useDispatch } from 'react-redux';
+import { setToTalProductCart } from '../Cart/totalProducCartSlice';
+import { checkOutVNPay } from '../../apis/vnpayApi';
 
 const Pay = () => {
+    const dispatch = useDispatch();
     const {
         register,
         handleSubmit,
@@ -67,22 +72,35 @@ const Pay = () => {
     const onSubmit: SubmitHandler<IOrderCheckOut> = async (data) => {
         //
         let PaymentType: string = '';
+        let response: {
+            data: any;
+            status: number;
+            headers: object;
+        };
         if (data.paymentType === config.PaymentType.CashOnDelivery) {
             PaymentType = 'COD';
+            response = await addOrderByToken({
+                total: totalPrice,
+                paymentType: PaymentType,
+                note: data.note,
+                addressId: data.addressId,
+            });
         } else {
-            PaymentType = config.PaymentType.VNPay;
+            PaymentType = 'VN_PAY';
+            response = await checkOutVNPay({
+                total: totalPrice,
+                paymentType: PaymentType,
+                note: data.note,
+                addressId: data.addressId,
+            });
         }
-        const response = await addOrderByToken({
-            total: totalPrice,
-            paymentType: PaymentType,
-            note: data.note,
-            addressId: data.addressId,
-        });
         if (response.status === 201) {
-            toast.success(response.data.status);
+            dispatch(setToTalProductCart(0));
+            toast.success('Đặt hàng thành công');
         } else {
             toast.error(response.data.message || response.data);
         }
+        console.log(response);
     };
     return (
         <div className="w-11/12 m-auto pt-32">
