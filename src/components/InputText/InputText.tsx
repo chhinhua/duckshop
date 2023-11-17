@@ -55,6 +55,9 @@ const InputText = (propsCh: IProps) => {
                             ''
                         ),
                 }}
+                InputLabelProps={{
+                    shrink: true,
+                }}
                 {...register}
                 {...props}
             />

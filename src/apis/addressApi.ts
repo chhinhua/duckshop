@@ -46,3 +46,12 @@ export const setDefaultAddress = async (idAddress: number) => {
         throw error;
     }
 };
+
+export const deleteAddressByAddressID = async (idAddress: number) => {
+    try {
+        const response = await axios.delete(`/address/${idAddress}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};

@@ -47,16 +47,14 @@ const ModalAddress = (propsCh: IPropsAddress) => {
         if (idAddressUpdate !== null) {
             handleGetInfoAddress();
         }
-    }, []);
+    }, [idAddressUpdate]);
     // form
     const {
         register: registerForm,
         handleSubmit: handleSubmitForm,
         formState: formStateForm,
         setValue,
-    } = useForm<IAddress>({
-        defaultValues: {},
-    });
+    } = useForm<IAddress>({});
     const onSubmit: SubmitHandler<IAddress> = async (data) => {
         //  call api doi update thong tin
         const response = await addNewAddressForCurrentUser(data);

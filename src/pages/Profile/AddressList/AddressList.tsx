@@ -3,7 +3,7 @@ import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 import ModalAddress from './ModalAddress/ModalAddress';
 import IAddress from '../../../interface/address';
-import { getListAddressOffCurrentUser, setDefaultAddress } from '../../../apis/addressApi';
+import { deleteAddressByAddressID, getListAddressOffCurrentUser, setDefaultAddress } from '../../../apis/addressApi';
 
 const AddressList = () => {
     // Save idAddress
@@ -28,9 +28,19 @@ const AddressList = () => {
     const [idLoading, setIsLoading] = useState<boolean>(false);
     const handleSetDefault = async (idAddress: number) => {
         const response = await setDefaultAddress(idAddress);
-        setIsLoading((prev) => !prev);
         if (response.status === 200) {
+            setIsLoading((prev) => !prev);
             toast.success('Địa chỉ mặc định đã thay đổi');
+        } else {
+            toast.error(response.data.message);
+        }
+    };
+    // handle delete address by ID
+    const deleteAddress = async (idAddress: number) => {
+        const response = await deleteAddressByAddressID(idAddress);
+        if (response.status === 200) {
+            setIsLoading((prev) => !prev);
+            toast.success(response.data);
         } else {
             toast.error(response.data.message);
         }
@@ -77,7 +87,11 @@ const AddressList = () => {
                             <Button sx={{ width: 100 }} onClick={() => handleUpdate(item.id)}>
                                 Cập nhật
                             </Button>
-                            <Button sx={{ width: 100 }}>Xóa</Button>
+                            {!item.isDefault && (
+                                <Button sx={{ width: 100 }} onClick={() => deleteAddress(item.id)}>
+                                    Xóa
+                                </Button>
+                            )}
                         </div>
                         <Button
                             sx={{ width: 200 }}

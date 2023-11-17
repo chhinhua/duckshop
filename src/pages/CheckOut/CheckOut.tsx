@@ -68,7 +68,7 @@ const Pay = () => {
         //
         let PaymentType: string = '';
         if (data.paymentType === config.PaymentType.CashOnDelivery) {
-            PaymentType = 'Cash on Delivery';
+            PaymentType = 'COD';
         } else {
             PaymentType = config.PaymentType.VNPay;
         }
