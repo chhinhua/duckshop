@@ -87,16 +87,20 @@ const Pay = () => {
             });
         } else {
             PaymentType = 'VN_PAY';
-            response = await checkOutVNPay({
-                total: totalPrice,
-                paymentType: PaymentType,
-                note: data.note,
-                addressId: data.addressId,
-            });
+
+            const note = encodeURIComponent(data.note);
+            const total = totalPrice;
+            const addressId = data.addressId;
+            const username = "chhinhua13"; // lấy tên username
+            const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${username}&addressId=${addressId}&note=${note}`;
+            
+            // Redirect to the specified URL
+            window.location.href = redirectURL;
         }
         if (response.status === 201) {
             dispatch(setToTalProductCart(0));
             toast.success('Đặt hàng thành công');
+            window.location.href = `http://localhost:5173/trang-cua-ban#historyPaymentProfile`;
         } else {
             toast.error(response.data.message || response.data);
         }
@@ -176,7 +180,7 @@ const Pay = () => {
                             size="large"
                             disabled={!isChecked}
                         >
-                            Tiếp tục
+                            Đặt hàng
                         </Button>
                         <div className="grid grid-cols-10">
                             <span>
