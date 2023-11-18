@@ -30,7 +30,7 @@ const ManagerPass = () => {
         // kiem tra mat hien tai  => true
 
         if (data.newPassWord !== data.confirmPassWord) {
-            toast.error('Nhập mật khẩu mới và nhập lại khác nhau');
+            toast.error('Mật khẩu mới không khớp với nhau');
         } else {
             //
             //  call api doi mk
