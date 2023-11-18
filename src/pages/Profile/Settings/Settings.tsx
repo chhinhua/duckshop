@@ -1,8 +1,8 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import Button from '@mui/material/Button';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
@@ -17,6 +17,12 @@ import { toast } from 'react-toastify';
 
 const Settings = () => {
     const savedInfoUser = localStorage.getItem('infoUser');
+
+    // change gender
+    const [genderUser, setGenderUser] = useState<string>('');
+    const handleChangeGender = (e: SelectChangeEvent) => {
+        setGenderUser(e.target.value);
+    };
     // get data info user
     const handlegetInfoUser = async () => {
         if (savedInfoUser) {
@@ -30,6 +36,8 @@ const Settings = () => {
                     await setValue('email', response.data.email);
                     await setValue('phoneNumber', response.data.phoneNumber);
                     await setValue('gender', response.data.gender);
+
+                    await setGenderUser(response.data.gender);
                 } else {
                     toast.error(response.data.message);
                 }
@@ -52,6 +60,7 @@ const Settings = () => {
     const onSubmit: SubmitHandler<IInfoProfileUser> = async (data) => {
         //  call api doi update thong tin
         const response = await updateAccountProfileOfSignedinAccount(data);
+
         if (response.status === 200) {
             toast.success('Cập nhật thông tin thành công');
             // cap nhat infoUser trong local
@@ -129,10 +138,9 @@ const Settings = () => {
                                 input={<OutlinedInput label="Giới tính" />}
                                 fullWidth
                                 error={errors.gender ? true : false}
-                                defaultValue={''}
-                                {...register('gender', {
-                                    required: 'Gender is required',
-                                })}
+                                {...register('gender')}
+                                value={genderUser}
+                                onChange={handleChangeGender}
                             >
                                 <MenuItem value={config.Gender.NAM}>{config.Gender.NAM}</MenuItem>
                                 <MenuItem value={config.Gender.NU}>{config.Gender.NU}</MenuItem>

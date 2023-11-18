@@ -78,6 +78,16 @@ const Cart = () => {
             toast.error('Đang bảo trì');
         }
     };
+    // get số lượng sản phẩm trong giỏ hàng
+    const totalProductLocalStorage: string | null = localStorage.getItem('totalProductInCart');
+    const [totalProduct, setTotalProduct] = useState<number>(0);
+
+    useEffect(() => {
+        if (totalProductLocalStorage) {
+            setTotalProduct(+totalProductLocalStorage);
+        }
+    }, [totalProductLocalStorage]);
+
     return (
         <div className="w-11/12 m-auto pt-32">
             <div className="grid grid-cols-12 gap-2">
@@ -170,17 +180,17 @@ const Cart = () => {
                         <span className="text-right">{(totalPrice + 0).toLocaleString('vi-VN')} VNĐ</span>
                         <span className="absolute left-0 bottom-5 h-0.5 bg-gray-200 w-full"></span>
                     </div>
-                    <Link to={config.Routes.checkOut}>
-                        <Button
-                            style={{ background: 'black' }}
-                            variant="contained"
-                            fullWidth
-                            color="primary"
-                            size="large"
-                        >
+                    {totalProduct === 0 ? (
+                        <Button variant="contained" fullWidth size="large" disabled>
                             Thanh toán
                         </Button>
-                    </Link>
+                    ) : (
+                        <Link to={config.Routes.checkOut}>
+                            <Button variant="contained" fullWidth color="primary" size="large">
+                                Thanh toán
+                            </Button>
+                        </Link>
+                    )}
                 </div>
                 {/* end bill */}
             </div>

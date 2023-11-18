@@ -33,6 +33,7 @@ function Row(props: { item: IOrder }) {
                 </TableCell>
                 <TableCell align="left">{item.totalItems}</TableCell>
                 <TableCell align="left">{item.total.toLocaleString('vi-VN')}</TableCell>
+                <TableCell align="left">{item.status}</TableCell>
                 <TableCell>
                     <Button variant="outlined" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
@@ -43,9 +44,27 @@ function Row(props: { item: IOrder }) {
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <Typography variant="h6" gutterBottom component="div">
-                                Details
-                            </Typography>
+                            <div>
+                                <Typography fontWeight={600} component="span">
+                                    Địa chỉ nhận hàng:{' '}
+                                </Typography>
+                                <Typography component="span">
+                                    {item.address.orderDetails}, {item.address.ward}, {item.address.district},
+                                    {item.address.city}
+                                </Typography>
+                            </div>
+                            <div>
+                                <Typography fontWeight={600} component="span">
+                                    Hình thức thanh toán:{' '}
+                                </Typography>
+                                <Typography component="span">{item.paymentType}</Typography>
+                            </div>
+                            <div>
+                                <Typography fontWeight={600} component="span">
+                                    Ghi chú:{' '}
+                                </Typography>
+                                <Typography component="span">{item.note}</Typography>
+                            </div>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
@@ -98,7 +117,6 @@ const PurchaseHistory = () => {
 
     const handleGetListHistory = async () => {
         const response = await getHistoryOrderForCurrentUser();
-        console.log(response.data);
 
         setListHistory(response.data);
     };
@@ -116,7 +134,8 @@ const PurchaseHistory = () => {
                                 <TableCell>Ngày xuất đơn</TableCell>
                                 <TableCell align="left">Tổng sản phẩm</TableCell>
                                 <TableCell align="left">Tổng giá</TableCell>
-                                <TableCell></TableCell>
+                                <TableCell align="left">Trạng thái</TableCell>
+                                <TableCell>Chi tiết</TableCell>
                             </TableRow>
                         </TableHead>
                         <TableBody>

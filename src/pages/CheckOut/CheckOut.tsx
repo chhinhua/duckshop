@@ -16,7 +16,7 @@ import Textarea from '../../components/Textarea/Textarea';
 import { IOrderCheckOut } from '../../interface/order';
 import IAddress from '../../interface/address';
 import { getListAddressOffCurrentUser } from '../../apis/addressApi';
-import { getCartByToken } from '../../apis/cartApi';
+import { getTotalPriceForYourCart } from '../../apis/cartApi';
 import { addOrderByToken } from '../../apis/orderApi';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
@@ -56,12 +56,12 @@ const Pay = () => {
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
     const getListProduct = async () => {
-        const response = await getCartByToken();
+        const response = await getTotalPriceForYourCart();
 
         if (response.status === 200) {
-            setTotalPrice(response?.data?.totalPrice);
+            setTotalPrice(response?.data);
         } else {
-            toast.error(response.data.message);
+            toast.error(response?.data?.message || response?.data);
         }
     };
     useEffect(() => {

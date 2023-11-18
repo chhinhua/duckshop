@@ -16,6 +16,7 @@ import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
 
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ContentPasteSearch from '@mui/icons-material/ContentPasteSearch';
 
 import { toast } from 'react-toastify';
 
@@ -159,12 +160,19 @@ function Listproducts() {
                     </Drawer>
                     {/* end navigation  */}
                     {/* start list item */}
-                    <div className="col-span-5 px-3 xl:col-span-4">
-                        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
-                            {data.map((item, index) => (
-                                <CardComp key={index} itemProduct={item} />
-                            ))}
-                        </div>
+                    <div className="col-span-5 px-3 xl:col-span-4 ">
+                        {data.length !== 0 ? (
+                            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">
+                                {data.map((item, index) => (
+                                    <CardComp key={index} itemProduct={item} />
+                                ))}
+                            </div>
+                        ) : (
+                            <div className="flex flex-col items-center pt-20 text-xl  text-gray-400 gap-5">
+                                <ContentPasteSearch sx={{ fontSize: '100px' }} />
+                                Hix. Không có sản phẩm nào. Bạn thử tắt điều kiện lọc và tìm lại nhé?
+                            </div>
+                        )}
                     </div>
                     {/* end list item */}
                 </div>

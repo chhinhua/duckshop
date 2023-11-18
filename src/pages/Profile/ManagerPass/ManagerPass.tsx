@@ -31,6 +31,8 @@ const ManagerPass = () => {
 
         if (data.newPassWord !== data.confirmPassWord) {
             toast.error('Mật khẩu mới không khớp với nhau');
+        } else if (data.currentPassWord === data.newPassWord) {
+            toast.error('Mật khẩu mới trùng mật khẩu hiện tại');
         } else {
             //
             //  call api doi mk
@@ -79,7 +81,7 @@ const ManagerPass = () => {
                     {/* end new password */}
                     {/* start comfirm password */}
                     <InputText
-                        labelInput="xác nhận lại mật khẩu"
+                        labelInput="Xác nhận lại mật khẩu"
                         errorInput={errors.confirmPassWord ? true : false}
                         isRequired
                         typeInput="password"

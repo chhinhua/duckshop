@@ -63,7 +63,6 @@ const ModalAddress = (propsCh: IPropsAddress) => {
         if (idAddressUpdate) {
             //  call api doi update thong tin
             const response = await updateAddressByAddressID(idAddressUpdate, data);
-            console.log(response);
 
             if (response) {
                 if (response.status === 200) {
