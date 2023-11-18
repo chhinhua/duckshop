@@ -91,7 +91,6 @@ const Pay = () => {
             }
         } else {
             PaymentType = 'VN_PAY';
-
             const note = encodeURIComponent(data.note);
             const total = totalPrice;
             const addressId = data.addressId;
