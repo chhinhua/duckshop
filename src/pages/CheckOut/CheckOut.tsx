@@ -20,10 +20,11 @@ import { getCartByToken } from '../../apis/cartApi';
 import { addOrderByToken } from '../../apis/orderApi';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
-import { checkOutVNPay } from '../../apis/vnpayApi';
+import { useNavigate } from 'react-router-dom';
 
 const Pay = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -72,25 +73,29 @@ const Pay = () => {
     const onSubmit: SubmitHandler<IOrderCheckOut> = async (data) => {
         //
         let PaymentType: string = '';
-        let response: {
-            data: any;
-            status: number;
-            headers: object;
-        };
+
         if (data.paymentType === config.PaymentType.CashOnDelivery) {
             PaymentType = 'COD';
-            response = await addOrderByToken({
+            const response = await addOrderByToken({
                 total: totalPrice,
                 paymentType: PaymentType,
                 note: data.note,
                 addressId: data.addressId,
             });
+            if (response?.status === 201) {
+                dispatch(setToTalProductCart(0));
+                toast.success('Đặt hàng thành công');
+                navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+            } else {
+                toast.error(response?.data.message || response?.data);
+            }
         } else {
             PaymentType = 'VN_PAY';
 
             const note = encodeURIComponent(data.note);
             const total = totalPrice;
             const addressId = data.addressId;
+<<<<<<< HEAD
             const username = "user"; // lấy tên username
 
             const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${username}&addressId=${addressId}&note=${note}`;
@@ -104,8 +109,19 @@ const Pay = () => {
             window.location.href = `http://localhost:5173/trang-cua-ban#historyPaymentProfile`;
         } else {
             toast.error(response.data.message || response.data);
+=======
+            const savedInfoUser = localStorage.getItem('infoUser');
+            let useName: string = ''; // lấy tên username
+            if (savedInfoUser) {
+                const dataInfo: { userName: string } = JSON.parse(savedInfoUser);
+                useName = dataInfo.userName;
+            }
+            dispatch(setToTalProductCart(0));
+            const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${useName}&addressId=${addressId}&note=${note}`;
+
+            window.location.href = redirectURL;
+>>>>>>> 30e9dfb2e2f78262b22f80e6bbd668e6f640dce0
         }
-        console.log(response);
     };
     return (
         <div className="w-11/12 m-auto pt-32">

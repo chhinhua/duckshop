@@ -8,7 +8,7 @@ import Paper from '@mui/material/Paper';
 import Button from '@mui/material/Button';
 
 import { toast } from 'react-toastify';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import React, { useEffect, useState } from 'react';
 
 import Image from '../../components/Image';
@@ -25,6 +25,7 @@ import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from './totalProducCartSlice';
 
 const Cart = () => {
+    const navigate = useNavigate();
     const dispatch = useDispatch();
 
     const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -69,6 +70,14 @@ const Cart = () => {
             dispatch(setToTalProductCart(+totalProductInCart.data));
         }
     };
+    // chi tiet san pham
+    const handleNextDetailPage = (idProduct: number) => {
+        if (idProduct) {
+            navigate(config.Routes.detailProduct + '#' + idProduct);
+        } else {
+            toast.error('Đang bảo trì');
+        }
+    };
     return (
         <div className="w-11/12 m-auto pt-32">
             <div className="grid grid-cols-12 gap-2">
@@ -101,7 +110,11 @@ const Cart = () => {
                                             key={index}
                                             sx={{ '&:last-child td, &:last-child th': { border: 0 } }}
                                         >
-                                            <TableCell component="th" scope="row">
+                                            <TableCell
+                                                component="th"
+                                                scope="row"
+                                                onClick={() => handleNextDetailPage(item.product.id)}
+                                            >
                                                 <Image
                                                     src={item.imageUrl}
                                                     className="sm:h-24 sm:w-24 lg:h-36 lg:w-36  h-16 w-16"

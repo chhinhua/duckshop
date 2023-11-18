@@ -4,7 +4,7 @@ import Button from '@mui/material/Button';
 
 import InputText from '../../../components/InputText/InputText';
 import { toast } from 'react-toastify';
-// import { changePassWordByToken } from '../../../apis/userApi';
+import { changePassWordByToken } from '../../../apis/userApi';
 
 interface IFormPassWord {
     currentPassWord: string;
@@ -34,13 +34,12 @@ const ManagerPass = () => {
         } else {
             //
             //  call api doi mk
-            // const response = await changePassWordByToken(data.newPassWord);
-            // console.log(response);
-            // if (response.status !== 200) {
-            //     //
-            // }
-            //
-            //
+            const response = await changePassWordByToken(data.currentPassWord, data.newPassWord);
+            if (response.status === 200) {
+                toast.success(response?.data);
+            } else {
+                toast.error(response?.data.message || response?.data);
+            }
         }
     };
 

@@ -1,6 +1,6 @@
-/** @type {import('tailwindcss').Config} */
-
-export default {
+/** @type {import('tailwindcss').Config} \*/
+// eslint-disable-next-line no-undef
+module.exports = {
     content: ['./index.html', './src/**/*.{js,ts,jsx,tsx}'],
     theme: {
         screens: {
@@ -27,6 +27,9 @@ export default {
                 128: '32rem',
                 140: '35rem',
                 144: '36rem',
+                148: '37rem',
+                152: '38rem',
+                156: '39rem',
             },
             borderColor: {
                 headerProfile: '#FFEEE8',

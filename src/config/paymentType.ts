@@ -1,5 +1,5 @@
 const PaymentType = {
-    VNPay: 'VN_Pay',
+    VNPay: 'VNPay',
     CashOnDelivery: 'Thanh toán khi nhận hàng',
 };
 

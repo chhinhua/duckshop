@@ -2,6 +2,15 @@
 import { IInfoProfileUser } from '../interface/user.js';
 import axios from './axiosConfig.js';
 
+export const getAllUserWithPagination = async (pageNo: number, pageSize: number) => {
+    try {
+        const response = await axios.get(`/users?pageNo=${pageNo}&pageSize=${pageSize}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getSingleUserByID = async (idUser: string) => {
     try {
         const response = await axios.get(`/users/id/${idUser}`);
@@ -19,9 +28,12 @@ export const getUserByUserNameOrEmail = async (userNameOrEmail: string) => {
         throw error;
     }
 };
-export const changePassWordByToken = async (passWord: string) => {
+export const changePassWordByToken = async (oldPassword: string, newPassword: string) => {
     try {
-        const response = await axios.put(`/users/password/change?newPassword=${passWord}`);
+        const response = await axios.put(`/users/password/change`, {
+            oldPassword,
+            newPassword,
+        });
         return response;
     } catch (error) {
         throw error;

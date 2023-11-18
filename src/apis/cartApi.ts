@@ -1,6 +1,15 @@
 /* eslint-disable no-useless-catch */
 import axios from './axiosConfig.js';
 
+export const getTotalPriceForYourCart = async () => {
+    try {
+        const response = await axios.get(`/cart/total-price`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const addToCart = async (quantity: number, productId: number, valueNames: Array<string>) => {
     try {
         const response = await axios.post('/cart', {
