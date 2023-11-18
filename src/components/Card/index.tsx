@@ -63,7 +63,7 @@ const Card = (props: { itemProduct: IProduct }) => {
                 <div className="font-medium text-base mb-3 grid gap-1">
                     <div>{itemProduct.name}</div>
                     <div className="flex justify-between">
-                        <span>{itemProduct.price} VNĐ</span>
+                        <span>{itemProduct.price.toLocaleString('vi-VN')} VNĐ</span>
                         <Rating defaultValue={itemProduct.rating} precision={0.5} readOnly />
                     </div>
                 </div>

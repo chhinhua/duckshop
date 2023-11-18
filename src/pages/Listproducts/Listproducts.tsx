@@ -37,7 +37,7 @@ function Listproducts() {
     const [page, setPage] = useState<number>(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
     const [totalProducts, setTotalProducts] = useState<number>(0); // Tổng số san pham
-    const itemsPerPage = 8;
+    const itemsPerPage = 24;
 
     const getAllProducts = async (pageNo: number) => {
         try {

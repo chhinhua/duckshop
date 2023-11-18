@@ -6,7 +6,11 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 
 import IAddress from '../../../../interface/address';
-import { addNewAddressForCurrentUser, getOneAddressByAddressID } from '../../../../apis/addressApi';
+import {
+    addNewAddressForCurrentUser,
+    getOneAddressByAddressID,
+    updateAddressByAddressID,
+} from '../../../../apis/addressApi';
 import InputText from '../../../../components/InputText/InputText';
 import { useEffect } from 'react';
 
@@ -56,13 +60,26 @@ const ModalAddress = (propsCh: IPropsAddress) => {
         setValue,
     } = useForm<IAddress>({});
     const onSubmit: SubmitHandler<IAddress> = async (data) => {
-        //  call api doi update thong tin
-        const response = await addNewAddressForCurrentUser(data);
-        if (response) {
-            if (response.status === 200) {
-                toast.success('Thêm thành công');
-            } else {
-                toast.error(response.data.message);
+        if (idAddressUpdate) {
+            //  call api doi update thong tin
+            const response = await updateAddressByAddressID(idAddressUpdate, data);
+            console.log(response);
+
+            if (response) {
+                if (response.status === 200) {
+                    toast.success('Cập nhật thành công');
+                } else {
+                    toast.error(response.data.message);
+                }
+            }
+        } else {
+            const response = await addNewAddressForCurrentUser(data);
+            if (response) {
+                if (response.status === 200) {
+                    toast.success('Thêm thành công');
+                } else {
+                    toast.error(response.data.message);
+                }
             }
         }
         handleClose();

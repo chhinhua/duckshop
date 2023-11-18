@@ -2,6 +2,15 @@
 import { IOrderCheckOut } from '../interface/order.js';
 import axios from './axiosConfig.js';
 
+export const getAllOrderWithPagination = async (pageNo: number, pageSize: number) => {
+    try {
+        const response = await axios.get(`/orders?pageNo=${pageNo}&pageSize=${pageSize}`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const getHistoryOrderForCurrentUser = async () => {
     try {
         const response = await axios.get(`/orders/token`);

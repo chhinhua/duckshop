@@ -20,10 +20,11 @@ import { getCartByToken } from '../../apis/cartApi';
 import { addOrderByToken } from '../../apis/orderApi';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
-import { checkOutVNPay } from '../../apis/vnpayApi';
+import { useNavigate } from 'react-router-dom';
 
 const Pay = () => {
     const dispatch = useDispatch();
+    const navigate = useNavigate();
     const {
         register,
         handleSubmit,
@@ -72,35 +73,39 @@ const Pay = () => {
     const onSubmit: SubmitHandler<IOrderCheckOut> = async (data) => {
         //
         let PaymentType: string = '';
-        let response: {
-            data: any;
-            status: number;
-            headers: object;
-        };
+
         if (data.paymentType === config.PaymentType.CashOnDelivery) {
             PaymentType = 'COD';
-            response = await addOrderByToken({
+            const response = await addOrderByToken({
                 total: totalPrice,
                 paymentType: PaymentType,
                 note: data.note,
                 addressId: data.addressId,
             });
+            if (response?.status === 201) {
+                dispatch(setToTalProductCart(0));
+                toast.success('Đặt hàng thành công');
+                navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+            } else {
+                toast.error(response?.data.message || response?.data);
+            }
         } else {
             PaymentType = 'VN_PAY';
-            response = await checkOutVNPay({
-                total: totalPrice,
-                paymentType: PaymentType,
-                note: data.note,
-                addressId: data.addressId,
-            });
-        }
-        if (response.status === 201) {
+
+            const note = encodeURIComponent(data.note);
+            const total = totalPrice;
+            const addressId = data.addressId;
+            const savedInfoUser = localStorage.getItem('infoUser');
+            let useName: string = ''; // lấy tên username
+            if (savedInfoUser) {
+                const dataInfo: { userName: string } = JSON.parse(savedInfoUser);
+                useName = dataInfo.userName;
+            }
             dispatch(setToTalProductCart(0));
-            toast.success('Đặt hàng thành công');
-        } else {
-            toast.error(response.data.message || response.data);
+            const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${useName}&addressId=${addressId}&note=${note}`;
+
+            window.location.href = redirectURL;
         }
-        console.log(response);
     };
     return (
         <div className="w-11/12 m-auto pt-32">
@@ -176,7 +181,7 @@ const Pay = () => {
                             size="large"
                             disabled={!isChecked}
                         >
-                            Tiếp tục
+                            Đặt hàng
                         </Button>
                         <div className="grid grid-cols-10">
                             <span>
