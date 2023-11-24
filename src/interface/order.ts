@@ -14,7 +14,7 @@ export default interface IOrder {
     isPaidBefore: boolean;
     lastModifiedDate: string;
     note: string;
-    orderItems: IProductCart;
+    orderItems: Array<IProductCart>;
     paymentType: string;
     status: string;
     total: number;

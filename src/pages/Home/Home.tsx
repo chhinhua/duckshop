@@ -59,7 +59,7 @@ function Home() {
             {/* End section banner */}
 
             {/* Start content */}
-            <div className="mt-10 w-11/12 flex flex-col justify-center m-auto">
+            <div className="mt-10 w-10/12 flex flex-col justify-center m-auto">
                 {/* Section 2 */}
                 <div className="w-full flex flex-col justify-center items-center gap-1 mb-1">
                     <div className="bg-black h-1 w-3/12"></div>

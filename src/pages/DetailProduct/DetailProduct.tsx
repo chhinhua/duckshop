@@ -30,6 +30,9 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import Image from '../../components/Image';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
+import Rating from '@mui/material/Rating';
+import ButtonRating from './ButtonRating';
+import Review from '../../components/Review/Review';
 
 const DetailProduct = () => {
     const dispatch = useDispatch();
@@ -45,6 +48,7 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
+                console.log(response);
 
                 if (response && response.data) {
                     setProduct(response.data);
@@ -137,7 +141,7 @@ const DetailProduct = () => {
     };
 
     return (
-        <div className="w-11/12 m-auto pt-32">
+        <div className="w-10/12 m-auto pt-32">
             <div className="grid grid-flow-row md:grid-flow-col grid-cols-12 gap-2">
                 {/* Start list image product */}
                 <div className=" hidden col-span-1 lg:flex flex-col gap-2 overflow-y-auto scroll-smooth hide-scrollbar h-144">
@@ -172,7 +176,10 @@ const DetailProduct = () => {
                 {/* Start info prođuct */}
                 <div className="col-span-12 md:col-span-6 lg:col-span-5 md:ml-10 ">
                     <div className="text-xl not-italic font-medium">{product?.name}</div>
-                    <div className="text-base not-italic font-medium">{product?.price} VNĐ</div>
+                    <div className="text-lg not-italic font-medium pt-5 text-red-500 flex">
+                        <span className="text-sm pr-1">đ</span>
+                        <span>{product?.price.toLocaleString('vi-VN')}</span>
+                    </div>
 
                     {/* start sỉze */}
                     <div className="mt-10 mb-2">
@@ -233,7 +240,7 @@ const DetailProduct = () => {
                                 aria-controls="panel1a-content"
                                 id="panel1a-header"
                             >
-                                <Typography>Delivery & Returns</Typography>
+                                <Typography>Giao hàng và vận chuyển</Typography>
                             </AccordionSummary>
                             <AccordionDetails>
                                 <Typography>
@@ -247,31 +254,49 @@ const DetailProduct = () => {
                                 </Typography>
                             </AccordionDetails>
                         </Accordion>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel2a-content"
-                                id="panel2a-header"
-                            >
-                                <Typography>Product Information</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails>
-                                <Typography>{product?.description}</Typography>
-                            </AccordionDetails>
-                        </Accordion>
-                        <Accordion>
-                            <AccordionSummary
-                                expandIcon={<ExpandMoreIcon />}
-                                aria-controls="panel3a-content"
-                                id="panel3a-header"
-                            >
-                                <Typography>Reviews (0)</Typography>
-                            </AccordionSummary>
-                            <AccordionDetails></AccordionDetails>
-                        </Accordion>
                     </div>
                 </div>
                 {/* End info prođuct */}
+            </div>
+            {/* Start product description */}
+            <div className="mt-5">
+                <div className="bg-slate-100 p-3 rounded text-xl font-normal">MÔ TẢ SẢN PHẨM</div>
+                <div className="mt-5 text-lg">{product?.description}</div>
+            </div>
+
+            {/* Start product reviews */}
+            <div className="mt-5">
+                <div className="bg-slate-100 p-3 rounded text-xl font-normal">ĐÁNH GIÁ SẢN PHẨM</div>
+                <div className="bg-orange-50 h-max p-5">
+                    <div className="grid grid-cols-8">
+                        <div className="col-span-3 lg:col-span-2">
+                            <div className="text-center mt-4">
+                                <span className="text-red-500 text-2xl font-bold">{product?.rating}&nbsp;</span>
+                                <span className="text-red-500 text-lg">trên 5</span>
+                                <div>
+                                    <Rating
+                                        defaultValue={product?.rating}
+                                        precision={0.5}
+                                        readOnly
+                                        sx={{ fontSize: '1.8rem' }}
+                                    />
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="col-span-5 lg:col-span-6 flex flex-wrap items-center gap-3">
+                            <ButtonRating>Tất cả</ButtonRating>
+                            <ButtonRating>5 sao (55)</ButtonRating>
+                            <ButtonRating>4 sao (100)</ButtonRating>
+                            <ButtonRating>3 sao (22)</ButtonRating>
+                            <ButtonRating>2 sao (2)</ButtonRating>
+                            <ButtonRating>1 sao (0)</ButtonRating>
+                        </div>
+                    </div>
+                </div>
+                <Review />
+                <Review />
+                <Review />
             </div>
         </div>
     );

@@ -16,7 +16,6 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { Fragment, useEffect, useState } from 'react';
 import { getHistoryOrderForCurrentUser } from '../../../apis/orderApi';
 import IOrder from '../../../interface/order';
-import IProductCart from '../../../interface/productCart';
 import Image from '../../../components/Image';
 
 // import Pagination from '@mui/material/Pagination';
@@ -32,7 +31,13 @@ function Row(props: { item: IOrder }) {
                     {item.createdDate}
                 </TableCell>
                 <TableCell align="left">{item.totalItems}</TableCell>
-                <TableCell align="left">{item.total.toLocaleString('vi-VN')}</TableCell>
+                <TableCell align="left">
+                    <div className="text-base not-italic font-medium text-red-500 flex ">
+                        <span className="text-sm pr-0.5">đ</span>
+
+                        {item.total.toLocaleString('vi-VN')}
+                    </div>
+                </TableCell>
                 <TableCell align="left">{item.status}</TableCell>
                 <TableCell>
                     <Button variant="outlined" onClick={() => setOpen(!open)}>
@@ -70,12 +75,13 @@ function Row(props: { item: IOrder }) {
                                     <TableRow>
                                         <TableCell>Sản phẩm</TableCell>
                                         <TableCell align="left">Tên</TableCell>
-                                        <TableCell align="left">Số lượng</TableCell>
-                                        <TableCell align="left">Giá</TableCell>
+                                        <TableCell align="center">Số lượng</TableCell>
+                                        <TableCell align="left">Giá cho 1 sản phẩm</TableCell>
+                                        <TableCell align="left">Tổng giá</TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
-                                    {item?.orderItems.map((item2: IProductCart, index2: number) => (
+                                    {item?.orderItems.map((item2, index2) => (
                                         <TableRow
                                             key={index2}
                                             sx={{
@@ -96,9 +102,18 @@ function Row(props: { item: IOrder }) {
                                                     <span key={index3}>{item3.valueName} </span>
                                                 ))}
                                             </TableCell>
-                                            <TableCell align="left">{item2.quantity} </TableCell>
+                                            <TableCell align="center">{item2.quantity} </TableCell>
                                             <TableCell align="left">
-                                                {item2.subTotal.toLocaleString('vi-VN')} VNĐ
+                                                <div className="text-base not-italic font-medium text-red-500 flex ">
+                                                    <span className="text-sm pr-0.5">đ</span>
+                                                    <span> {item2.price.toLocaleString('vi-VN')}</span>
+                                                </div>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <div className="text-base not-italic font-medium text-red-500 flex">
+                                                    <span className="text-sm pr-0.5">đ</span>
+                                                    <span> {item2.subTotal.toLocaleString('vi-VN')}</span>
+                                                </div>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -133,7 +148,7 @@ const PurchaseHistory = () => {
                             <TableRow>
                                 <TableCell>Ngày xuất đơn</TableCell>
                                 <TableCell align="left">Tổng sản phẩm</TableCell>
-                                <TableCell align="left">Tổng giá</TableCell>
+                                <TableCell align="left">Thành tiền</TableCell>
                                 <TableCell align="left">Trạng thái</TableCell>
                                 <TableCell>Chi tiết</TableCell>
                             </TableRow>

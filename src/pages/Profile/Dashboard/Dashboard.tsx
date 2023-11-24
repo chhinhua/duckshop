@@ -24,7 +24,7 @@ const Dashboard = () => {
                 </div>
                 <div className="col-span-2">
                     <div className="font-medium text-2xl">18</div>
-                    <div className="text-sm text-gray-500">Chờ xác nhận</div>
+                    <div className="text-sm text-gray-500">Chờ thanh toán</div>
                 </div>
             </div>
             {/* end doi xac nhan don hang */}
@@ -46,7 +46,7 @@ const Dashboard = () => {
                 </div>
                 <div className="col-span-2">
                     <div className="font-medium text-2xl">2002</div>
-                    <div className="text-sm text-gray-500">Đã thanh toán</div>
+                    <div className="text-sm text-gray-500">Đã giao</div>
                 </div>
             </div>
             {/* end sp da thanh toan */}

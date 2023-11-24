@@ -23,6 +23,7 @@ import DeleteProduct from './DeleteProduct';
 import { getCountOfItems } from '../../apis/cartApi';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from './totalProducCartSlice';
+import MouseOverPopover from '../../components/MouseOverPopover/MouseOverPopover';
 
 const Cart = () => {
     const navigate = useNavigate();
@@ -89,10 +90,10 @@ const Cart = () => {
     }, [totalProductLocalStorage]);
 
     return (
-        <div className="w-11/12 m-auto pt-32">
+        <div className="w-10/12 m-auto pt-32">
             <div className="grid grid-cols-12 gap-2">
                 {/* start list product */}
-                <div className="col-span-12 lg:col-span-8 ">
+                <div className="col-span-12 lg:col-span-9 ">
                     <div className="h-min bg-[#F5F5F5] px-6 py-3 mb-5 rounded">
                         <div className="font-semibold text-lg">Miễn phí vận chuyển</div>
                         <span className="text-sm text-gray-500">
@@ -108,7 +109,7 @@ const Cart = () => {
                                 <TableHead>
                                     <TableRow>
                                         <TableCell></TableCell>
-                                        <TableCell align="left">Tên</TableCell>
+                                        <TableCell align="left">Sản phẩm</TableCell>
                                         <TableCell align="center">Số lượng</TableCell>
                                         <TableCell align="left">Giá</TableCell>
                                         <TableCell></TableCell>
@@ -123,23 +124,26 @@ const Cart = () => {
                                             <TableCell
                                                 component="th"
                                                 scope="row"
+                                                sx={{
+                                                    minWidth: '100px',
+                                                }}
                                                 onClick={() => handleNextDetailPage(item.product.id)}
                                             >
                                                 <Image
                                                     src={item.imageUrl}
-                                                    className="sm:h-24 sm:w-24 lg:h-36 lg:w-36  h-16 w-16"
+                                                    className="sm:h-24 sm:w-24 lg:h-30 lg:w-30  h-16 w-16"
                                                 />
                                             </TableCell>
                                             <TableCell align="left">
-                                                <div>{item.product.name}</div>
-                                                <span>
+                                                {item.product.name}
+                                                <div>
                                                     {item.sku?.optionValues?.map((option, index) => (
                                                         <React.Fragment key={index}>
                                                             {option.valueName}
                                                             {index < item.sku.optionValues.length - 1 ? ' - ' : ''}
                                                         </React.Fragment>
                                                     ))}
-                                                </span>
+                                                </div>
                                             </TableCell>
                                             <TableCell align="center">
                                                 <QuantityProduct
@@ -148,12 +152,19 @@ const Cart = () => {
                                                     handleChangeItemQuantity={handleChangeItemQuantity}
                                                 />
                                             </TableCell>
-                                            <TableCell align="left">{item.subTotal.toLocaleString('vi-VN')}</TableCell>
                                             <TableCell align="left">
-                                                <DeleteProduct
-                                                    idItem={item.id}
-                                                    handleDeleteProduct={handleDeleteProduct}
-                                                />
+                                                <div className="text-base not-italic font-medium text-red-500 flex ">
+                                                    <span className="text-sm pr-0.5">đ</span>
+                                                    {item.subTotal.toLocaleString('vi-VN')}
+                                                </div>
+                                            </TableCell>
+                                            <TableCell align="left">
+                                                <MouseOverPopover content="Xóa sản phẩm khỏi giỏ hàng">
+                                                    <DeleteProduct
+                                                        idItem={item.id}
+                                                        handleDeleteProduct={handleDeleteProduct}
+                                                    />
+                                                </MouseOverPopover>
                                             </TableCell>
                                         </TableRow>
                                     ))}
@@ -164,20 +175,31 @@ const Cart = () => {
                 </div>
                 {/* end list product */}
                 {/* start bill */}
-                <div className="col-span-12 mt-10 lg:mt-0 lg:col-span-4 lg:ml-10 space-y-5">
+                <div className="col-span-12 mt-10 lg:mt-0 lg:col-span-3 lg:ml-10 space-y-5">
                     <h1 className="text-2xl font-semibold text-center">Tổng chi phí</h1>
                     <div className="grid grid-cols-3">
-                        <span className="text-left col-span-2">Tổng tiền Sản phẩm</span>
-                        <span className="text-right">{totalPrice.toLocaleString('vi-VN')} VNĐ</span>
+                        <span className="text-left col-span-2">Tổng tiền</span>
+                        <span className="text-right text-red-500 flex justify-end">
+                            <span className="text-sm pr-0.5">đ</span>
+                            {totalPrice.toLocaleString('vi-VN')}
+                        </span>
                     </div>
                     <div className="grid grid-cols-3">
-                        <span className="text-left col-span-2">Dự kiến Giao hàng và Xử lý</span>
-                        <span className="text-right">{0} VNĐ</span>
+                        <span className="text-left col-span-2">Phí vận chuyển</span>
+                        <span className="text-right text-red-500 flex justify-end">
+                            <span className="text-sm pr-0.5">đ</span>
+                            {0}
+                        </span>
                     </div>
                     <div className="grid grid-cols-3 relative py-10">
                         <span className="absolute left-0 top-5 h-0.5 bg-gray-200 w-full"></span>
+
                         <span className="text-left col-span-2">Thành tiền</span>
-                        <span className="text-right">{(totalPrice + 0).toLocaleString('vi-VN')} VNĐ</span>
+                        <span className="text-right text-red-500 flex justify-end">
+                            <span className="text-sm pr-0.5">đ</span>
+                            {(totalPrice + 0).toLocaleString('vi-VN')}
+                        </span>
+
                         <span className="absolute left-0 bottom-5 h-0.5 bg-gray-200 w-full"></span>
                     </div>
                     {totalProduct === 0 ? (

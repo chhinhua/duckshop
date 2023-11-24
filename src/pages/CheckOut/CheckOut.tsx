@@ -107,7 +107,7 @@ const Pay = () => {
         }
     };
     return (
-        <div className="w-11/12 m-auto pt-32">
+        <div className="w-10/12 m-auto pt-32">
             <div className="grid sm:grid-cols-2 gap-10 sm:grid-row-2 lg:gap-20">
                 {/* start infomation */}
                 <div>

@@ -60,10 +60,13 @@ const Card = (props: { itemProduct: IProduct }) => {
                 </Box>
             </div>
             <CardContent>
-                <div className="font-medium text-base mb-3 grid gap-1">
-                    <div>{itemProduct.name}</div>
-                    <div className="flex justify-between">
-                        <span>{itemProduct.price.toLocaleString('vi-VN')} VNĐ</span>
+                <div className="font-medium text-base  grid gap-1">
+                    <div className="h-18 overflow-hidden ">{itemProduct.name}</div>
+                    <div className="flex justify-between mt-3">
+                        <div className="text-base not-italic font-medium text-red-500 flex ">
+                            <span className="text-sm pr-0.5">đ</span>
+                            {itemProduct.price.toLocaleString('vi-VN')}
+                        </div>
                         <Rating defaultValue={itemProduct.rating} precision={0.5} readOnly />
                     </div>
                 </div>
@@ -72,8 +75,8 @@ const Card = (props: { itemProduct: IProduct }) => {
                 <Button fullWidth variant="outlined" onClick={handleNextDetailPage}>
                     <ShoppingCart />
                 </Button>
-                <Button onClick={handleChangeFavorite}>
-                    {favourite ? <Favorite sx={{ color: 'black' }} /> : <FavoriteBorder sx={{ color: 'black' }} />}
+                <Button fullWidth onClick={handleChangeFavorite}>
+                    {favourite ? <Favorite sx={{ color: 'red' }} /> : <FavoriteBorder sx={{ color: 'red' }} />}
                 </Button>
             </CardActions>
         </div>

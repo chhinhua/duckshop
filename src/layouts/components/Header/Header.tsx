@@ -85,7 +85,7 @@ function Header() {
                     scroll ? 'bg-header shadow-xl fixed duration-200 ease-in ' : 'bg-transparent absolute '
                 } h-18 flex flex-col justify-center items-center w-full z-50`}
             >
-                <div className="w-11/12 grid grid-flow-col grid-cols-3 place-content-between ">
+                <div className="w-10/12 grid grid-flow-col grid-cols-3 place-content-between ">
                     <div className="h-full w-48 col-span-1">
                         <Link to={config.Routes.home}>
                             <Image src={logo} className="h-full w-full" />
@@ -122,7 +122,7 @@ function Header() {
                                     </IconButton>
                                 </Link>
                                 <Button onClick={handlePopoverToggle}>
-                                    <Avatar src={avatarUrl} alt="Đức" sx={{ width: 32, height: 32 }} />
+                                    <Avatar src={avatarUrl} alt="Avatar" sx={{ width: 32, height: 32 }} />
                                     <span className="text-base ml-1 font-medium normal-case text-black">
                                         {userName}
                                     </span>
