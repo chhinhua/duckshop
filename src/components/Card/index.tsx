@@ -24,7 +24,11 @@ const Card = (props: { itemProduct: IProduct }) => {
     const [favourite, setFavourite] = useState(itemProduct.liked ? true : false);
     const handleChangeFavorite = useCallback(async () => {
         // call api yeu thich
-        await putFollowProduct(+itemProduct.id);
+        try {
+            await putFollowProduct(+itemProduct.id);
+        } catch (error) {
+            toast.error(`${error}`);
+        }
 
         // fake
         setFavourite((prev) => !prev);

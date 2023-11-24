@@ -31,6 +31,9 @@ import { setToTalProductCart } from '../Cart/totalProducCartSlice';
 import Rating from '@mui/material/Rating';
 import ButtonRating from './ButtonRating';
 import Review from '../../components/Review/Review';
+import Favorite from '@mui/icons-material/Favorite';
+import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
+import { putFollowProduct } from '../../apis/followProductApi';
 
 const DetailProduct = () => {
     const dispatch = useDispatch();
@@ -39,6 +42,7 @@ const DetailProduct = () => {
     const location = useLocation();
     const idProduct = location.hash.substring(1);
     // handle data
+    const [favourite, setFavourite] = useState<boolean>(false);
     const [product, setProduct] = useState<IProduct>(); // Dữ liệu từ API
 
     const getProduct = async (id: number) => {
@@ -46,9 +50,11 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
+                console.log(response);
 
                 if (response && response.data) {
                     setProduct(response.data);
+                    setFavourite(response.data.liked);
                 }
                 if (response.status !== 200) {
                     toast.error(response.data.message);
@@ -105,7 +111,7 @@ const DetailProduct = () => {
             try {
                 const response = await getSKUPrice(+idProduct, color, size);
                 if (response.status === 200) {
-                    const updatedObject: IProduct = { ...product };
+                    const updatedObject: IProduct = product;
                     updatedObject.price = response.data;
                     setProduct(updatedObject);
                 } else {
@@ -117,6 +123,14 @@ const DetailProduct = () => {
         }
     };
 
+    const handleToggleFavorite = async () => {
+        setFavourite((prev) => !prev);
+        try {
+            await putFollowProduct(+idProduct);
+        } catch (error) {
+            toast.error(`${error}`);
+        }
+    };
     useEffect(() => {
         handleGetPrice();
     }, [idProduct, color, size]);
@@ -245,16 +259,25 @@ const DetailProduct = () => {
                         ))}
                     </div>
                     {/* end list color */}
+                    <div className="flex gap-2">
+                        <Button
+                            fullWidth
+                            disabled={color && size ? false : true}
+                            variant="contained"
+                            sx={{ height: 50, marginTop: 2 }}
+                            onClick={handleAddCart}
+                        >
+                            + <ShoppingCart />
+                        </Button>
 
-                    <Button
-                        disabled={color && size ? false : true}
-                        fullWidth
-                        variant="contained"
-                        sx={{ height: 50, marginTop: 2 }}
-                        onClick={handleAddCart}
-                    >
-                        <ShoppingCart />
-                    </Button>
+                        <Button
+                            sx={{ height: 50, marginTop: 2, color: 'red', border: '1px solid red' }}
+                            variant="outlined"
+                            onClick={handleToggleFavorite}
+                        >
+                            {favourite ? <Favorite sx={{ color: 'red' }} /> : <FavoriteBorder sx={{ color: 'red' }} />}
+                        </Button>
+                    </div>
                     <div className="pt-10">
                         <Accordion>
                             <AccordionSummary
