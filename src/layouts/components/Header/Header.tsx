@@ -18,6 +18,8 @@ import config from '../../../config';
 import { useAppDispatch, useAppSelector } from '../../../redux/hook';
 import { selectIsLogin, setIsLogin } from '../../../pages/LogIn/loginSlice';
 import { selectToTalProductCart } from '../../../pages/Cart/totalProducCartSlice';
+import Favorite from '@mui/icons-material/Favorite';
+import MouseOverPopover from '../../../components/MouseOverPopover/MouseOverPopover';
 
 function Header() {
     const dispatch = useAppDispatch();
@@ -107,20 +109,30 @@ function Header() {
                         {checkLogin ? (
                             <>
                                 <Link to={config.Routes.cart}>
-                                    <IconButton aria-label="cart">
-                                        <Badge
-                                            badgeContent={totalProductCart}
-                                            color="secondary"
-                                            anchorOrigin={{
-                                                vertical: 'top',
-                                                horizontal: 'right',
-                                            }}
-                                            overlap="circular"
-                                        >
-                                            <ShoppingCartIcon />
-                                        </Badge>
+                                    <IconButton>
+                                        <MouseOverPopover content="Giỏ hàng">
+                                            <Badge
+                                                badgeContent={totalProductCart}
+                                                color="secondary"
+                                                anchorOrigin={{
+                                                    vertical: 'top',
+                                                    horizontal: 'right',
+                                                }}
+                                                overlap="circular"
+                                            >
+                                                <ShoppingCartIcon />
+                                            </Badge>
+                                        </MouseOverPopover>
                                     </IconButton>
                                 </Link>
+                                <Link to={config.Routes.profile + '#' + config.PageInProfile.favouriteProfile}>
+                                    <IconButton>
+                                        <MouseOverPopover content="Danh sách yêu thích">
+                                            <Favorite />
+                                        </MouseOverPopover>
+                                    </IconButton>
+                                </Link>
+
                                 <Button onClick={handlePopoverToggle}>
                                     <Avatar src={avatarUrl} alt="Avatar" sx={{ width: 32, height: 32 }} />
                                     <span className="text-base ml-1 font-medium normal-case text-black">

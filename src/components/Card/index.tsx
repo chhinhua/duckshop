@@ -14,15 +14,17 @@ import { useCallback, useState } from 'react';
 
 import config from '../../config';
 import IProduct from '../../interface/product';
+import { putFollowProduct } from '../../apis/followProductApi';
 
 const Card = (props: { itemProduct: IProduct }) => {
     const { itemProduct } = props;
     const navigate = useNavigate();
 
     // yeu thich
-    const [favourite, setFavourite] = useState(false);
-    const handleChangeFavorite = useCallback(() => {
+    const [favourite, setFavourite] = useState(itemProduct.liked ? true : false);
+    const handleChangeFavorite = useCallback(async () => {
         // call api yeu thich
+        await putFollowProduct(+itemProduct.id);
 
         // fake
         setFavourite((prev) => !prev);

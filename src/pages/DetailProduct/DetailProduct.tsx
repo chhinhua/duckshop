@@ -8,9 +8,7 @@ import InputLabel from '@mui/material/InputLabel';
 import MenuItem from '@mui/material/MenuItem';
 import FormControl from '@mui/material/FormControl';
 import Select from '@mui/material/Select';
-import Box from '@mui/material/Box';
 import Card from '@mui/material/Card';
-import CardContent from '@mui/material/CardContent';
 import Accordion from '@mui/material/Accordion';
 import AccordionSummary from '@mui/material/AccordionSummary';
 import AccordionDetails from '@mui/material/AccordionDetails';
@@ -20,7 +18,7 @@ import NavigateBefore from '@mui/icons-material/NavigateBefore';
 import NavigateNext from '@mui/icons-material/NavigateNext';
 import ShoppingCart from '@mui/icons-material/ShoppingCart';
 
-import { getSingleProduct } from '../../apis/productApi';
+import { getSKUPrice, getSingleProduct } from '../../apis/productApi';
 import IProduct from '../../interface/product';
 
 import BootstrapButton from './BootstrapButton';
@@ -48,7 +46,6 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
-                console.log(response);
 
                 if (response && response.data) {
                     setProduct(response.data);
@@ -102,6 +99,28 @@ const DetailProduct = () => {
             }
         }
     };
+    // handle price theo size và color
+    const handleGetPrice = async () => {
+        if (color && size) {
+            try {
+                const response = await getSKUPrice(+idProduct, color, size);
+                if (response.status === 200) {
+                    const updatedObject: IProduct = { ...product };
+                    updatedObject.price = response.data;
+                    setProduct(updatedObject);
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+            } catch (error) {
+                toast.error(`${error}`);
+            }
+        }
+    };
+
+    useEffect(() => {
+        handleGetPrice();
+    }, [idProduct, color, size]);
+
     // handle số lượng sản phẩm trong giỏ hàng
     const getTotalItemOfCart = async () => {
         const totalProductInCart = await getCountOfItems();
@@ -207,17 +226,20 @@ const DetailProduct = () => {
                     <div className="mt-10">
                         <span>Chọn Màu</span>
                     </div>
-                    <div className="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-2 xl:grid-cols-3 gap-2">
+                    <div className="grid grid-cols-2 sm:grid-cols-3  md:grid-cols-1 lg:grid-cols-2  gap-2">
                         {product?.options[0].values.map((item, index) => (
                             <BootstrapButton key={index} onClick={() => handleChangePicColor(item)}>
                                 <Card
                                     key={index}
                                     sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}
                                 >
-                                    <Box sx={{ display: 'flex', flexDirection: 'column' }}>
-                                        <CardContent>{item.valueName}</CardContent>
-                                    </Box>
-                                    <Image className="h-16" src={item.imageUrl} alt={item.valueName} />
+                                    {/* <Box sx={{ display: 'flex', flexDirection: 'column' }}>
+                                        <CardContent sx={{ fontSize: '12px' }}>{item.valueName}</CardContent>
+                                    </Box> */}
+                                    <div className="flex justify-center items-center font-semibold text-center w-full text-sm h-18">
+                                        {item.valueName}
+                                    </div>
+                                    <Image className="h-18" src={item.imageUrl} alt={item.valueName} />
                                 </Card>
                             </BootstrapButton>
                         ))}

@@ -20,7 +20,7 @@ import { getTotalPriceForYourCart } from '../../apis/cartApi';
 import { addOrderByToken } from '../../apis/orderApi';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 
 const Pay = () => {
     const dispatch = useDispatch();
@@ -41,14 +41,18 @@ const Pay = () => {
     const [listAddress, setListAddress] = useState<Array<IAddress>>([]);
 
     const getListAddress = async () => {
-        const response = await getListAddressOffCurrentUser();
+        try {
+            const response = await getListAddressOffCurrentUser();
 
-        if (response.status === 200) {
-            if (response?.data) {
-                setListAddress(response.data);
+            if (response.status === 200) {
+                if (response?.data) {
+                    setListAddress(response.data);
+                }
+            } else {
+                toast.error(response.data.message);
             }
-        } else {
-            toast.error(response.data.message);
+        } catch (error) {
+            toast.error(`${error}`);
         }
     };
 
@@ -56,12 +60,16 @@ const Pay = () => {
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
     const getListProduct = async () => {
-        const response = await getTotalPriceForYourCart();
+        try {
+            const response = await getTotalPriceForYourCart();
 
-        if (response.status === 200) {
-            setTotalPrice(response?.data);
-        } else {
-            toast.error(response?.data?.message || response?.data);
+            if (response.status === 200) {
+                setTotalPrice(response?.data);
+            } else {
+                toast.error(response?.data?.message || response?.data);
+            }
+        } catch (error) {
+            toast.error(`${error}`);
         }
     };
     useEffect(() => {
@@ -76,18 +84,22 @@ const Pay = () => {
 
         if (data.paymentType === config.PaymentType.CashOnDelivery) {
             PaymentType = 'COD';
-            const response = await addOrderByToken({
-                total: totalPrice,
-                paymentType: PaymentType,
-                note: data.note,
-                addressId: data.addressId,
-            });
-            if (response?.status === 201) {
-                dispatch(setToTalProductCart(0));
-                toast.success('Đặt hàng thành công');
-                navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
-            } else {
-                toast.error(response?.data.message || response?.data);
+            try {
+                const response = await addOrderByToken({
+                    total: totalPrice,
+                    paymentType: PaymentType,
+                    note: data.note,
+                    addressId: data.addressId,
+                });
+                if (response?.status === 201) {
+                    dispatch(setToTalProductCart(0));
+                    toast.success('Đặt hàng thành công');
+                    navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+                } else {
+                    toast.error(response?.data.message || response?.data);
+                }
+            } catch (error) {
+                toast.error(`${error}`);
             }
         } else {
             PaymentType = 'VN_PAY';
@@ -101,9 +113,13 @@ const Pay = () => {
                 useName = dataInfo.userName;
             }
             dispatch(setToTalProductCart(0));
-            const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${useName}&addressId=${addressId}&note=${note}`;
+            try {
+                const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${useName}&addressId=${addressId}&note=${note}`;
 
-            window.location.href = redirectURL;
+                window.location.href = redirectURL;
+            } catch (error) {
+                toast.error(`${error}`);
+            }
         }
     };
     return (
@@ -135,34 +151,41 @@ const Pay = () => {
                         </FormControl>
                         {/* end input PaymentType */}
                         {/* start input address */}
-                        <FormControl fullWidth>
-                            <InputLabel id="demo-simple-select-helper-label">Địa chỉ</InputLabel>
-                            <Select
-                                labelId="demo-simple-select-label"
-                                id="demo-simple-select"
-                                input={<OutlinedInput label="Địa chỉ" />}
-                                fullWidth
-                                error={errors.addressId ? true : false}
-                                defaultValue={''}
-                                {...register('addressId', {
-                                    required: 'address is required',
-                                })}
-                            >
-                                {listAddress.map((item, index) => (
-                                    <MenuItem value={item.id} key={index}>
-                                        <div>
-                                            <span>{item.fullName}</span>
-                                            <span className="px-3">|</span>
-                                            <span>{item.phoneNumber}</span>
-                                            <div>{item.orderDetails}</div>
+                        {listAddress.length > 0 ? (
+                            <FormControl fullWidth>
+                                <InputLabel>Địa chỉ</InputLabel>
+                                <Select
+                                    input={<OutlinedInput label="Địa chỉ" />}
+                                    fullWidth
+                                    error={errors.addressId ? true : false}
+                                    defaultValue={''}
+                                    {...register('addressId', {
+                                        required: 'address is required',
+                                    })}
+                                >
+                                    {listAddress.map((item, index) => (
+                                        <MenuItem value={item.id} key={index}>
                                             <div>
-                                                {item.ward}, {item.district}, {item.city}
+                                                <span>{item.fullName}</span>
+                                                <span className="px-3">|</span>
+                                                <span>{item.phoneNumber}</span>
+                                                <div>{item.orderDetails}</div>
+                                                <div>
+                                                    {item.ward}, {item.district}, {item.city}
+                                                </div>
                                             </div>
-                                        </div>
-                                    </MenuItem>
-                                ))}
-                            </Select>
-                        </FormControl>
+                                        </MenuItem>
+                                    ))}
+                                </Select>
+                            </FormControl>
+                        ) : (
+                            <Link to={config.Routes.profile + '#' + config.PageInProfile.addressProfile}>
+                                <Button fullWidth variant="outlined" size="large" sx={{ marginTop: '20px' }}>
+                                    Hiện chưa có địa chỉ. Nhấn để thêm
+                                </Button>
+                            </Link>
+                        )}
+
                         {/* end input address */}
                         {/* start input firtname */}
                         <Textarea

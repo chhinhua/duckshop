@@ -1,6 +1,5 @@
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
-import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
@@ -9,6 +8,8 @@ import Box from '@mui/material/Box';
 import Collapse from '@mui/material/Collapse';
 import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
+import { styled } from '@mui/material/styles';
+import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -19,32 +20,51 @@ import IOrder from '../../../interface/order';
 import Image from '../../../components/Image';
 
 // import Pagination from '@mui/material/Pagination';
+const StyledTableCell = styled(TableCell)(({ theme }) => ({
+    [`&.${tableCellClasses.head}`]: {
+        backgroundColor: '#B3A492',
+        color: theme.palette.common.white,
+    },
+    [`&.${tableCellClasses.body}`]: {
+        fontSize: 14,
+        padding: 3,
+    },
+}));
 
+const StyledTableRow = styled(TableRow)(({ theme }) => ({
+    '&:nth-of-type(odd)': {
+        backgroundColor: theme.palette.action.hover,
+    },
+    // hide last border
+    '&:last-child td, &:last-child th': {
+        border: 0,
+    },
+}));
 function Row(props: { item: IOrder }) {
     const { item } = props;
     const [open, setOpen] = useState(false);
 
     return (
         <Fragment>
-            <TableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: open ? '#FFF8EA' : '' }}>
-                <TableCell component="th" scope="row">
+            <StyledTableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: open ? '#FFF8EA' : '' }}>
+                <StyledTableCell align="center" component="th" scope="row">
                     {item.createdDate}
-                </TableCell>
-                <TableCell align="left">{item.totalItems}</TableCell>
-                <TableCell align="left">
+                </StyledTableCell>
+                <StyledTableCell align="center">{item.totalItems}</StyledTableCell>
+                <StyledTableCell align="center">
                     <div className="text-base not-italic font-medium text-red-500 flex ">
                         <span className="text-sm pr-0.5">đ</span>
 
                         {item.total.toLocaleString('vi-VN')}
                     </div>
-                </TableCell>
-                <TableCell align="left">{item.status}</TableCell>
-                <TableCell>
+                </StyledTableCell>
+                <StyledTableCell align="left">{item.status}</StyledTableCell>
+                <StyledTableCell>
                     <Button variant="outlined" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </Button>
-                </TableCell>
-            </TableRow>
+                </StyledTableCell>
+            </StyledTableRow>
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
@@ -145,13 +165,13 @@ const PurchaseHistory = () => {
                 <TableContainer>
                     <Table stickyHeader aria-label="simple table">
                         <TableHead>
-                            <TableRow>
-                                <TableCell>Ngày xuất đơn</TableCell>
-                                <TableCell align="left">Tổng sản phẩm</TableCell>
-                                <TableCell align="left">Thành tiền</TableCell>
-                                <TableCell align="left">Trạng thái</TableCell>
-                                <TableCell>Chi tiết</TableCell>
-                            </TableRow>
+                            <StyledTableRow>
+                                <StyledTableCell align="center">Ngày xuất đơn</StyledTableCell>
+                                <StyledTableCell align="center">Tổng sản phẩm</StyledTableCell>
+                                <StyledTableCell align="left">Thành tiền</StyledTableCell>
+                                <StyledTableCell align="left">Trạng thái</StyledTableCell>
+                                <StyledTableCell>Chi tiết</StyledTableCell>
+                            </StyledTableRow>
                         </TableHead>
                         <TableBody>
                             {listHistory.map((item: IOrder, index) => (
