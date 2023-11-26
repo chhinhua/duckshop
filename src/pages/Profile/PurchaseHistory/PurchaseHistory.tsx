@@ -10,6 +10,10 @@ import Typography from '@mui/material/Typography';
 import Button from '@mui/material/Button';
 import { styled } from '@mui/material/styles';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
+import InputLabel from '@mui/material/InputLabel';
+import MenuItem from '@mui/material/MenuItem';
+import FormControl from '@mui/material/FormControl';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
@@ -19,7 +23,7 @@ import ModeComment from '@mui/icons-material/ModeComment';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
 
-import { getHistoryOrderForCurrentUser, updateOrderStatusByID } from '../../../apis/orderApi';
+import { getHistoryOrderForCurrentUser, searchOrderForUser, updateOrderStatusByID } from '../../../apis/orderApi';
 import IOrder from '../../../interface/order';
 import Image from '../../../components/Image';
 import config from '../../../config';
@@ -237,18 +241,43 @@ function Row(props: Iprops) {
 const PurchaseHistory = () => {
     const [isLoading, setLoading] = useState<boolean>(false);
     const [listHistory, setListHistory] = useState<Array<IOrder>>([]);
+    // change status
+    const [status, setStatus] = useState<string>('');
 
-    const handleGetListHistory = async () => {
-        const response = await getHistoryOrderForCurrentUser();
-
-        setListHistory(response.data);
+    const handleChangeStatus = (event: SelectChangeEvent) => {
+        setStatus(event.target.value as string);
+    };
+    // get data
+    const handleGetListHistory = async (statusParam: string) => {
+        if (statusParam === '') {
+            const response = await getHistoryOrderForCurrentUser();
+            setListHistory(response.data);
+        } else {
+            const response = await searchOrderForUser(statusParam);
+            setListHistory(response.data);
+        }
     };
     useEffect(() => {
-        handleGetListHistory();
-    }, [isLoading]);
+        handleGetListHistory(status);
+    }, [isLoading, status]);
 
     return (
         <div>
+            <div className="flex items-center font-medium text-lg py-3">
+                <span className="w-40">Lọc đơn hàng:</span>
+                <FormControl fullWidth>
+                    <InputLabel>Trạng thái</InputLabel>
+                    <Select value={status} label="Trạng thái" onChange={handleChangeStatus}>
+                        <MenuItem value={''}>Tất cả</MenuItem>
+                        <MenuItem value={config.StatusOrders.ORDERED}>{config.StatusOrders.ORDERED}</MenuItem>
+                        <MenuItem value={config.StatusOrders.PROCESSING}>{config.StatusOrders.PROCESSING}</MenuItem>
+                        <MenuItem value={config.StatusOrders.SHIPPED}>{config.StatusOrders.SHIPPED}</MenuItem>
+                        <MenuItem value={config.StatusOrders.DELIVERED}>{config.StatusOrders.DELIVERED}</MenuItem>
+                        <MenuItem value={config.StatusOrders.CANCELED}>{config.StatusOrders.CANCELED}</MenuItem>
+                        <MenuItem value={config.StatusOrders.WAITFORPAY}>{config.StatusOrders.WAITFORPAY}</MenuItem>
+                    </Select>
+                </FormControl>
+            </div>
             <Paper sx={{ width: '100%', overflow: 'hidden' }}>
                 <TableContainer>
                     <Table stickyHeader aria-label="simple table">
