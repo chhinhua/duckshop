@@ -1,4 +1,4 @@
-interface IProductChildrenCart {
+export interface IProductChildrenCart {
     id: number;
     name: string;
     quantityAvailable: number;

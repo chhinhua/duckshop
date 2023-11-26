@@ -13,11 +13,18 @@ import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import Cancel from '@mui/icons-material/Cancel';
+import ModeComment from '@mui/icons-material/ModeComment';
 
-import { Fragment, useEffect, useState } from 'react';
-import { getHistoryOrderForCurrentUser } from '../../../apis/orderApi';
+import { useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import { getHistoryOrderForCurrentUser, updateOrderStatusByID } from '../../../apis/orderApi';
 import IOrder from '../../../interface/order';
 import Image from '../../../components/Image';
+import config from '../../../config';
+import MouseOverPopover from '../../../components/MouseOverPopover/MouseOverPopover';
+import ModalReview from './ModalReview/ModalReview';
 
 // import Pagination from '@mui/material/Pagination';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -40,13 +47,52 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
         border: 0,
     },
 }));
-function Row(props: { item: IOrder }) {
-    const { item } = props;
+interface Iprops {
+    item: IOrder;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
+}
+function Row(props: Iprops) {
+    const { item, setLoading } = props;
+
     const [open, setOpen] = useState(false);
+    const [isCancel, setCancel] = useState<boolean>(
+        item.status === config.StatusOrders.ORDERED || item.status === config.StatusOrders.WAITFORPAY ? true : false,
+    );
+    const [isReview, setReview] = useState<boolean>(item.status === config.StatusOrders.DELIVERED ? true : false);
+
+    const handleCancelOrder = async (id: number) => {
+        const userConfirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
+        if (userConfirmed) {
+            try {
+                const response = await updateOrderStatusByID(id, config.StatusOrders.CANCELED);
+                if (response.status === 200) {
+                    setCancel(false);
+                    toast.success(response.data.status);
+                    setLoading((prev) => !prev);
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+            } catch (error) {
+                toast.error(`${error}`);
+            }
+        } else {
+            toast.info('Hủy xóa');
+        }
+    };
+
+    // modal
+    const [openReview, setOpenReview] = useState(false);
+
+    const handleOpenReview = () => setOpenReview(true);
+    const handleCloseReview = () => setOpenReview(false);
 
     return (
-        <Fragment>
-            <StyledTableRow sx={{ '& > *': { borderBottom: 'unset' }, backgroundColor: open ? '#FFF8EA' : '' }}>
+        <>
+            <StyledTableRow
+                sx={{
+                    '&:last-child td, &:last-child th': { border: 0 },
+                }}
+            >
                 <StyledTableCell align="center" component="th" scope="row">
                     {item.createdDate}
                 </StyledTableCell>
@@ -58,11 +104,32 @@ function Row(props: { item: IOrder }) {
                         {item.total.toLocaleString('vi-VN')}
                     </div>
                 </StyledTableCell>
-                <StyledTableCell align="left">{item.status}</StyledTableCell>
+                <StyledTableCell align="left">
+                    <span
+                        className={`${
+                            item.status === config.StatusOrders.DELIVERED
+                                ? 'text-green-600 text-base font-semibold'
+                                : ''
+                        } font-medium `}
+                    >
+                        {item.status}
+                    </span>
+                </StyledTableCell>
                 <StyledTableCell>
                     <Button variant="outlined" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </Button>
+                    {isCancel && (
+                        <Button onClick={() => handleCancelOrder(item.id)} sx={{ width: '20px' }}>
+                            <MouseOverPopover content="Hủy đơn hàng">
+                                <Cancel
+                                    sx={{
+                                        color: 'red',
+                                    }}
+                                />
+                            </MouseOverPopover>
+                        </Button>
+                    )}
                 </StyledTableCell>
             </StyledTableRow>
             <TableRow>
@@ -71,7 +138,7 @@ function Row(props: { item: IOrder }) {
                         <Box sx={{ margin: 1 }}>
                             <div>
                                 <Typography fontWeight={600} component="span">
-                                    Địa chỉ nhận hàng:{' '}
+                                    Địa chỉ nhận hàng:
                                 </Typography>
                                 <Typography component="span">
                                     {item.address.orderDetails}, {item.address.ward}, {item.address.district},
@@ -80,13 +147,13 @@ function Row(props: { item: IOrder }) {
                             </div>
                             <div>
                                 <Typography fontWeight={600} component="span">
-                                    Hình thức thanh toán:{' '}
+                                    Hình thức thanh toán:
                                 </Typography>
                                 <Typography component="span">{item.paymentType}</Typography>
                             </div>
                             <div>
                                 <Typography fontWeight={600} component="span">
-                                    Ghi chú:{' '}
+                                    Ghi chú:
                                 </Typography>
                                 <Typography component="span">{item.note}</Typography>
                             </div>
@@ -98,6 +165,7 @@ function Row(props: { item: IOrder }) {
                                         <TableCell align="center">Số lượng</TableCell>
                                         <TableCell align="left">Giá cho 1 sản phẩm</TableCell>
                                         <TableCell align="left">Tổng giá</TableCell>
+                                        <TableCell align="center"></TableCell>
                                     </TableRow>
                                 </TableHead>
                                 <TableBody>
@@ -135,6 +203,25 @@ function Row(props: { item: IOrder }) {
                                                     <span> {item2.subTotal.toLocaleString('vi-VN')}</span>
                                                 </div>
                                             </TableCell>
+                                            <TableCell>
+                                                {isReview && (
+                                                    <Button onClick={handleOpenReview} sx={{ width: '20px' }}>
+                                                        <MouseOverPopover content="Đánh giá sản phẩm">
+                                                            <ModeComment
+                                                                sx={{
+                                                                    color: 'blue',
+                                                                }}
+                                                            />
+                                                        </MouseOverPopover>
+                                                    </Button>
+                                                )}
+                                                <ModalReview
+                                                    open={openReview}
+                                                    handleClose={handleCloseReview}
+                                                    product={item2.product}
+                                                    idOrder={item.id}
+                                                />
+                                            </TableCell>
                                         </TableRow>
                                     ))}
                                 </TableBody>
@@ -143,11 +230,12 @@ function Row(props: { item: IOrder }) {
                     </Collapse>
                 </TableCell>
             </TableRow>
-        </Fragment>
+        </>
     );
 }
 
 const PurchaseHistory = () => {
+    const [isLoading, setLoading] = useState<boolean>(false);
     const [listHistory, setListHistory] = useState<Array<IOrder>>([]);
 
     const handleGetListHistory = async () => {
@@ -157,7 +245,7 @@ const PurchaseHistory = () => {
     };
     useEffect(() => {
         handleGetListHistory();
-    }, []);
+    }, [isLoading]);
 
     return (
         <div>
@@ -175,7 +263,7 @@ const PurchaseHistory = () => {
                         </TableHead>
                         <TableBody>
                             {listHistory.map((item: IOrder, index) => (
-                                <Row key={index} item={item} />
+                                <Row key={index} item={item} setLoading={setLoading} />
                             ))}
                         </TableBody>
                     </Table>

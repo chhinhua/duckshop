@@ -70,7 +70,7 @@ export const addOrderByToken = async (data: IOrderCheckOut) => {
     }
 };
 
-export const updateOrderStatusByID = async (idOrder: string, status: string) => {
+export const updateOrderStatusByID = async (idOrder: number, status: string) => {
     try {
         const response = await axios.put(`/orders/${idOrder}/status?status=${status}`);
         return response;
