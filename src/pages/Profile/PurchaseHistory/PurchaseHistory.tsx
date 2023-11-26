@@ -124,13 +124,26 @@ function Row(props: Iprops) {
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </Button>
                     {isCancel && (
-                        <Button onClick={() => handleCancelOrder(item.id)} sx={{ width: '20px' }}>
+                        <Button
+                            onClick={() => handleCancelOrder(item.id)}
+                            variant="contained"
+                            sx={{
+                                bgcolor: 'red',
+                                marginLeft: 1,
+                                ':hover': {
+                                    bgcolor: '#2B2A4C',
+                                },
+                            }}
+                        >
                             <MouseOverPopover content="Hủy đơn hàng">
                                 <Cancel
                                     sx={{
-                                        color: 'red',
+                                        color: 'white',
+                                        fontSize: '1rem',
+                                        marginRight: 0.3,
                                     }}
                                 />
+                                <span className="normal-case text-white text-base">Huỷ</span>
                             </MouseOverPopover>
                         </Button>
                     )}
