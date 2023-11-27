@@ -29,11 +29,11 @@ import Image from '../../components/Image';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
 import Rating from '@mui/material/Rating';
-import ButtonRating from './Button/ButtonRating';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
-import { putFollowProduct } from '../../apis/followProductApi';
+import { getWishListNumber, putFollowProduct } from '../../apis/followProductApi';
 import ReviewProductCurrent from './ReviewProductCurrent/ReviewProductCurrent';
+import { setToTalWishList } from '../Profile/Wishlist/wishListSlice';
 
 const DetailProduct = () => {
     const dispatch = useDispatch();
@@ -44,6 +44,7 @@ const DetailProduct = () => {
     // handle data
     const [favourite, setFavourite] = useState<boolean>(false);
     const [product, setProduct] = useState<IProduct>(); // Dữ liệu từ API
+    const [ratingProduct, setRatingProduct] = useState<number>(0);
 
     const getProduct = async (id: number) => {
         try {
@@ -54,6 +55,7 @@ const DetailProduct = () => {
                 if (response && response.data) {
                     setProduct(response.data);
                     setFavourite(response.data.liked);
+                    setRatingProduct(response.data.rating);
                 }
                 if (response.status !== 200) {
                     toast.error(response.data.message);
@@ -114,7 +116,7 @@ const DetailProduct = () => {
         if (color && size) {
             try {
                 const response = await getSKUPrice(+idProduct, color, size);
-                if (response.status === 200) {
+                if (response.status === 200 && product) {
                     const updatedObject: IProduct = product;
                     updatedObject.price = response.data;
                     setProduct(updatedObject);
@@ -131,6 +133,8 @@ const DetailProduct = () => {
         setFavourite((prev) => !prev);
         try {
             await putFollowProduct(+idProduct);
+            const response = await getWishListNumber();
+            dispatch(setToTalWishList(+response.data));
         } catch (error) {
             toast.error(`${error}`);
         }
@@ -216,6 +220,16 @@ const DetailProduct = () => {
                     <div className="text-lg not-italic font-medium pt-5 text-red-500 flex">
                         <span className="text-sm pr-1">đ</span>
                         <span>{product?.price.toLocaleString('vi-VN')}</span>
+                        <span className="text-gray-600 px-3">|</span>
+                        <div>
+                            <span className="text-lg text-gray-800 font-semibold pr-2">{product?.rating}/5</span>
+                            <Rating readOnly value={ratingProduct} precision={0.01} sx={{ fontSize: '16px' }} />
+                        </div>
+                        <span className="text-gray-600 px-3">|</span>
+                        <div>
+                            <span className="text-lg text-gray-800 font-semibold">{product?.numberOfRatings}</span>
+                            <span className="text-base text-gray-500 "> Đánh giá</span>
+                        </div>
                     </div>
 
                     {/* start sỉze */}
@@ -315,35 +329,7 @@ const DetailProduct = () => {
 
             {/* Start product reviews */}
             <div className="mt-5">
-                <div className="bg-gray-200 p-3 rounded text-xl font-normal">ĐÁNH GIÁ SẢN PHẨM</div>
-                <div className="bg-orange-50 h-max p-5">
-                    <div className="grid grid-cols-8">
-                        <div className="col-span-3 lg:col-span-2">
-                            <div className="text-center mt-4">
-                                <span className="text-red-500 text-2xl font-bold">{product?.rating}&nbsp;</span>
-                                <span className="text-red-500 text-lg">trên 5</span>
-                                <div>
-                                    <Rating
-                                        defaultValue={product && parseFloat(product.rating.toFixed(1))}
-                                        precision={0.1}
-                                        readOnly
-                                        sx={{ fontSize: '1.8rem' }}
-                                    />
-                                </div>
-                            </div>
-                        </div>
-
-                        <div className="col-span-5 lg:col-span-6 flex flex-wrap items-center gap-3">
-                            <ButtonRating>Tất cả</ButtonRating>
-                            <ButtonRating>5 sao (0)</ButtonRating>
-                            <ButtonRating>4 sao (0)</ButtonRating>
-                            <ButtonRating>3 sao (0)</ButtonRating>
-                            <ButtonRating>2 sao (0)</ButtonRating>
-                            <ButtonRating>1 sao (0)</ButtonRating>
-                        </div>
-                    </div>
-                </div>
-                <ReviewProductCurrent idProduct={+idProduct} />
+                <ReviewProductCurrent idProduct={+idProduct} rating={ratingProduct} />
             </div>
         </div>
     );

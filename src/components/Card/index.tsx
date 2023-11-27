@@ -11,21 +11,25 @@ import Rating from '@mui/material/Rating';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
 import { useCallback, useState } from 'react';
+import { useDispatch } from 'react-redux';
 
 import config from '../../config';
 import IProduct from '../../interface/product';
-import { putFollowProduct } from '../../apis/followProductApi';
+import { getWishListNumber, putFollowProduct } from '../../apis/followProductApi';
+import { setToTalWishList } from '../../pages/Profile/Wishlist/wishListSlice';
 
 const Card = (props: { itemProduct: IProduct }) => {
     const { itemProduct } = props;
     const navigate = useNavigate();
+    const dispatch = useDispatch();
 
     // yeu thich
     const [favourite, setFavourite] = useState(itemProduct.liked ? true : false);
     const handleChangeFavorite = useCallback(async () => {
-        // call api yeu thich
         try {
             await putFollowProduct(+itemProduct.id);
+            const response = await getWishListNumber();
+            dispatch(setToTalWishList(+response.data));
         } catch (error) {
             toast.error(`${error}`);
         }
@@ -81,9 +85,12 @@ const Card = (props: { itemProduct: IProduct }) => {
                 <Button fullWidth variant="outlined" onClick={handleNextDetailPage}>
                     <ShoppingCart />
                 </Button>
-                <Button fullWidth onClick={handleChangeFavorite}>
+                <Button onClick={handleChangeFavorite}>
                     {favourite ? <Favorite sx={{ color: 'red' }} /> : <FavoriteBorder sx={{ color: 'red' }} />}
                 </Button>
+                <div className="flex place-content-center w-full">
+                    <span className="text-sm text-gray-600 font-medium">Yêu thích {itemProduct.favoriteCount}</span>
+                </div>
             </CardActions>
         </div>
     );

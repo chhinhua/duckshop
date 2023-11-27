@@ -17,12 +17,13 @@ import ModeComment from '@mui/icons-material/ModeComment';
 import { useState } from 'react';
 
 import { toast } from 'react-toastify';
-import { updateOrderStatusByID } from '../../../apis/orderApi';
-import Image from '../../../components/Image';
-import MouseOverPopover from '../../../components/MouseOverPopover/MouseOverPopover';
-import ModalReview from './ModalReview/ModalReview';
-import IOrder from '../../../interface/order';
-import config from '../../../config';
+import { updateOrderStatusByID } from '../../../../apis/orderApi';
+import Image from '../../../../components/Image';
+import MouseOverPopover from '../../../../components/MouseOverPopover/MouseOverPopover';
+import ModalReview from '../ModalReview/ModalReview';
+import IOrder from '../../../../interface/order';
+import config from '../../../../config';
+import { Link } from 'react-router-dom';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -64,6 +65,7 @@ export default function RowTable(props: Iprops) {
         if (userConfirmed) {
             try {
                 const response = await updateOrderStatusByID(id, config.StatusOrders.CANCELED);
+
                 if (response.status === 200) {
                     setCancel(false);
                     toast.success(response.data.status);
@@ -191,10 +193,12 @@ export default function RowTable(props: Iprops) {
                                             }}
                                         >
                                             <TableCell component="th" scope="row">
-                                                <Image
-                                                    src={item2.imageUrl}
-                                                    className="sm:h-24 sm:w-24 lg:h-36 lg:w-36  h-16 w-16"
-                                                />
+                                                <Link to={config.Routes.detailProduct + '#' + item2.product.id}>
+                                                    <Image
+                                                        src={item2.imageUrl}
+                                                        className="sm:h-24 sm:w-24 lg:h-36 lg:w-36  h-16 w-16"
+                                                    />
+                                                </Link>
                                             </TableCell>
                                             <TableCell align="left">
                                                 <div className="text-md font-medium">{item2.product.name}</div>
@@ -230,7 +234,7 @@ export default function RowTable(props: Iprops) {
                                                 <ModalReview
                                                     open={openReview}
                                                     handleClose={handleCloseReview}
-                                                    product={item2.product}
+                                                    product={item2}
                                                     idOrder={item.id}
                                                 />
                                             </TableCell>

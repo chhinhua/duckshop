@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { useDispatch } from 'react-redux';
 
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
@@ -16,10 +17,11 @@ import ShoppingCartOutlined from '@mui/icons-material/ShoppingCartOutlined';
 import Favorite from '@mui/icons-material/Favorite';
 
 import Image from '../../../components/Image';
-import { getWishListWithPagination, putFollowProduct } from '../../../apis/followProductApi';
+import { getWishListNumber, getWishListWithPagination, putFollowProduct } from '../../../apis/followProductApi';
 import IFollowProduct from '../../../interface/followProduct';
 import config from '../../../config';
 import MouseOverPopover from '../../../components/MouseOverPopover/MouseOverPopover';
+import { setToTalWishList } from './wishListSlice';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -43,6 +45,7 @@ const StyledTableRow = styled(TableRow)(({ theme }) => ({
 }));
 
 const Wishlist = () => {
+    const dispatch = useDispatch();
     const [isLoading, setLoading] = useState<boolean>(false);
     // change page
     const [data, setData] = useState<Array<IFollowProduct>>([]); // Dữ liệu từ API
@@ -68,9 +71,10 @@ const Wishlist = () => {
     };
 
     const handleToggleFavourite = async (itemProduct: number) => {
-        const response = await putFollowProduct(itemProduct);
+        await putFollowProduct(itemProduct);
+        const response = await getWishListNumber();
+        dispatch(setToTalWishList(+response.data));
         setLoading((prev) => !prev);
-        console.log(response);
     };
 
     useEffect(() => {

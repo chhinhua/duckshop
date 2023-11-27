@@ -10,7 +10,7 @@ import { toast } from 'react-toastify';
 import { useState } from 'react';
 
 import { IreviewOrder } from '../../../../interface/review';
-import { IProductChildrenCart } from '../../../../interface/productCart';
+import IProductCart from '../../../../interface/productCart';
 import { addReview } from '../../../../apis/reviewApi';
 const style = {
     position: 'absolute',
@@ -28,7 +28,7 @@ const style = {
 interface IPropsAddress {
     open: boolean;
     handleClose: () => void;
-    product: IProductChildrenCart;
+    product: IProductCart;
     idOrder: number;
 }
 
@@ -81,39 +81,50 @@ const ModalReview = (propsCh: IPropsAddress) => {
             <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
                     <div className="text-lg mb-4">
-                        <span className="font-semibold">Đánh giá sản phẩm: </span> {product.name}
+                        <span className="font-semibold">Đánh giá sản phẩm: </span> {product.product.name}
+                    </div>
+                    <div className="text-lg mb-4">
+                        <span className="font-semibold">Phân loại: </span>
+                        {product.sku.optionValues.map((item, index) => (
+                            <span key={index}>{item.valueName} </span>
+                        ))}
                     </div>
                     <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
-                        <span className="font-semibold text-lg">Ghi đánh giá: </span>
+                        <div className="font-semibold text-lg flex">
+                            <span className="pr-5">Đánh sao:</span>
+                            <Box
+                                sx={{
+                                    width: 500,
+                                    display: 'flex',
+                                    alignItems: 'center',
+                                    paddingBottom: 3,
+                                }}
+                            >
+                                <Rating
+                                    value={valueRating}
+                                    precision={1}
+                                    getLabelText={getLabelText}
+                                    onChange={(event, newValue) => {
+                                        setValueRating(newValue || 1);
+                                    }}
+                                    onChangeActive={(event, newHover) => {
+                                        setHoverRating(newHover);
+                                    }}
+                                    emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
+                                />
+                                {valueRating !== null && (
+                                    <Box sx={{ ml: 2 }}>{labels[hoverRating !== -1 ? hoverRating : valueRating]}</Box>
+                                )}
+                            </Box>
+                        </div>
+
+                        <span className="font-semibold text-lg ">Ghi đánh giá: </span>
                         <TextareaAutosize
                             minRows={9}
                             style={{ border: '1px solid #000', width: '100%', padding: '8px 12px' }}
                             {...register(`content`)}
                         />
-                        <div className="font-semibold text-lg">Đánh sao: </div>
-                        <Box
-                            sx={{
-                                width: 500,
-                                display: 'flex',
-                                alignItems: 'center',
-                            }}
-                        >
-                            <Rating
-                                value={valueRating}
-                                precision={1}
-                                getLabelText={getLabelText}
-                                onChange={(event, newValue) => {
-                                    setValueRating(newValue || 1);
-                                }}
-                                onChangeActive={(event, newHover) => {
-                                    setHoverRating(newHover);
-                                }}
-                                emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
-                            />
-                            {valueRating !== null && (
-                                <Box sx={{ ml: 2 }}>{labels[hoverRating !== -1 ? hoverRating : valueRating]}</Box>
-                            )}
-                        </Box>
+
                         <div className="float-right">
                             <Button sx={{ width: 140 }} onClick={handleClose}>
                                 Trở lại

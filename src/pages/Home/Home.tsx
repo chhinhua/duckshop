@@ -47,11 +47,11 @@ function Home() {
                 style={{ backgroundImage: `url(${S1banner1})` }}
             >
                 <div className="flex flex-col pl-32 select-none">
-                    <span className="w-2/3 text-3xl font-medium not-italic tracking-widest text-white uppercase xl:text-7xl lg:text-5xl">
-                        DISCOVER THE ART OF DRESSING UP
+                    <span className="w-4/5  font-medium not-italic tracking-widest text-white uppercase text-2xl md:text-4xl lg:text-5xl xl:text-7xl ">
+                        Nghệ thuật ăn mặc
                     </span>
-                    <span className="text-lg  font-normal not-italic tracking-wider text-white uppercase xl:text-2xl">
-                        MADE IN VIETNAM, DEDICATED TO VIETNAM
+                    <span className="font-normal not-italic tracking-wider text-white uppercase text-sm md:text-lg xl:text-2xl">
+                        Sản xuất tại Việt Nam, Dành riêng cho Việt Nam.
                     </span>
                 </div>
             </div>
@@ -63,15 +63,19 @@ function Home() {
                 {/* Section 2 */}
                 <div className="w-full flex flex-col justify-center items-center gap-1 mb-1">
                     <div className="bg-black h-1 w-3/12"></div>
-                    <div className="uppercase text-xl font-semibold not-italic">This Weeks Highlights</div>
+                    <div className="uppercase text-xl font-semibold not-italic">NHỮNG ĐIỂM NỔI BẬT TRONG TUẦN NÀY</div>
                 </div>
                 <div className="w-full mt-7">
                     <div className="grid grid-cols-1 gap-4 md:grid-cols-3 sm:grid-cols-2">
                         {[
-                            { title: 'Exclusive Shoes', action: 'Find Your Store', image: S2Baner1 },
-                            { title: 'Exquisite Styles & Collections', action: 'Find Shop', image: S2Baner2 },
-                            { title: 'New Products', action: 'Find New Products', image: S2Baner3 },
-                            { title: 'Exclusive Items', action: 'Find Items', image: S2Baner4 },
+                            { title: 'Giày', action: 'Sản phẩm Giày', image: S2Baner1 },
+                            {
+                                title: 'Phong cách và Bộ sưu tập độc đáo',
+                                action: 'Danh sách sản phẩm',
+                                image: S2Baner2,
+                            },
+                            { title: 'Áo', action: 'Sản phẩm Áo', image: S2Baner3 },
+                            { title: 'Những Mặt hàng Độc Quyền', action: 'Danh sách sản phẩm', image: S2Baner4 },
                         ].map((item, index) => (
                             <ScrollAnimationElement key={index}>
                                 <div
@@ -84,12 +88,24 @@ function Home() {
                                         style={{ backgroundImage: `url(${item.image})` }}
                                     >
                                         <div className="h-full flex flex-col">
-                                            <span className="w-full h-96 flex items-center justify-center text-center text-4xl font-medium not-italic tracking-widest text-white uppercase">
+                                            <span className="w-full h-96 flex items-center justify-center text-center text-4xl not-italic tracking-widest text-white font-semibold uppercase">
                                                 {item.title}
                                             </span>
-                                            <Link to={config.Routes.listProducts} className="absolute bottom-7 left-7 ">
-                                                <ButtonComp>{item.action}</ButtonComp>
-                                            </Link>
+                                            {item.title === 'Giày' || item.title === 'Áo' ? (
+                                                <Link
+                                                    to={config.Routes.listProducts + '#' + item.title}
+                                                    className="absolute bottom-7 left-7 "
+                                                >
+                                                    <ButtonComp>{item.action}</ButtonComp>
+                                                </Link>
+                                            ) : (
+                                                <Link
+                                                    to={config.Routes.listProducts}
+                                                    className="absolute bottom-7 left-7 "
+                                                >
+                                                    <ButtonComp>{item.action}</ButtonComp>
+                                                </Link>
+                                            )}
                                         </div>
                                     </div>
                                 </div>
@@ -101,7 +117,7 @@ function Home() {
                 {/* Start section 3 */}
                 <div className="w-full grid justify-items-center gap-1 mt-8">
                     <div className="bg-black h-1 w-3/12"></div>
-                    <div className="uppercase text-xl font-semibold not-italic">Popular this week</div>
+                    <div className="uppercase text-xl font-semibold not-italic">PHỔ BIẾN TRONG TUẦN NÀY</div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
                     {[S2Baner1, S2Baner2, S2Baner3, S2Baner4].map((item, index) => (
@@ -114,7 +130,7 @@ function Home() {
                 {/* Start section 4 */}
                 <div className="w-full grid justify-items-center gap-1 mt-8">
                     {/* <div className="bg-black h-1 w-3/12"></div> */}
-                    <div className="uppercase text-xl font-semibold not-italic">The Essentials</div>
+                    <div className="uppercase text-xl font-semibold not-italic">Những Điều Cần Thiết</div>
                 </div>
                 <div className="h-full grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
                     {[
@@ -156,10 +172,10 @@ function Home() {
                     </video>
                     <div className="w-full flex flex-col absolute bottom-0 text-center mb-4">
                         <span className="w-full h-auto mb-4 lg:text-4xl md:text-2xl text-xl font-medium not-italic tracking-widest text-white uppercase">
-                            See the fashion accessories for you
+                            Xem các phụ kiện thời trang dành cho bạn
                         </span>
                         <Link to={config.Routes.listProducts}>
-                            <ButtonComp custom>See accessories</ButtonComp>
+                            <ButtonComp custom>Xem cửa hàng</ButtonComp>
                         </Link>
                     </div>
                 </div>

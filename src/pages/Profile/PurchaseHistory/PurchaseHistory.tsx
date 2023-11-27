@@ -17,7 +17,7 @@ import { useEffect, useState } from 'react';
 import { getHistoryOrderForCurrentUser, searchOrderForUser } from '../../../apis/orderApi';
 import IOrder from '../../../interface/order';
 import config from '../../../config';
-import RowTable from './RowTable';
+import RowTable from './RowTable/RowTable';
 
 // import Pagination from '@mui/material/Pagination';
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
@@ -55,11 +55,9 @@ const PurchaseHistory = () => {
         if (statusParam === '') {
             const response = await getHistoryOrderForCurrentUser();
             setListHistory(response.data);
-            console.log(response.data);
         } else {
             const response = await searchOrderForUser(statusParam);
             setListHistory(response.data);
-            console.log(response.data);
         }
     };
     useEffect(() => {

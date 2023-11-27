@@ -39,18 +39,22 @@ const Register = () => {
     });
 
     const onSubmit: SubmitHandler<TResgister> = async (data: TResgister) => {
-        setIsLoadng(true);
-        // call api dang ki va gui OTP
-        const response = await registerApi(data.userName, data.email, data.passWord);
+        try {
+            setIsLoadng(true);
+            // call api dang ki va gui OTP
+            const response = await registerApi(data.userName, data.email, data.passWord);
 
-        setIsLoadng(false);
+            setIsLoadng(false);
 
-        if (response.status === 201) {
-            dispatch(setRegister(data));
-            toast.success(response.data);
-            navigate(config.Routes.getOTPRegister);
-        } else {
-            toast.error(response.data.message);
+            if (response.status === 201) {
+                dispatch(setRegister(data));
+                toast.success(response.data);
+                navigate(config.Routes.getOTPRegister);
+            } else {
+                toast.error(response.data.message);
+            }
+        } catch (error) {
+            toast.error(`${error}`);
         }
     };
 

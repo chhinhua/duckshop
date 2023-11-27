@@ -30,6 +30,11 @@ import config from '../../config';
 function Listproducts() {
     const location = useLocation();
     const search = decodeURIComponent(location.hash.substring(1));
+    // Kiểm tra xem có dấu thăng (#) hay không
+    if (search) {
+        // Thay đổi URL, xóa dấu thăng và mọi dữ liệu sau nó
+        window.history.replaceState({}, document.title, window.location.pathname);
+    }
 
     // change page
     const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
@@ -136,8 +141,8 @@ function Listproducts() {
                 {/* start section 1 */}
                 <div
                     className={`${
-                        scroll ? 'fixed duration-200 ease-in top-18 left-0 w-full ' : ' grid-cols-2'
-                    }   z-50 grid bg-transparen`}
+                        scroll ? 'fixed duration-200 ease-in top-18 left-0 w-full w-screen' : ' grid-cols-2'
+                    }   z-50 grid bg-transparen `}
                 >
                     <strong className={`${scroll ? 'hidden' : ''} `}>
                         Đang hiển thị {totalProductsPage} trong {totalProducts} sản phẩm
@@ -172,14 +177,26 @@ function Listproducts() {
                                             onChange={handleGetFilter}
                                         >
                                             <MenuItem value={''}>Không chọn</MenuItem>
-                                            <MenuItem value={config.SearchFilter.favoriteAsc}>Yêu thích tăng</MenuItem>
-                                            <MenuItem value={config.SearchFilter.favoriteDesc}>Yêu thích giảm</MenuItem>
-                                            <MenuItem value={config.SearchFilter.priceAsc}>Giá tăng</MenuItem>
-                                            <MenuItem value={config.SearchFilter.priceDesc}>Giá giảm</MenuItem>
-                                            <MenuItem value={config.SearchFilter.ratingAsc}>Số sao tăng</MenuItem>
-                                            <MenuItem value={config.SearchFilter.ratingDesc}>Số sao giảm</MenuItem>
-                                            <MenuItem value={config.SearchFilter.reviewAsc}>Đánh giá tăng</MenuItem>
-                                            <MenuItem value={config.SearchFilter.reviewDesc}>Đánh giá giảm</MenuItem>
+                                            <MenuItem value={config.SearchFilter.favoriteAsc}>
+                                                Lượt thích: Thấp đến Cao
+                                            </MenuItem>
+                                            <MenuItem value={config.SearchFilter.favoriteDesc}>
+                                                Lượt thích: Cao đến Thấp
+                                            </MenuItem>
+                                            <MenuItem value={config.SearchFilter.priceAsc}>Giá: Thấp đến Cao</MenuItem>
+                                            <MenuItem value={config.SearchFilter.priceDesc}>Giá: Cao đến Thấp</MenuItem>
+                                            <MenuItem value={config.SearchFilter.ratingAsc}>
+                                                Số sao: Thấp đến Cao
+                                            </MenuItem>
+                                            <MenuItem value={config.SearchFilter.ratingDesc}>
+                                                Số sao: Cao đến Thấp
+                                            </MenuItem>
+                                            <MenuItem value={config.SearchFilter.reviewAsc}>
+                                                Lượt đánh giá: Thấp đến Cao
+                                            </MenuItem>
+                                            <MenuItem value={config.SearchFilter.reviewDesc}>
+                                                Lượt đánh giá: Cao đến Thấp
+                                            </MenuItem>
                                         </Select>
                                     </FormControl>
                                 </AccordionDetails>
@@ -194,7 +211,7 @@ function Listproducts() {
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
-                                    <Typography>Category</Typography>
+                                    <Typography>Mục sản phẩm</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <FormGroup>

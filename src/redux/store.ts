@@ -3,12 +3,14 @@ import { configureStore } from '@reduxjs/toolkit';
 import loginSlice from '../pages/LogIn/loginSlice';
 import registerSlice from '../pages/Register/registerSlice';
 import totalProducCartSlice from '../pages/Cart/totalProducCartSlice';
+import wishListSlice from '../pages/Profile/Wishlist/wishListSlice';
 
 const store = configureStore({
     reducer: {
         login: loginSlice,
         register: registerSlice,
         totalProducCart: totalProducCartSlice,
+        wishListSlice: wishListSlice,
     },
 });
 

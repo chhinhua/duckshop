@@ -1,6 +1,14 @@
 /* eslint-disable no-useless-catch */
-
 import axios from './axiosConfig.js';
+
+export const getWishListNumber = async () => {
+    try {
+        const response = await axios.get(`/follows/wishlist/count`);
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
 
 export const getWishListWithPagination = async (pageNo: number, pageSize: number) => {
     try {

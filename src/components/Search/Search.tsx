@@ -16,7 +16,6 @@ const Search = (props: Iprops) => {
     };
     const handleSubmitSearch = () => {
         setDoneSearch && setDoneSearch(true);
-        setValueSearch('');
     };
     // optimize
     // handle set thời gian chờ để tránh việc nhập 1 kí tự sẽ loading liên tục
