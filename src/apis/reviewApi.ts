@@ -1,8 +1,8 @@
 /* eslint-disable no-useless-catch */
-import Ireview from '../interface/review.js';
+import { IreviewOrder } from '../interface/review.js';
 import axios from './axiosConfig.js';
 
-export const addReview = async (object: Ireview) => {
+export const addReview = async (object: IreviewOrder) => {
     try {
         const response = await axios.post(`/reviews`, {
             content: object.content,
@@ -18,7 +18,7 @@ export const addReview = async (object: Ireview) => {
 
 export const getAllReviewWithPagination = async (idProduct: number, pageNo: number, pageSize: number) => {
     try {
-        const response = await axios.get(`/reviews?${idProduct}pageNo=${pageNo}&pageSize=${pageSize}`);
+        const response = await axios.get(`/reviews/${idProduct}?pageNo=${pageNo}&pageSize=${pageSize}`);
         return response;
     } catch (error) {
         throw error;

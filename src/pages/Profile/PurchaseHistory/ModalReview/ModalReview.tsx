@@ -9,7 +9,7 @@ import { useForm, SubmitHandler } from 'react-hook-form';
 import { toast } from 'react-toastify';
 import { useState } from 'react';
 
-import Ireview from '../../../../interface/review';
+import { IreviewOrder } from '../../../../interface/review';
 import { IProductChildrenCart } from '../../../../interface/productCart';
 import { addReview } from '../../../../apis/reviewApi';
 const style = {
@@ -52,9 +52,9 @@ const ModalReview = (propsCh: IPropsAddress) => {
     const [hoverRating, setHoverRating] = useState(-1);
 
     // form
-    const { register, handleSubmit, setValue } = useForm<Ireview>({});
-    const onSubmit: SubmitHandler<Ireview> = async (data) => {
-        const objectUpdate: Ireview = {
+    const { register, handleSubmit, setValue } = useForm<IreviewOrder>({});
+    const onSubmit: SubmitHandler<IreviewOrder> = async (data) => {
+        const objectUpdate: IreviewOrder = {
             content: data.content,
             stars: valueRating,
             orderId: idOrder,

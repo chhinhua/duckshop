@@ -21,7 +21,7 @@ import ShoppingCart from '@mui/icons-material/ShoppingCart';
 import { getSKUPrice, getSingleProduct } from '../../apis/productApi';
 import IProduct from '../../interface/product';
 
-import BootstrapButton from './BootstrapButton';
+import BootstrapButton from './Button/BootstrapButton';
 import config from '../../config';
 import { addToCart, getCountOfItems } from '../../apis/cartApi';
 import OutlinedInput from '@mui/material/OutlinedInput';
@@ -29,11 +29,11 @@ import Image from '../../components/Image';
 import { useDispatch } from 'react-redux';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
 import Rating from '@mui/material/Rating';
-import ButtonRating from './ButtonRating';
-import Review from '../../components/Review/Review';
+import ButtonRating from './Button/ButtonRating';
 import Favorite from '@mui/icons-material/Favorite';
 import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import { putFollowProduct } from '../../apis/followProductApi';
+import ReviewProductCurrent from './ReviewProductCurrent/ReviewProductCurrent';
 
 const DetailProduct = () => {
     const dispatch = useDispatch();
@@ -50,7 +50,6 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
-                console.log(response);
 
                 if (response && response.data) {
                     setProduct(response.data);
@@ -81,28 +80,33 @@ const DetailProduct = () => {
 
     // handle handleAddCart
     const handleAddCart = async () => {
-        // call api day vao gio hang  style
-        if (idProduct) {
-            const quantity: number = 1; // so luong san pham
-            const productId: number = +idProduct; //id san pham
-            const valueNames: Array<string> = [color, size]; //style san pham
-            try {
-                const resonse = await addToCart(quantity, productId, valueNames);
-                // handle số lượng sản phẩm trong giỏ hàng
-                getTotalItemOfCart();
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            // call api day vao gio hang  style
+            if (idProduct) {
+                const quantity: number = 1; // so luong san pham
+                const productId: number = +idProduct; //id san pham
+                const valueNames: Array<string> = [color, size]; //style san pham
+                try {
+                    const resonse = await addToCart(quantity, productId, valueNames);
+                    // handle số lượng sản phẩm trong giỏ hàng
+                    getTotalItemOfCart();
 
-                // handle defaut value
-                setSize('');
-                setColor('');
+                    // handle defaut value
+                    setSize('');
+                    setColor('');
 
-                if (resonse?.status === 201 && resonse?.data?.product?.name) {
-                    toast.success('Đã thêm vào giỏ hàng');
-                } else {
-                    toast.info(resonse.data.message);
+                    if (resonse?.status === 201 && resonse?.data?.product?.name) {
+                        toast.success('Đã thêm vào giỏ hàng');
+                    } else {
+                        toast.info(resonse.data.message);
+                    }
+                } catch {
+                    toast.error('Lỗi không thêm được sản phẩm');
                 }
-            } catch {
-                toast.error('Lỗi không thêm được sản phẩm');
             }
+        } else {
+            navigate(config.Routes.logIn);
         }
     };
     // handle price theo size và color
@@ -305,13 +309,13 @@ const DetailProduct = () => {
             </div>
             {/* Start product description */}
             <div className="mt-5">
-                <div className="bg-slate-100 p-3 rounded text-xl font-normal">MÔ TẢ SẢN PHẨM</div>
-                <div className="mt-5 text-lg">{product?.description}</div>
+                <div className="bg-gray-200 p-3 rounded text-xl font-normal">MÔ TẢ SẢN PHẨM</div>
+                <div className="mt-5 text-lg bg-gray-100 p-5 rounded shadow-md">{product?.description}</div>
             </div>
 
             {/* Start product reviews */}
             <div className="mt-5">
-                <div className="bg-slate-100 p-3 rounded text-xl font-normal">ĐÁNH GIÁ SẢN PHẨM</div>
+                <div className="bg-gray-200 p-3 rounded text-xl font-normal">ĐÁNH GIÁ SẢN PHẨM</div>
                 <div className="bg-orange-50 h-max p-5">
                     <div className="grid grid-cols-8">
                         <div className="col-span-3 lg:col-span-2">
@@ -320,8 +324,8 @@ const DetailProduct = () => {
                                 <span className="text-red-500 text-lg">trên 5</span>
                                 <div>
                                     <Rating
-                                        defaultValue={product?.rating}
-                                        precision={0.5}
+                                        defaultValue={product && parseFloat(product.rating.toFixed(1))}
+                                        precision={0.1}
                                         readOnly
                                         sx={{ fontSize: '1.8rem' }}
                                     />
@@ -331,17 +335,15 @@ const DetailProduct = () => {
 
                         <div className="col-span-5 lg:col-span-6 flex flex-wrap items-center gap-3">
                             <ButtonRating>Tất cả</ButtonRating>
-                            <ButtonRating>5 sao (55)</ButtonRating>
-                            <ButtonRating>4 sao (100)</ButtonRating>
-                            <ButtonRating>3 sao (22)</ButtonRating>
-                            <ButtonRating>2 sao (2)</ButtonRating>
+                            <ButtonRating>5 sao (0)</ButtonRating>
+                            <ButtonRating>4 sao (0)</ButtonRating>
+                            <ButtonRating>3 sao (0)</ButtonRating>
+                            <ButtonRating>2 sao (0)</ButtonRating>
                             <ButtonRating>1 sao (0)</ButtonRating>
                         </div>
                     </div>
                 </div>
-                <Review />
-                <Review />
-                <Review />
+                <ReviewProductCurrent idProduct={+idProduct} />
             </div>
         </div>
     );
