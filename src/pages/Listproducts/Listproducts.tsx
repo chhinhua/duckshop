@@ -1,8 +1,6 @@
 import React, { useEffect, useState } from 'react';
-
-import CardComp from '../../components/Card';
-import { getAllProductSearchWithinPagination } from '../../apis/productApi';
-import IProduct from '../../interface/product';
+import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
 
 import Pagination from '@mui/material/Pagination';
 import Accordion from '@mui/material/Accordion';
@@ -14,19 +12,19 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Drawer from '@mui/material/Drawer';
 import Button from '@mui/material/Button';
-
-import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
-import ContentPasteSearch from '@mui/icons-material/ContentPasteSearch';
-
-import { toast } from 'react-toastify';
-import { useLocation } from 'react-router-dom';
-import ICategory from '../../interface/category';
-import { getAllCategoryWithPagination } from '../../apis/categoryApii';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
 import OutlinedInput from '@mui/material/OutlinedInput';
+import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
+import ContentPasteSearch from '@mui/icons-material/ContentPasteSearch';
+
+import ICategory from '../../interface/category';
+import { getAllCategoryWithPagination } from '../../apis/categoryApii';
+import CardComp from '../../components/Card';
+import { getAllProductSearchWithinPagination } from '../../apis/productApi';
+import IProduct from '../../interface/product';
 import config from '../../config';
 
 function Listproducts() {
