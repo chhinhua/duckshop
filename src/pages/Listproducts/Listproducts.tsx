@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import CardComp from '../../components/Card';
-import { getAllProductWithinPagination } from '../../apis/productApi';
+import { getAllProductSearchWithinPagination } from '../../apis/productApi';
 import IProduct from '../../interface/product';
 
 import Pagination from '@mui/material/Pagination';
@@ -19,8 +19,106 @@ import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import ContentPasteSearch from '@mui/icons-material/ContentPasteSearch';
 
 import { toast } from 'react-toastify';
+import { useLocation } from 'react-router-dom';
+import ICategory from '../../interface/category';
+import { getAllCategoryWithPagination } from '../../apis/categoryApii';
+import FormControl from '@mui/material/FormControl';
+import InputLabel from '@mui/material/InputLabel';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
+import MenuItem from '@mui/material/MenuItem';
+import OutlinedInput from '@mui/material/OutlinedInput';
+import config from '../../config';
 
 function Listproducts() {
+    const location = useLocation();
+    const search = decodeURIComponent(location.hash.substring(1));
+
+    // change page
+    const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
+    const [page, setPage] = useState<number>(1); // Trang hiện tại
+    const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
+    const [totalProducts, setTotalProducts] = useState<number>(0); // Tổng số san pham
+    const [totalProductsPage, setTotalProductsPage] = useState<number>(0); // Tổng số san pham cua 1 trang
+    const [filter, setFilter] = useState<string>('');
+    const [cateFilter, setCateFilter] = useState<Array<string>>([]);
+    const itemsPerPage = 40;
+
+    const getAllProducts = async (pageNo: number, filter: string, cateFilter: Array<string>) => {
+        try {
+            const resultcateFilterString = cateFilter.join(',');
+            const response = await getAllProductSearchWithinPagination(
+                pageNo,
+                itemsPerPage,
+                search,
+                resultcateFilterString,
+                filter,
+            );
+
+            const { content, totalPages, totalElements, last, lastPageSize, pageSize } = response.data;
+            if (last) {
+                setTotalProductsPage(lastPageSize);
+            } else {
+                setTotalProductsPage(pageSize);
+            }
+
+            setData(content);
+            setTotalPages(totalPages);
+            setTotalProducts(totalElements);
+        } catch (error) {
+            toast.error('Đang bảo trì quay lại sau');
+        }
+    };
+
+    const handleGetFilter = (event: SelectChangeEvent) => {
+        setFilter(event.target.value as string);
+    };
+
+    const handleSelectCategoryFilter = (categoryName: string) => {
+        const updatedSelection = cateFilter.includes(categoryName)
+            ? cateFilter.filter((category) => category !== categoryName)
+            : [...cateFilter, categoryName];
+
+        setCateFilter(updatedSelection);
+    };
+
+    // handle change page
+    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+        window.scrollTo(0, 0);
+        setPage(newPage);
+    };
+
+    useEffect(() => {
+        getAllProducts(page, filter, cateFilter);
+    }, [page, search, filter, cateFilter]);
+
+    // handle get allCate
+    const [listCate, setListCate] = useState<Array<ICategory>>([]);
+    const handleGetAllCate = async () => {
+        // setListCate();
+        try {
+            const response = await getAllCategoryWithPagination();
+
+            // Kiểm tra nếu có thuộc tính data
+            if (response.data && Array.isArray(response.data.content)) {
+                setListCate(response.data.content);
+            } else {
+                console.error("Response does not contain 'data' property.");
+            }
+        } catch (error) {
+            console.error('Error fetching categories:', error);
+        }
+    };
+    useEffect(() => {
+        handleGetAllCate();
+    }, []);
+
+    // handle menu
+    const [openMenu, setOpenMenu] = useState(false);
+
+    const toggleMenu = () => () => {
+        setOpenMenu((prev) => !prev);
+    };
+
     // handle scroll to fix header
     const [scroll, setScroll] = useState(false);
     const listenScrollEvent = () => {
@@ -33,40 +131,6 @@ function Listproducts() {
             window.removeEventListener('scroll', listenScrollEvent);
         };
     }, []);
-    // change page
-    const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
-    const [page, setPage] = useState<number>(1); // Trang hiện tại
-    const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
-    const [totalProducts, setTotalProducts] = useState<number>(0); // Tổng số san pham
-    const itemsPerPage = 40;
-
-    const getAllProducts = async (pageNo: number) => {
-        try {
-            const response = await getAllProductWithinPagination(pageNo, itemsPerPage);
-            const { content, totalPages, totalElements } = response.data;
-
-            setData(content);
-            setTotalPages(totalPages);
-            setTotalProducts(totalElements);
-        } catch (error) {
-            toast.error('Đang bảo trì quay lại sau');
-        }
-    };
-
-    useEffect(() => {
-        getAllProducts(page);
-    }, [page]);
-
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        window.scrollTo(0, 0);
-        setPage(newPage);
-    };
-    // handle menu
-    const [openMenu, setOpenMenu] = useState(false);
-
-    const toggleMenu = () => () => {
-        setOpenMenu((prev) => !prev);
-    };
 
     return (
         <>
@@ -78,7 +142,7 @@ function Listproducts() {
                     }   z-50 grid bg-transparen`}
                 >
                     <strong className={`${scroll ? 'hidden' : ''} `}>
-                        Đang hiển thị {itemsPerPage} trong {totalProducts} sản phẩm
+                        Đang hiển thị {totalProductsPage} trong {totalProducts} sản phẩm
                     </strong>
                     <div className={`${scroll ? ' flex justify-end' : 'w-full flex justify-end'}`}>
                         <Button variant="contained" onClick={toggleMenu()}>
@@ -91,28 +155,41 @@ function Listproducts() {
                 <div className="h-full">
                     {/* start navigation  */}
                     <Drawer anchor="right" open={openMenu} onClose={toggleMenu()}>
-                        {/* Start Select Gender */}
-                        <div className="w-96">
+                        {/* Start Select Filter */}
+                        <div>
                             <Accordion defaultExpanded>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
                                     aria-controls="panel1a-content"
                                     id="panel1a-header"
                                 >
-                                    <Typography>Gender</Typography>
+                                    <Typography>Lọc theo yêu cầu</Typography>
                                 </AccordionSummary>
                                 <AccordionDetails>
-                                    <FormGroup>
-                                        <FormControlLabel control={<Checkbox defaultChecked />} label="All" />
-                                        <FormControlLabel control={<Checkbox />} label="Men" />
-                                        <FormControlLabel control={<Checkbox />} label="Women" />
-                                    </FormGroup>
+                                    <FormControl fullWidth>
+                                        <InputLabel>Yêu cầu</InputLabel>
+                                        <Select
+                                            value={filter}
+                                            input={<OutlinedInput label="Yêu cầu" />}
+                                            onChange={handleGetFilter}
+                                        >
+                                            <MenuItem value={''}>Không chọn</MenuItem>
+                                            <MenuItem value={config.SearchFilter.favoriteAsc}>Yêu thích tăng</MenuItem>
+                                            <MenuItem value={config.SearchFilter.favoriteDesc}>Yêu thích giảm</MenuItem>
+                                            <MenuItem value={config.SearchFilter.priceAsc}>Giá tăng</MenuItem>
+                                            <MenuItem value={config.SearchFilter.priceDesc}>Giá giảm</MenuItem>
+                                            <MenuItem value={config.SearchFilter.ratingAsc}>Số sao tăng</MenuItem>
+                                            <MenuItem value={config.SearchFilter.ratingDesc}>Số sao giảm</MenuItem>
+                                            <MenuItem value={config.SearchFilter.reviewAsc}>Đánh giá tăng</MenuItem>
+                                            <MenuItem value={config.SearchFilter.reviewDesc}>Đánh giá giảm</MenuItem>
+                                        </Select>
+                                    </FormControl>
                                 </AccordionDetails>
                             </Accordion>
                         </div>
-                        {/* End Select Gender */}
+                        {/* End Select Filter */}
                         {/* Start Select Category */}
-                        <div>
+                        <div className="w-96">
                             <Accordion defaultExpanded>
                                 <AccordionSummary
                                     expandIcon={<ExpandMoreIcon />}
@@ -123,41 +200,23 @@ function Listproducts() {
                                 </AccordionSummary>
                                 <AccordionDetails>
                                     <FormGroup>
-                                        <FormControlLabel control={<Checkbox defaultChecked />} label="All" />
-                                        <FormControlLabel control={<Checkbox />} label="Shoes" />
-                                        <FormControlLabel control={<Checkbox />} label="Sandal" />
-                                        <FormControlLabel control={<Checkbox />} label="T-Shirts" />
-                                        <FormControlLabel control={<Checkbox />} label="Trousers" />
-                                        <FormControlLabel control={<Checkbox />} label="Dress" />
-                                        <FormControlLabel control={<Checkbox />} label="Accessory" />
-                                        <FormControlLabel control={<Checkbox />} label="Backpack" />
+                                        {listCate.map((item, index) => (
+                                            <FormControlLabel
+                                                control={
+                                                    <Checkbox
+                                                        checked={cateFilter.includes(item.name)}
+                                                        onChange={() => handleSelectCategoryFilter(item.name)}
+                                                    />
+                                                }
+                                                label={item.name}
+                                                key={index}
+                                            />
+                                        ))}
                                     </FormGroup>
                                 </AccordionDetails>
                             </Accordion>
                         </div>
                         {/* End Select Category */}
-                        {/* Start Select Filter */}
-                        <div>
-                            <Accordion>
-                                <AccordionSummary
-                                    expandIcon={<ExpandMoreIcon />}
-                                    aria-controls="panel1a-content"
-                                    id="panel1a-header"
-                                >
-                                    <Typography>Filter</Typography>
-                                </AccordionSummary>
-                                <AccordionDetails>
-                                    <FormGroup>
-                                        <FormControlLabel control={<Checkbox />} label="Price high to low" />
-                                        <FormControlLabel control={<Checkbox />} label="Price low to high" />
-                                        <FormControlLabel control={<Checkbox />} label="Latest" />
-                                        <FormControlLabel control={<Checkbox />} label="Many reviews" />
-                                        <FormControlLabel control={<Checkbox />} label="High stars" />
-                                    </FormGroup>
-                                </AccordionDetails>
-                            </Accordion>
-                        </div>
-                        {/* End Select Filter */}
                     </Drawer>
                     {/* end navigation  */}
                     {/* start list item */}

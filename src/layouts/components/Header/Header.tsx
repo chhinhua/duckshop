@@ -6,9 +6,7 @@ import Badge from '@mui/material/Badge';
 import Button from '@mui/material/Button';
 import IconButton from '@mui/material/IconButton';
 import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
-import Search from '@mui/icons-material/Search';
-import TextField from '@mui/material/TextField';
-import Box from '@mui/material/Box';
+
 import Avatar from '@mui/material/Avatar';
 import Popper from '@mui/material/Popper';
 
@@ -20,6 +18,7 @@ import { selectIsLogin, setIsLogin } from '../../../pages/LogIn/loginSlice';
 import { selectToTalProductCart } from '../../../pages/Cart/totalProducCartSlice';
 import Favorite from '@mui/icons-material/Favorite';
 import MouseOverPopover from '../../../components/MouseOverPopover/MouseOverPopover';
+import Search from '../../../components/Search/Search';
 
 function Header() {
     const dispatch = useAppDispatch();
@@ -80,6 +79,37 @@ function Header() {
 
     const open = Boolean(anchorEl);
 
+    // handle get allCateNotIDparant
+    // const [listCate, setListCate] = useState<Array<ICategory>>([]);
+    // const handleGetAllCate = async () => {
+    //     // setListCate();
+    //     try {
+    //         const response = await getAllCategoryWithPagination('', '');
+
+    //         // Kiểm tra nếu có thuộc tính data
+    //         if (response.data && Array.isArray(response.data.content)) {
+    //             const newArray = response.data.content.filter((item: ICategory) => item.parentId === null);
+    //             setListCate(newArray);
+    //         } else {
+    //             console.error("Response does not contain 'data' property.");
+    //         }
+    //     } catch (error) {
+    //         console.error('Error fetching categories:', error);
+    //     }
+    // };
+    // useEffect(() => {
+    //     handleGetAllCate();
+    // }, []);
+
+    // handle search
+    const [search, setSearch] = useState<string>('');
+    const [isDoneSearch, setDoneSearch] = useState<boolean>(false);
+    useEffect(() => {
+        if (isDoneSearch === true) {
+            navaigate(config.Routes.listProducts + '#' + search);
+        }
+        return () => setDoneSearch(false);
+    });
     return (
         <>
             <div
@@ -88,23 +118,19 @@ function Header() {
                 } h-18 flex flex-col justify-center items-center w-full z-50`}
             >
                 <div className="w-10/12 grid grid-flow-col grid-cols-3 place-content-between ">
-                    <div className="h-full w-48 col-span-1">
+                    <div className="h-full w-24  md:w-40 col-span-1">
                         <Link to={config.Routes.home}>
-                            <Image src={logo} className="h-full w-full" />
+                            <Image src={logo} className="h-full w-full " />
                         </Link>
                     </div>
-                    <form className="w-full h-full col-span-1 mt-2.5">
-                        <Box sx={{ display: 'flex', alignItems: 'flex-end' }}>
-                            <Search className="mr-1 my-0.5" />
-                            <TextField
-                                className=" w-4/6 text-sm border-b"
-                                id="standard-basic"
-                                label="Tìm kiếm"
-                                variant="standard"
-                            />
-                        </Box>
-                    </form>
-
+                    <div className="w-full h-full col-span-1 flex justify-center items-center gap-5">
+                        {/* {listCate.map((item, index) => (
+                            <button key={index} className="font-medium text-lg md:block hidden">
+                                {item.name}
+                            </button>
+                        ))} */}
+                        <Search setSearch={setSearch} setDoneSearch={setDoneSearch} />
+                    </div>
                     <div className="flex justify-end items-center md:gap-3 gap-0 col-span-1">
                         {checkLogin ? (
                             <>
