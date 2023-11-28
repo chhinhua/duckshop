@@ -1,12 +1,16 @@
-// export interface IreviewOrder = Pick<Person, 'id' | 'name'>;
-// {
-//     content: string;
-//     stars: number; // số nguyễn từ 1 đến 5
-//     orderId: number;
-//     productId: number;
-// }
+export interface IStarNumberOfProduct {
+    all: number;
+    fiveStar: number;
+    fourStar: number;
+    oneStar: number;
+    threeStar: number;
+    twoStar: number;
+}
 
-export interface IreviewOrder extends Pick<Ireview, 'content' | 'stars' | 'orderId' | 'productId'> {}
+export interface IreviewOrder extends Pick<Ireview, 'content' | 'stars' | 'productId'> {
+    itemId: number;
+}
+
 export default interface Ireview {
     id: number;
     content: string;

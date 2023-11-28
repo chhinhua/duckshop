@@ -16,6 +16,7 @@ export interface ISku {
 }
 
 export default interface IProductCart {
+    hasReview: boolean;
     id: number;
     orderId: number;
     imageUrl: string;

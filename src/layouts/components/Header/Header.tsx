@@ -59,7 +59,7 @@ function Header() {
     // handle scroll to fix header
     const [scroll, setScroll] = useState(false);
     const listenScrollEvent = () => {
-        window.scrollY > 100 ? setScroll(true) : setScroll(false);
+        window.scrollY > 1 ? setScroll(true) : setScroll(false);
     };
 
     useEffect(() => {

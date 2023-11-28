@@ -8,22 +8,20 @@ import TableBody from '@mui/material/TableBody';
 import TableHead from '@mui/material/TableHead';
 import TableRow from '@mui/material/TableRow';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
-
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import Cancel from '@mui/icons-material/Cancel';
-import ModeComment from '@mui/icons-material/ModeComment';
 
 import { useState } from 'react';
-
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+
 import { updateOrderStatusByID } from '../../../../apis/orderApi';
 import Image from '../../../../components/Image';
 import MouseOverPopover from '../../../../components/MouseOverPopover/MouseOverPopover';
 import ModalReview from '../ModalReview/ModalReview';
 import IOrder from '../../../../interface/order';
 import config from '../../../../config';
-import { Link } from 'react-router-dom';
+import IProductCart from '../../../../interface/productCart';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -52,22 +50,15 @@ interface Iprops {
 
 export default function RowTable(props: Iprops) {
     const { item, setLoading } = props;
-
     const [open, setOpen] = useState(false);
-    const [isCancel, setCancel] = useState<boolean>(
-        item.status === config.StatusOrders.ORDERED || item.status === config.StatusOrders.WAITFORPAY ? true : false,
-    );
-
-    const [isReview, setReview] = useState<boolean>(item.status === config.StatusOrders.DELIVERED ? true : false);
 
     const handleCancelOrder = async (id: number) => {
-        const userConfirmed = window.confirm('Bạn có chắc chắn muốn xóa không?');
+        const userConfirmed = window.confirm('Bạn có chắc chắn muốn hủy không?');
         if (userConfirmed) {
             try {
                 const response = await updateOrderStatusByID(id, config.StatusOrders.CANCELED);
 
                 if (response.status === 200) {
-                    setCancel(false);
                     toast.success(response.data.status);
                     setLoading((prev) => !prev);
                 } else {
@@ -83,12 +74,23 @@ export default function RowTable(props: Iprops) {
 
     // modal
     const [openReview, setOpenReview] = useState(false);
-
-    const handleOpenReview = () => setOpenReview(true);
+    const [itemCart, setItemCart] = useState<IProductCart>();
+    const handleOpenReview = (item: IProductCart) => {
+        setItemCart(item);
+        setOpenReview(true);
+    };
     const handleCloseReview = () => setOpenReview(false);
 
     return (
         <>
+            {/* model danh gia */}
+            <ModalReview
+                open={openReview}
+                handleClose={handleCloseReview}
+                orderItem={itemCart}
+                setLoading={setLoading}
+            />
+            {/*  */}
             <StyledTableRow
                 sx={{
                     '&:last-child td, &:last-child th': { border: 0 },
@@ -120,7 +122,10 @@ export default function RowTable(props: Iprops) {
                     <Button variant="outlined" onClick={() => setOpen(!open)}>
                         {open ? <KeyboardArrowUpIcon /> : <KeyboardArrowDownIcon />}
                     </Button>
-                    {isCancel && (
+                </StyledTableCell>
+                <StyledTableCell>
+                    {(item.status === config.StatusOrders.ORDERED ||
+                        item.status === config.StatusOrders.WAITFORPAY) && (
                         <Button
                             onClick={() => handleCancelOrder(item.id)}
                             variant="contained"
@@ -133,14 +138,7 @@ export default function RowTable(props: Iprops) {
                             }}
                         >
                             <MouseOverPopover content="Hủy đơn hàng">
-                                <Cancel
-                                    sx={{
-                                        color: 'white',
-                                        fontSize: '1rem',
-                                        marginRight: 0.3,
-                                    }}
-                                />
-                                <span className="normal-case text-white text-base">Huỷ</span>
+                                <span className="normal-case text-white text-base">Huỷ đơn</span>
                             </MouseOverPopover>
                         </Button>
                     )}
@@ -194,10 +192,12 @@ export default function RowTable(props: Iprops) {
                                         >
                                             <TableCell component="th" scope="row">
                                                 <Link to={config.Routes.detailProduct + '#' + item2.product.id}>
-                                                    <Image
-                                                        src={item2.imageUrl}
-                                                        className="sm:h-24 sm:w-24 lg:h-36 lg:w-36  h-16 w-16"
-                                                    />
+                                                    <div className="h-16 w-16 sm:h-24 sm:w-24 lg:h-36 lg:w-36 overflow-hidden">
+                                                        <Image
+                                                            src={item2.imageUrl}
+                                                            className="w-full h-full object-cover"
+                                                        />
+                                                    </div>
                                                 </Link>
                                             </TableCell>
                                             <TableCell align="left">
@@ -220,23 +220,15 @@ export default function RowTable(props: Iprops) {
                                                 </div>
                                             </TableCell>
                                             <TableCell>
-                                                {isReview && (
-                                                    <Button onClick={handleOpenReview} sx={{ width: '20px' }}>
-                                                        <MouseOverPopover content="Đánh giá sản phẩm">
-                                                            <ModeComment
-                                                                sx={{
-                                                                    color: 'blue',
-                                                                }}
-                                                            />
-                                                        </MouseOverPopover>
+                                                {item2.hasReview && (
+                                                    <Button
+                                                        variant="contained"
+                                                        onClick={() => handleOpenReview(item2)}
+                                                        sx={{ width: '110px' }}
+                                                    >
+                                                        Đánh giá
                                                     </Button>
                                                 )}
-                                                <ModalReview
-                                                    open={openReview}
-                                                    handleClose={handleCloseReview}
-                                                    product={item2}
-                                                    idOrder={item.id}
-                                                />
                                             </TableCell>
                                         </TableRow>
                                     ))}

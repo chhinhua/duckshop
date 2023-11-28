@@ -116,7 +116,8 @@ const Pay = () => {
             try {
                 const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${useName}&addressId=${addressId}&note=${note}`;
 
-                window.location.href = redirectURL;
+                // window.location.href = redirectURL;
+                window.open(redirectURL, '_blank');
             } catch (error) {
                 toast.error(`${error}`);
             }
@@ -227,7 +228,7 @@ const Pay = () => {
                         <span className="text-right">{totalPrice.toLocaleString('vi-VN')} VNĐ</span>
                     </div>
                     <div className="grid grid-cols-3">
-                        <span className="text-left col-span-2">Dự kiến Giao hàng và Xử lý</span>
+                        <span className="text-left col-span-2">Phí vận chuyển</span>
                         <span className="text-right">Free</span>
                     </div>
                     <div className="grid grid-cols-3 relative py-10">

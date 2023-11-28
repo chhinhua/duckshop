@@ -77,7 +77,7 @@ const Card = (props: { itemProduct: IProduct }) => {
                             <span className="text-sm pr-0.5">đ</span>
                             {itemProduct.price.toLocaleString('vi-VN')}
                         </div>
-                        <Rating defaultValue={itemProduct.rating} precision={0.5} readOnly />
+                        <Rating value={itemProduct.rating} precision={0.5} readOnly />
                     </div>
                 </div>
             </CardContent>

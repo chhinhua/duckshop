@@ -1,11 +1,13 @@
 import { useEffect, useRef, useState } from 'react';
+import { toast } from 'react-toastify';
+
+import Pagination from '@mui/material/Pagination';
+import Rating from '@mui/material/Rating';
+import Button from '@mui/material/Button';
+
 import Review from '../../../components/Review/Review';
 import { getAllReviewWithPagination } from '../../../apis/reviewApi';
-import Ireview from '../../../interface/review';
-import { toast } from 'react-toastify';
-import Pagination from '@mui/material/Pagination';
-import ButtonRating from '../Button/ButtonRating';
-import Rating from '@mui/material/Rating';
+import Ireview, { IStarNumberOfProduct } from '../../../interface/review';
 
 interface Iprops {
     idProduct: number;
@@ -18,16 +20,21 @@ const ReviewProductCurrent = (props: Iprops) => {
     const [data, setData] = useState<Array<Ireview>>([]); // Dữ liệu từ API
     const [page, setPage] = useState<number>(1); // Trang hiện tại
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
+    const [numberListStar, setNumberListStar] = useState<IStarNumberOfProduct>(); // ds số lượng sao
+    const [star, setStar] = useState<number | null | undefined>(null); // số sao hiện tại
     const itemsPerPage = 4;
 
-    const getAllReviewOfProduct = async (id: number, pageNo: number) => {
+    const getAllReviewOfProduct = async (id: number, pageNo: number, star: number | null | undefined) => {
         try {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
-                const response = await getAllReviewWithPagination(id, pageNo, itemsPerPage);
+                const response = await getAllReviewWithPagination(id, pageNo, itemsPerPage, star);
+                console.log(response.data.content);
+
                 if (response.status === 200) {
                     setData(response.data.content);
                     setTotalPages(response.data.totalPages);
+                    setNumberListStar(response.data.starNumber);
                 } else {
                     toast.error(response.data.message || response.data);
                 }
@@ -36,6 +43,12 @@ const ReviewProductCurrent = (props: Iprops) => {
             toast.error('Đang bảo trì');
         }
     };
+    // handle change star
+    const handleChangeStar = (value: number | null | undefined) => {
+        setStar(value);
+        setPage(1);
+    };
+
     // handle change page
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
@@ -51,9 +64,12 @@ const ReviewProductCurrent = (props: Iprops) => {
     };
 
     useEffect(() => {
-        getAllReviewOfProduct(+idProduct, page);
+        getAllReviewOfProduct(+idProduct, page, star);
         scrollToComponent();
-    }, [idProduct, page]);
+    }, [idProduct, page, star]);
+    useEffect(() => {
+        window.scroll(0, 0);
+    }, []);
     return (
         <>
             <div ref={targetComponentRef} className="bg-gray-200 p-3 rounded text-xl font-normal">
@@ -72,12 +88,24 @@ const ReviewProductCurrent = (props: Iprops) => {
                     </div>
 
                     <div className="col-span-5 lg:col-span-6 flex flex-wrap items-center gap-3">
-                        <ButtonRating>Tất cả</ButtonRating>
-                        <ButtonRating>5 sao (0)</ButtonRating>
-                        <ButtonRating>4 sao (0)</ButtonRating>
-                        <ButtonRating>3 sao (0)</ButtonRating>
-                        <ButtonRating>2 sao (0)</ButtonRating>
-                        <ButtonRating>1 sao (0)</ButtonRating>
+                        <Button variant="outlined" onClick={() => handleChangeStar(null)}>
+                            Tất cả ({numberListStar?.all})
+                        </Button>
+                        <Button variant="outlined" onClick={() => handleChangeStar(5)}>
+                            5 sao ({numberListStar?.fiveStar})
+                        </Button>
+                        <Button variant="outlined" onClick={() => handleChangeStar(4)}>
+                            4 sao ({numberListStar?.fourStar})
+                        </Button>
+                        <Button variant="outlined" onClick={() => handleChangeStar(3)}>
+                            3 sao ({numberListStar?.threeStar})
+                        </Button>
+                        <Button variant="outlined" onClick={() => handleChangeStar(2)}>
+                            2 sao ({numberListStar?.twoStar})
+                        </Button>
+                        <Button variant="outlined" onClick={() => handleChangeStar(1)}>
+                            1 sao ({numberListStar?.oneStar})
+                        </Button>
                     </div>
                 </div>
             </div>

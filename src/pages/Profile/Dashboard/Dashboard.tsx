@@ -2,8 +2,34 @@ import VolunteerActivismTwoTone from '@mui/icons-material/VolunteerActivismTwoTo
 import InventoryTwoTone from '@mui/icons-material/InventoryTwoTone';
 import AirportShuttleTwoTone from '@mui/icons-material/AirportShuttleTwoTone';
 import ShoppingBagTwoTone from '@mui/icons-material/ShoppingBagTwoTone';
-
+import { useEffect, useState } from 'react';
+import { getDataStatisticUser } from '../../../apis/statisticApi';
+import { toast } from 'react-toastify';
+interface IDashboard {
+    favoriteCount: number;
+    ordered: number;
+    shipping: number;
+    delivered: number;
+}
 const Dashboard = () => {
+    const [data, setData] = useState<IDashboard>();
+    const getDataStatistic = async () => {
+        try {
+            const response = await getDataStatisticUser();
+            if (response.status === 200) {
+                setData(response.data);
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+        } catch (error) {
+            toast.error(`${error}`);
+        }
+    };
+
+    useEffect(() => {
+        getDataStatistic();
+    }, []);
+
     return (
         <div className="w-full grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-10 mt-10">
             {/* start sp quan tam */}
@@ -12,7 +38,7 @@ const Dashboard = () => {
                     <VolunteerActivismTwoTone sx={{ fontSize: 35, color: '#FF6636' }} />
                 </div>
                 <div className="col-span-2">
-                    <div className="font-medium text-2xl">1804</div>
+                    <div className="font-medium text-2xl">{data?.favoriteCount}</div>
                     <div className="text-sm text-gray-500">Sản phẩm quan tâm</div>
                 </div>
             </div>
@@ -23,8 +49,8 @@ const Dashboard = () => {
                     <InventoryTwoTone sx={{ fontSize: 35, color: '#564FFD' }} />
                 </div>
                 <div className="col-span-2">
-                    <div className="font-medium text-2xl">18</div>
-                    <div className="text-sm text-gray-500">Chờ thanh toán</div>
+                    <div className="font-medium text-2xl">{data?.ordered}</div>
+                    <div className="text-sm text-gray-500">Đã đặt</div>
                 </div>
             </div>
             {/* end doi xac nhan don hang */}
@@ -34,7 +60,7 @@ const Dashboard = () => {
                     <AirportShuttleTwoTone sx={{ fontSize: 35, color: '#23BD33' }} />
                 </div>
                 <div className="col-span-2">
-                    <div className="font-medium text-2xl">4</div>
+                    <div className="font-medium text-2xl">{data?.shipping}</div>
                     <div className="text-sm text-gray-500">Đang giao</div>
                 </div>
             </div>
@@ -45,7 +71,7 @@ const Dashboard = () => {
                     <ShoppingBagTwoTone sx={{ fontSize: 35, color: '#FD8E1F' }} />
                 </div>
                 <div className="col-span-2">
-                    <div className="font-medium text-2xl">2002</div>
+                    <div className="font-medium text-2xl">{data?.delivered}</div>
                     <div className="text-sm text-gray-500">Đã giao</div>
                 </div>
             </div>

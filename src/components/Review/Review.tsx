@@ -12,7 +12,7 @@ const Review = (props: Iprops) => {
             <Image src={user.avatarUrl} alt="Avatar" className="w-14 h-14 rounded-full mx-5 my-3" />
             <div>
                 <div className="font-medium">{user.username}</div>
-                <Rating defaultValue={stars} precision={0.1} readOnly sx={{ fontSize: '1rem' }} />
+                <Rating value={stars} precision={0.1} readOnly sx={{ fontSize: '1rem' }} />
                 <div className="text-gray-500 text-sm">
                     {createdDate} {/*| Phân loại:&nbsp;*/}
                 </div>

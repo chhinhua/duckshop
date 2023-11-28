@@ -28,8 +28,8 @@ const style = {
 interface IPropsAddress {
     open: boolean;
     handleClose: () => void;
-    product: IProductCart;
-    idOrder: number;
+    orderItem: IProductCart;
+    setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
 const labels: { [index: string]: string } = {
@@ -45,7 +45,7 @@ function getLabelText(value: number) {
 }
 
 const ModalReview = (propsCh: IPropsAddress) => {
-    const { open, handleClose, product, idOrder } = propsCh;
+    const { open, handleClose, orderItem, setLoading } = propsCh;
 
     // rating
     const [valueRating, setValueRating] = useState<number>(5);
@@ -57,8 +57,8 @@ const ModalReview = (propsCh: IPropsAddress) => {
         const objectUpdate: IreviewOrder = {
             content: data.content,
             stars: valueRating,
-            orderId: idOrder,
-            productId: product.id,
+            itemId: orderItem.id,
+            productId: orderItem.product.id,
         };
         try {
             const response = await addReview(objectUpdate);
@@ -67,6 +67,7 @@ const ModalReview = (propsCh: IPropsAddress) => {
                 toast.success('Đánh giá thành công');
                 setValue('content', '');
                 setValueRating(5);
+                setLoading((prev) => !prev);
             } else {
                 toast.error(response.data.message || response.data);
             }
@@ -81,11 +82,11 @@ const ModalReview = (propsCh: IPropsAddress) => {
             <Modal open={open} onClose={handleClose}>
                 <Box sx={style}>
                     <div className="text-lg mb-4">
-                        <span className="font-semibold">Đánh giá sản phẩm: </span> {product.product.name}
+                        <span className="font-semibold">Đánh giá sản phẩm: </span> {orderItem?.product.name}
                     </div>
                     <div className="text-lg mb-4">
                         <span className="font-semibold">Phân loại: </span>
-                        {product.sku.optionValues.map((item, index) => (
+                        {orderItem?.sku.optionValues.map((item, index) => (
                             <span key={index}>{item.valueName} </span>
                         ))}
                     </div>

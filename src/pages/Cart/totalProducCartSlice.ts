@@ -16,6 +16,8 @@ const saved = localStorage.getItem('totalProductInCart');
 
 if (saved) {
     initialState.total = JSON.parse(saved);
+} else {
+    initialState.total = 0;
 }
 
 export const totalProducCartSlice = createSlice({
