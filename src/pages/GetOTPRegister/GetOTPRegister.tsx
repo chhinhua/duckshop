@@ -85,7 +85,7 @@ const GetOTPRegister = () => {
         try {
             const response = await loginApi(dataRegister.email, dataRegister.passWord);
 
-            if (response && response.data && response.data.jwt) {
+            if (response?.data?.jwt) {
                 toast.success('Đăng nhập thành công');
                 // set redux
                 dispatch(setIsLogin(true));
@@ -111,7 +111,7 @@ const GetOTPRegister = () => {
         <>
             {/* Thong bao doi */}
             <Dialog onClose={() => setIsLoadng(false)} open={isLoading} fullWidth maxWidth="sm">
-                <DialogTitle>Xác thực đăng kí</DialogTitle>
+                <DialogTitle>Xác thực</DialogTitle>
                 <DialogContent>
                     <LinearProgress color="success" />
                 </DialogContent>

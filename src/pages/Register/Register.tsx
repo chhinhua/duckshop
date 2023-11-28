@@ -3,6 +3,10 @@ import { Link, useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import LinearProgress from '@mui/material/LinearProgress';
 
 import config from '../../config';
 import InputText from '../../components/InputText/InputText';
@@ -11,10 +15,7 @@ import { useAppDispatch } from '../../redux/hook';
 import { setRegister } from './registerSlice';
 import { registerApi } from '../../apis/authApi';
 import { useState } from 'react';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import LinearProgress from '@mui/material/LinearProgress';
+
 type TResgister = {
     email: string;
     userName: string;
@@ -41,6 +42,7 @@ const Register = () => {
     const onSubmit: SubmitHandler<TResgister> = async (data: TResgister) => {
         try {
             setIsLoadng(true);
+
             // call api dang ki va gui OTP
             const response = await registerApi(data.userName, data.email, data.passWord);
 
@@ -106,7 +108,7 @@ const Register = () => {
                                 register={{
                                     ...register('userName', {
                                         required: 'UserName is required',
-                                        pattern: /^[A-Za-z0-9]{4,}$/,
+                                        // pattern: /^[A-Za-z0-9]{4,}$/,
                                     }),
                                 }}
                             />
@@ -121,7 +123,7 @@ const Register = () => {
                                 register={{
                                     ...register('passWord', {
                                         required: 'passWord is required',
-                                        pattern: /^[a-zA-Z0-9]{8,}$/,
+                                        // pattern: /^[a-zA-Z0-9]{8,}$/,
                                     }),
                                 }}
                                 autoComplete="password"

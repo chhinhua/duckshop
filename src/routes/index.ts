@@ -12,6 +12,7 @@ import Cart from '../pages/Cart/Cart';
 import Profile from '../pages/Profile/Profile';
 import GetOTPRegister from '../pages/GetOTPRegister/GetOTPRegister';
 import GetOTPLogin from '../pages/GetOTPLogin/GetOTPLogin';
+import ForgotPassWord from '../pages/ForgotPassWord/ForgotPassWord';
 
 type TRouters = {
     path: string;
@@ -25,6 +26,7 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.detailProduct, component: DetailProduct },
     { path: config.Routes.logIn, component: LogIn },
     { path: config.Routes.getOTPLogIn, component: GetOTPLogin },
+    { path: config.Routes.forgotPass, component: ForgotPassWord },
     { path: config.Routes.register, component: Register },
     { path: config.Routes.getOTPRegister, component: GetOTPRegister },
     { path: config.Routes.cart, component: Cart },
@@ -40,6 +42,7 @@ const privateRoute: Array<TRouters> = [
     { path: config.Routes.detailProduct, component: DetailProduct },
     { path: config.Routes.logIn, component: LogIn },
     { path: config.Routes.getOTPLogIn, component: GetOTPLogin },
+    { path: config.Routes.forgotPass, component: ForgotPassWord },
     { path: config.Routes.register, component: Register },
     { path: config.Routes.getOTPRegister, component: GetOTPRegister },
     { path: config.Routes.error, component: Error404, layout: null },

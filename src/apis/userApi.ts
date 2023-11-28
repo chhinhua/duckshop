@@ -42,7 +42,7 @@ export const changePassWordByToken = async (oldPassword: string, newPassword: st
 
 export const forgotPassWord = async (email: string, newPassword: string) => {
     try {
-        const response = await axios.put(`/users/password/forgot?email=${email}&newPassword=${newPassword}`);
+        const response = await axios.put(`/users/password/forgot?email=${email}&new_pass=${newPassword}`);
         return response;
     } catch (error) {
         throw error;
@@ -57,7 +57,6 @@ export const updateAccountProfileOfSignedinAccount = async (data: IInfoProfileUs
             email: data.email,
             phoneNumber: data.phoneNumber,
             gender: data.gender,
-            avatarUrl: data.avatarUrl,
         });
         return response;
     } catch (error) {

@@ -9,6 +9,7 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 
 import Avatar from '@mui/material/Avatar';
 import Popper from '@mui/material/Popper';
+import Store from '@mui/icons-material/Store';
 
 import { Link, useNavigate } from 'react-router-dom';
 import config from '../../../config';
@@ -98,18 +99,27 @@ function Header() {
                     scroll ? 'bg-header shadow-xl fixed duration-200 ease-in ' : 'bg-transparent absolute '
                 } h-18 flex flex-col justify-center items-center w-screen z-50`}
             >
-                <div className="w-10/12 grid grid-flow-col grid-cols-3 place-content-between ">
-                    <div className="h-full w-24  md:w-40 col-span-1">
+                <div className="sm:w-10/12 w-11/12 flex justify-between gap-3">
+                    <div className="h-full w-24  md:w-40 ">
                         <Link to={config.Routes.home}>
                             <Image src={logo} className="h-full w-full " />
                         </Link>
                     </div>
-                    <div className="w-full h-full col-span-1 flex justify-center items-center gap-5">
+                    <div className="sm:w-120 w-full h-full flex justify-center items-center ">
+                        {/* <div className="hidden sm:block"> */}
                         <Search setSearch={setSearch} setDoneSearch={setDoneSearch} />
+                        {/* </div> */}
                     </div>
-                    <div className="flex justify-end items-center md:gap-3 gap-0 col-span-1">
+                    <div className="flex items-center md:gap-3 gap-0">
                         {checkLogin ? (
                             <>
+                                <Link to={config.Routes.listProducts}>
+                                    <IconButton>
+                                        <MouseOverPopover content="Sản phẩm">
+                                            <Store />
+                                        </MouseOverPopover>
+                                    </IconButton>
+                                </Link>
                                 <Link to={config.Routes.cart}>
                                     <IconButton>
                                         <MouseOverPopover content="Giỏ hàng">

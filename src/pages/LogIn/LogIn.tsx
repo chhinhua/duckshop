@@ -5,10 +5,14 @@ import { loginApi } from '../../apis/authApi';
 import { useForm, SubmitHandler } from 'react-hook-form';
 
 import Button from '@mui/material/Button';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import LinearProgress from '@mui/material/LinearProgress';
 import { Link } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { useEffect } from 'react';
+import { useEffect, useState } from 'react';
 
 import { useAppDispatch } from '../../redux/hook';
 import { setInfoUser, setIsLogin } from './loginSlice';
@@ -23,6 +27,8 @@ type FormData = {
 const MESS_XACTHUC = 'Tài khoản chưa được xác thực';
 
 const LogIn = () => {
+    const [isLoading, setIsLoadng] = useState(false);
+
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
 
@@ -53,32 +59,38 @@ const LogIn = () => {
         } else if (!regexPass.test(data.passWord)) {
             toast.error('Mật khẩu phải trên 8 kí tự và không chứa kí tự đặc biệt');
         } else {
-            const response = await loginApi(data.email, data.passWord);
+            try {
+                setIsLoadng(true);
+                const response = await loginApi(data.email, data.passWord);
+                setIsLoadng(false);
 
-            if (response?.data?.jwt) {
-                toast.success('Đăng nhập thành công');
-                // set redux
-                dispatch(setIsLogin(true));
-                dispatch(
-                    setInfoUser({
-                        userNameUser: response.data.user.username,
-                        idUser: response.data.user.id,
-                        avatarUrl: response.data.user.avatarUrl,
-                    }),
-                );
+                if (response?.data?.jwt) {
+                    toast.success('Đăng nhập thành công');
+                    // set redux
+                    dispatch(setIsLogin(true));
+                    dispatch(
+                        setInfoUser({
+                            userNameUser: response.data.user.username,
+                            idUser: response.data.user.id,
+                            avatarUrl: response.data.user.avatarUrl,
+                        }),
+                    );
 
-                getTotalItemOfCart();
-                // chuyen next page home
-                navigate('/');
-            }
-            // error
-            if (response.data.message === MESS_XACTHUC) {
-                toast.error(response.data.message);
-                navigate(config.Routes.getOTPLogIn);
-            } else {
-                if (response && response.status) {
-                    toast.error(response.data.message);
+                    getTotalItemOfCart();
+                    // chuyen next page home
+                    navigate('/');
                 }
+                // error
+                if (response.data.message === MESS_XACTHUC) {
+                    toast.error(response.data.message);
+                    navigate(config.Routes.getOTPLogIn);
+                } else {
+                    if (response && response.status) {
+                        toast.error(response.data.message || response.data);
+                    }
+                }
+            } catch (error) {
+                toast.error(`${error}`);
             }
         }
     };
@@ -92,76 +104,84 @@ const LogIn = () => {
     };
 
     return (
-        <div className="m-auto pt-32">
-            <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">
-                <div className="sm:mx-auto sm:w-full sm:max-w-sm">
-                    <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
-                        <strong>YOUR ACCOUNT FOR EVERYTHING DUCK</strong>
-                    </h2>
-                </div>
+        <>
+            <Dialog onClose={() => setIsLoadng(false)} open={isLoading} fullWidth maxWidth="sm">
+                <DialogTitle>Xác thực</DialogTitle>
+                <DialogContent>
+                    <LinearProgress color="success" />
+                </DialogContent>
+            </Dialog>
+            <div className="m-auto pt-32">
+                <div className="flex min-h-full flex-1 flex-col justify-center px-6 lg:px-8">
+                    <div className="sm:mx-auto sm:w-full sm:max-w-sm">
+                        <h2 className="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-gray-900">
+                            <strong>YOUR ACCOUNT FOR EVERYTHING DUCK</strong>
+                        </h2>
+                    </div>
 
-                <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
-                    <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
-                        <div className="mt-2">
-                            <InputText
-                                labelInput="Email hoặc username"
-                                errorInput={errors.email ? true : false}
-                                isRequired
-                                errorFormMessage={errors.email?.message}
-                                register={{
-                                    ...register('email', {
-                                        required: 'email is required',
-                                    }),
-                                }}
-                                autoComplete="username"
-                            />
-                        </div>
+                    <div className="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+                        <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
+                            <div className="mt-2">
+                                <InputText
+                                    labelInput="Email hoặc username"
+                                    errorInput={errors.email ? true : false}
+                                    isRequired
+                                    errorFormMessage={errors.email?.message}
+                                    register={{
+                                        ...register('email', {
+                                            required: 'email is required',
+                                        }),
+                                    }}
+                                    autoComplete="username"
+                                />
+                            </div>
 
-                        <div className="mt-2">
-                            <InputText
-                                labelInput="Password"
-                                errorInput={errors.passWord ? true : false}
-                                isRequired
-                                typeInput="password"
-                                errorFormMessage={errors.passWord?.message}
-                                register={{
-                                    ...register('passWord', {
-                                        required: 'passWord is required',
-                                    }),
-                                }}
-                                autoComplete="password"
-                            />
-                        </div>
-                        <Link
-                            to={config.Routes.getOTPLogIn}
-                            className="text-sm font-semibold  text-gray-600 hover:text-black float-right"
-                        >
-                            Xác nhận bằng Email
-                        </Link>
-                        <Button
-                            style={{ background: 'black' }}
-                            type="submit"
-                            variant="contained"
-                            fullWidth
-                            color="primary"
-                            size="large"
-                        >
-                            Login
-                        </Button>
-                    </form>
+                            <div className="mt-2">
+                                <InputText
+                                    labelInput="Password"
+                                    errorInput={errors.passWord ? true : false}
+                                    isRequired
+                                    typeInput="password"
+                                    errorFormMessage={errors.passWord?.message}
+                                    register={{
+                                        ...register('passWord', {
+                                            required: 'passWord is required',
+                                        }),
+                                    }}
+                                    autoComplete="password"
+                                />
+                            </div>
+                            <Link
+                                to={config.Routes.forgotPass}
+                                className="text-sm font-semibold  text-gray-600 hover:text-black float-right"
+                            >
+                                Quên mật khẩu
+                            </Link>
+                            <Button
+                                style={{ background: 'black' }}
+                                type="submit"
+                                variant="contained"
+                                fullWidth
+                                color="primary"
+                                size="large"
+                            >
+                                Login
+                            </Button>
+                        </form>
 
-                    <p className="mt-10 text-center text-sm text-gray-500">
-                        Chưa có tài khoản?
-                        <Link
-                            to={config.Routes.register}
-                            className="pl-1 font-semibold leading-6 text-gray-600 hover:text-black underline"
-                        >
-                            Đăng kí.
-                        </Link>
-                    </p>
+                        <p className="mt-10 text-center text-sm text-gray-500">
+                            Chưa có tài khoản?
+                            <Link
+                                to={config.Routes.register}
+                                className="pl-1 font-semibold leading-6 text-gray-600 hover:text-black underline"
+                            >
+                                Đăng kí.
+                            </Link>
+                        </p>
+                    </div>
                 </div>
             </div>
-        </div>
+        </>
     );
 };
 

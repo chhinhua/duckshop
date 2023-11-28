@@ -12,13 +12,16 @@ import config from '../../config';
 
 import { sendOTPRegister, verifyOTPRegister } from '../../apis/authApi';
 import { useState } from 'react';
+import { forgotPassWord } from '../../apis/userApi';
 
-type TGetOTPLogin = {
+type TGetOTPForgot = {
     otp: string;
     email: string;
+    pass: string;
 };
 
-const GetOTPRegister = () => {
+const ForgotPassWord = () => {
+    const [inputPass, setInputPass] = useState<boolean>(false);
     const [isLoading, setIsLoadng] = useState(false);
 
     const navigate = useNavigate();
@@ -27,7 +30,7 @@ const GetOTPRegister = () => {
         handleSubmit,
         getValues,
         formState: { errors },
-    } = useForm<TGetOTPLogin>({
+    } = useForm<TGetOTPForgot>({
         defaultValues: {
             otp: '',
             email: '',
@@ -35,17 +38,40 @@ const GetOTPRegister = () => {
     });
 
     // send OTP
-    const onSubmit: SubmitHandler<TGetOTPLogin> = async (data) => {
-        // call api kiem tra OTP
-        setIsLoadng(true);
-        const response = await verifyOTPRegister(data.email, data.otp);
-        setIsLoadng(false);
+    const onSubmit: SubmitHandler<TGetOTPForgot> = async (data) => {
+        if (!inputPass) {
+            try {
+                // call api kiem tra OTP
+                setIsLoadng(true);
+                const response = await verifyOTPRegister(data.email, data.otp);
+                setIsLoadng(false);
 
-        if (response.status === 200) {
-            toast.success(response.data);
-            navigate(config.Routes.logIn);
+                if (response.status === 200) {
+                    toast.success(response.data);
+                    setInputPass(true);
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+            } catch (error) {
+                toast.error(`${error}`);
+            }
         } else {
-            toast.error(response.data.message);
+            try {
+                setIsLoadng(true);
+                const response = await forgotPassWord(data.email, data.pass);
+                console.log(response);
+
+                setIsLoadng(false);
+                if (response.status === 200) {
+                    toast.success(response.data);
+                    setInputPass(false);
+                    navigate(config.Routes.logIn);
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+            } catch (error) {
+                toast.error(`${error}`);
+            }
         }
     };
 
@@ -98,8 +124,6 @@ const GetOTPRegister = () => {
                                 }}
                                 autoComplete="email"
                             />
-                            {/* end input email */}
-                            {/* start input otp */}
                             <InputText
                                 labelInput="OTP"
                                 errorInput={errors.otp ? true : false}
@@ -112,7 +136,22 @@ const GetOTPRegister = () => {
                                     }),
                                 }}
                             />
-                            {/* end input otp */}
+                            {/* end input email */}
+                            {inputPass && (
+                                <InputText
+                                    labelInput="Mật khẩu mới"
+                                    errorInput={errors.pass ? true : false}
+                                    isRequired
+                                    typeInput="password"
+                                    errorFormMessage={errors.pass?.message}
+                                    register={{
+                                        ...register('pass', {
+                                            required: 'pass is required',
+                                        }),
+                                    }}
+                                    autoComplete="password"
+                                />
+                            )}
                             <Button
                                 style={{ background: 'black' }}
                                 type="submit"
@@ -120,11 +159,13 @@ const GetOTPRegister = () => {
                                 fullWidth
                                 size="large"
                             >
-                                Xác thực
-                            </Button>{' '}
-                            <Button variant="outlined" fullWidth size="large" onClick={handleSendAgainOTP}>
-                                Gửi lại mã
+                                {inputPass ? 'Xác nhận mật khẩu mới' : 'Xác thực OTP'}
                             </Button>
+                            {!inputPass && (
+                                <Button variant="outlined" fullWidth size="large" onClick={handleSendAgainOTP}>
+                                    Gửi lại mã
+                                </Button>
+                            )}
                         </form>
                     </div>
                 </div>
@@ -133,4 +174,4 @@ const GetOTPRegister = () => {
     );
 };
 
-export default GetOTPRegister;
+export default ForgotPassWord;

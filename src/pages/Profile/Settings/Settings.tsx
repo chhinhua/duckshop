@@ -1,6 +1,8 @@
 import { useForm, SubmitHandler } from 'react-hook-form';
-import { useEffect, useState } from 'react';
+import { ChangeEvent, useEffect, useState } from 'react';
+import { toast } from 'react-toastify';
 
+import { styled } from '@mui/material/styles';
 import Button from '@mui/material/Button';
 import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
@@ -11,12 +13,26 @@ import OutlinedInput from '@mui/material/OutlinedInput';
 import InputText from '../../../components/InputText/InputText';
 import config from '../../../config';
 import { IInfoProfileUser } from '../../../interface/user';
-import UploadImage from './UploadImage/UploadImage';
 import { getUserByUserNameOrEmail, updateAccountProfileOfSignedinAccount } from '../../../apis/userApi';
-import { toast } from 'react-toastify';
+import { uploadAvatar } from '../../../apis/uploadImageApi';
+import Avatar from '@mui/material/Avatar';
+
+const VisuallyHiddenInput = styled('input')({
+    clip: 'rect(0 0 0 0)',
+    clipPath: 'inset(50%)',
+    height: 1,
+    overflow: 'hidden',
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    whiteSpace: 'nowrap',
+    width: 1,
+});
 
 const Settings = () => {
     const savedInfoUser = localStorage.getItem('infoUser');
+    // avatar
+    const [avatar, setAvatar] = useState<string>('');
 
     // change gender
     const [genderUser, setGenderUser] = useState<string>('');
@@ -31,6 +47,7 @@ const Settings = () => {
                 const response = await getUserByUserNameOrEmail(dataInfo.userName);
 
                 if (response.status === 200) {
+                    setAvatar(response.data.avatarUrl);
                     await setValue('username', response.data.username);
                     await setValue('name', response.data.name);
                     await setValue('email', response.data.email);
@@ -69,12 +86,61 @@ const Settings = () => {
         }
     };
 
+    // handle change image
+    const [selectedImage, setSelectedImage] = useState<File | null>(null);
+    const handleImageChange = (e: ChangeEvent<HTMLInputElement>) => {
+        if (e.target.files && e.target.files.length > 0) {
+            setSelectedImage(e.target.files[0]);
+            setAvatar(URL.createObjectURL(e.target.files[0]));
+        }
+    };
+    const handleSaveAvatar = async () => {
+        if (!selectedImage) {
+            return;
+        }
+        const formData = new FormData();
+        formData.append('image', selectedImage);
+
+        try {
+            const response = await uploadAvatar(formData);
+            if (response.status === 200) {
+                toast.success('Cập nhật ảnh thành công');
+            } else {
+                toast.error(response.data.message || response.data);
+            }
+
+            setSelectedImage(null);
+        } catch (error) {
+            toast.error(`${error}`);
+        }
+    };
+
     return (
         <>
             <div className="grid grid-cols-12 relative gap-10 my-10">
                 {/* start avatar */}
                 <div className="col-span-12 sm:col-span-5 lg:col-span-4 xl:col-span-3 relative">
-                    <UploadImage />
+                    <div className="w-full">
+                        <Button component="label" variant="text" fullWidth sx={{ borderRadius: '100%' }}>
+                            <VisuallyHiddenInput type="file" onChange={handleImageChange} />
+                            <Avatar
+                                src={avatar}
+                                sx={{
+                                    width: '100%',
+                                    height: '20rem',
+                                    borderRadius: '100%',
+                                }}
+                            />
+                        </Button>
+                        <Button
+                            variant="contained"
+                            fullWidth
+                            onClick={handleSaveAvatar}
+                            disabled={selectedImage === null ? true : false}
+                        >
+                            Lưu ảnh
+                        </Button>
+                    </div>
                 </div>
                 {/* end avatar */}
                 {/* start account setting */}
