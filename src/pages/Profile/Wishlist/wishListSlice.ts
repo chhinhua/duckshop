@@ -16,8 +16,6 @@ const saved = localStorage.getItem('totalWishList');
 
 if (saved) {
     initialState.total = JSON.parse(saved);
-} else {
-    initialState.total = 0;
 }
 
 export const wishListSlice = createSlice({

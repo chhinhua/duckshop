@@ -17,7 +17,9 @@ import { useEffect, useState } from 'react';
 import { useAppDispatch } from '../../redux/hook';
 import { setInfoUser, setIsLogin } from './loginSlice';
 import { getCountOfItems } from '../../apis/cartApi';
+import { getWishListNumber } from '../../apis/followProductApi';
 import { setToTalProductCart } from '../Cart/totalProducCartSlice';
+import { setToTalWishList } from '../Profile/Wishlist/wishListSlice';
 
 type FormData = {
     email: string;
@@ -76,7 +78,7 @@ const LogIn = () => {
                         }),
                     );
 
-                    getTotalItemOfCart();
+                    getTotalItemOfCartAndTotalWishList();
                     // chuyen next page home
                     navigate('/');
                 }
@@ -96,10 +98,19 @@ const LogIn = () => {
     };
 
     // handle số lượng sản phẩm trong giỏ hàng
-    const getTotalItemOfCart = async () => {
-        const totalProductInCart = await getCountOfItems();
-        if (totalProductInCart.status === 200) {
-            dispatch(setToTalProductCart(+totalProductInCart.data));
+    const getTotalItemOfCartAndTotalWishList = async () => {
+        try {
+            const totalProductInCart = await getCountOfItems();
+            if (totalProductInCart.status === 200) {
+                dispatch(setToTalProductCart(+totalProductInCart.data));
+            }
+            const totalWishListt = await getWishListNumber();
+
+            if (totalWishListt.status === 200) {
+                dispatch(setToTalWishList(+totalWishListt.data));
+            }
+        } catch (error) {
+            toast.error(`${error}`);
         }
     };
 
