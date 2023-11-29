@@ -50,7 +50,7 @@ interface Iprops {
 
 export default function RowTable(props: Iprops) {
     const { item, setLoading } = props;
-    const [open, setOpen] = useState(false);
+    const [open, setOpen] = useState(true);
 
     const handleCancelOrder = async (id: number) => {
         const userConfirmed = window.confirm('Bạn có chắc chắn muốn hủy không?');
@@ -202,8 +202,13 @@ export default function RowTable(props: Iprops) {
                                             </TableCell>
                                             <TableCell align="left">
                                                 <div className="text-md font-medium">{item2.product.name}</div>
+                                                <span className="font-semibold text-base">Phân loại: </span>
+
                                                 {item2.sku.optionValues.map((item3, index3) => (
-                                                    <span key={index3}>{item3.valueName} </span>
+                                                    <span key={index3}>
+                                                        {item3.valueName}
+                                                        {index3 < item2.sku.optionValues.length - 1 ? ' - ' : ''}
+                                                    </span>
                                                 ))}
                                             </TableCell>
                                             <TableCell align="center">{item2.quantity} </TableCell>

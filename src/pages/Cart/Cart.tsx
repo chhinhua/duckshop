@@ -137,6 +137,7 @@ const Cart = () => {
                                             <TableCell align="left">
                                                 {item.product.name}
                                                 <div>
+                                                    <span className="font-semibold text-base">Phân loại: </span>
                                                     {item.sku?.optionValues?.map((option, index) => (
                                                         <React.Fragment key={index}>
                                                             {option.valueName}

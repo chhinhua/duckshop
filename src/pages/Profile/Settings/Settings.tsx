@@ -16,6 +16,8 @@ import { IInfoProfileUser } from '../../../interface/user';
 import { getUserByUserNameOrEmail, updateAccountProfileOfSignedinAccount } from '../../../apis/userApi';
 import { uploadAvatar } from '../../../apis/uploadImageApi';
 import Avatar from '@mui/material/Avatar';
+import { useDispatch } from 'react-redux';
+import { setAvatarUser } from '../../LogIn/loginSlice';
 
 const VisuallyHiddenInput = styled('input')({
     clip: 'rect(0 0 0 0)',
@@ -30,6 +32,7 @@ const VisuallyHiddenInput = styled('input')({
 });
 
 const Settings = () => {
+    const dispatch = useDispatch();
     const savedInfoUser = localStorage.getItem('infoUser');
     // avatar
     const [avatar, setAvatar] = useState<string>('');
@@ -103,7 +106,9 @@ const Settings = () => {
 
         try {
             const response = await uploadAvatar(formData);
+
             if (response.status === 200) {
+                dispatch(setAvatarUser(response.data));
                 toast.success('Cập nhật ảnh thành công');
             } else {
                 toast.error(response.data.message || response.data);

@@ -15,7 +15,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import config from '../../../config';
 
 import { useAppDispatch, useAppSelector } from '../../../redux/hook';
-import { selectIsLogin, setIsLogin } from '../../../pages/LogIn/loginSlice';
+import { selectAvatarUrl, selectIsLogin, selectUserNameUser, setIsLogin } from '../../../pages/LogIn/loginSlice';
 import { selectToTalProductCart } from '../../../pages/Cart/totalProducCartSlice';
 import Favorite from '@mui/icons-material/Favorite';
 import MouseOverPopover from '../../../components/MouseOverPopover/MouseOverPopover';
@@ -26,14 +26,8 @@ function Header() {
     const dispatch = useAppDispatch();
     const navaigate = useNavigate();
     // get userName
-    let userName: string = '';
-    let avatarUrl: string = '';
-    const savedInfoUser = localStorage.getItem('infoUser');
-    if (savedInfoUser) {
-        const dataInfo = JSON.parse(savedInfoUser);
-        userName = dataInfo.userName;
-        avatarUrl = dataInfo.avatarUrl;
-    }
+    const userName = useAppSelector(selectUserNameUser);
+    const avatarUrl = useAppSelector(selectAvatarUrl);
 
     // handle logged
     const handleLogout = () => {

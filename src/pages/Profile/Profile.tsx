@@ -15,6 +15,8 @@ import ManagerPass from './ManagerPass/ManagerPass';
 import { useCallback, useEffect, useState } from 'react';
 import config from '../../config';
 import { useLocation } from 'react-router-dom';
+import { useAppSelector } from '../../redux/hook';
+import { selectAvatarUrl, selectUserNameUser } from '../LogIn/loginSlice';
 
 const Profile = () => {
     // handle get id
@@ -22,9 +24,11 @@ const Profile = () => {
     const infoPage = location.hash.substring(1);
 
     const [valuePage, setValuePage] = useState(infoPage);
+
     useEffect(() => {
         setValuePage(location.hash.substring(1));
     }, [location.hash]);
+
     const handleChange = useCallback(
         (event: React.SyntheticEvent, newValue: string) => {
             setValuePage(newValue);
@@ -33,19 +37,15 @@ const Profile = () => {
         },
         [valuePage],
     );
-    let userName: string = '';
-    let avatarUrl: string = '';
-    const savedInfoUser = localStorage.getItem('infoUser');
-    if (savedInfoUser) {
-        const dataInfo = JSON.parse(savedInfoUser);
-        userName = dataInfo.userName;
-        avatarUrl = dataInfo.avatarUrl;
-    }
+
+    const userName = useAppSelector(selectUserNameUser);
+    const avatarUrl = useAppSelector(selectAvatarUrl);
+
     return (
         <div className="w-full m-auto pt-32">
             <div className="bg-headerProfile h-60 flex place-items-end place-content-center">
                 <div className="w-10/12 bg-white h-3/4 flex place-items-center place-content-center border-2 border-headerProfile">
-                    <Avatar alt="Remy Sharp" src={avatarUrl} sx={{ width: 76, height: 76 }} />
+                    <Avatar src={avatarUrl} sx={{ width: 76, height: 76 }} />
                     <div className="ml-5">
                         <div className="uppercase font-semibold text-2xl">{userName}</div>
                         <div className="text-sm text-gray-400">Khách hàng</div>

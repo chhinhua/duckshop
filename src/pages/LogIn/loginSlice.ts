@@ -59,11 +59,26 @@ export const loginSlice = createSlice({
                 );
             }
         },
+        setAvatarUser: (state, action: PayloadAction<string | null>) => {
+            state.avatarUrl = action.payload;
+
+            // Lưu giá trị mới vào localStorage khi có thay đổi
+
+            localStorage.setItem(
+                'infoUser',
+                JSON.stringify({
+                    userName: state.userNameUser,
+                    idUser: state.idUser,
+                    avatarUrl: action.payload,
+                }),
+            );
+        },
     },
 });
 
 export const { setIsLogin } = loginSlice.actions;
 export const { setInfoUser } = loginSlice.actions;
+export const { setAvatarUser } = loginSlice.actions;
 
 // Other code such as selectors can use the imported `RootState` type
 export const selectIsLogin = (state: RootState) => state.login.isLogin;
