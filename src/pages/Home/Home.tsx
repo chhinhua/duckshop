@@ -12,10 +12,35 @@ import ScrollAnimationElement from '../../components/ScrollAnimationElement/Scro
 import ButtonComp from '../../components/Button';
 
 import { useEffect, useRef } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import config from '../../config';
+import { checkExpiredToken } from '../../apis/authApi';
+import { useDispatch } from 'react-redux';
+import { setIsLogin } from '../LogIn/loginSlice';
 
 function Home() {
+    const dispatch = useDispatch();
+    const navaigate = useNavigate();
+    // check token
+    const handleCheckToken = async (token: string) => {
+        const response = await checkExpiredToken(token);
+        if (response.status !== 200) {
+            localStorage.removeItem('accessToken');
+            localStorage.removeItem('tokenType');
+            localStorage.removeItem('infoUser');
+            localStorage.removeItem('totalProductInCart');
+            localStorage.removeItem('totalWishList');
+            dispatch(setIsLogin(false));
+            navaigate('/');
+        }
+    };
+    // handle successful login
+    useEffect(() => {
+        const accessToken = localStorage.getItem('accessToken');
+        if (accessToken) {
+            handleCheckToken(accessToken);
+        }
+    }, []);
     const videoRef = useRef<HTMLVideoElement | null>(null);
 
     useEffect(() => {
