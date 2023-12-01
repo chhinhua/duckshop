@@ -34,6 +34,7 @@ import FavoriteBorder from '@mui/icons-material/FavoriteBorder';
 import { getWishListNumber, putFollowProduct } from '../../apis/followProductApi';
 import ReviewProductCurrent from './ReviewProductCurrent/ReviewProductCurrent';
 import { setToTalWishList } from '../Profile/Wishlist/wishListSlice';
+import RelatedProduct from './RelatedProduct/RelatedProduct';
 
 const DetailProduct = () => {
     const dispatch = useDispatch();
@@ -45,17 +46,20 @@ const DetailProduct = () => {
     const [favourite, setFavourite] = useState<boolean>(false);
     const [product, setProduct] = useState<IProduct>(); // Dữ liệu từ API
     const [ratingProduct, setRatingProduct] = useState<number>(0);
+    const [categoryName, setcategoryName] = useState<string>('');
 
     const getProduct = async (id: number) => {
         try {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
+                console.log(response);
 
                 if (response && response.data) {
                     setProduct(response.data);
                     setFavourite(response.data.liked);
                     setRatingProduct(response.data.rating);
+                    setcategoryName(response.data.categoryName);
                 }
                 if (response.status !== 200) {
                     toast.error(response.data.message);
@@ -337,6 +341,11 @@ const DetailProduct = () => {
             {/* Start product reviews */}
             <div className="mt-5">
                 <ReviewProductCurrent idProduct={+idProduct} rating={ratingProduct} />
+            </div>
+
+            {/* Start related product */}
+            <div className="mt-5">
+                <RelatedProduct categoryName={categoryName} />
             </div>
         </div>
     );

@@ -20,6 +20,7 @@ module.exports = {
                 header: 'white',
                 footer: '#787A91',
                 headerProfile: '#FFEEE8',
+                review: '#F3EEEA',
             },
             spacing: {
                 18: '4.5rem',

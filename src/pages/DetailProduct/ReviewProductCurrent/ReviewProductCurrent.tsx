@@ -71,7 +71,7 @@ const ReviewProductCurrent = (props: Iprops) => {
         window.scroll(0, 0);
     }, []);
     return (
-        <>
+        <div className="rounded border-2">
             <div ref={targetComponentRef} className="bg-gray-200 p-3 rounded text-xl font-normal">
                 ĐÁNH GIÁ SẢN PHẨM
             </div>
@@ -112,7 +112,7 @@ const ReviewProductCurrent = (props: Iprops) => {
             {data.map((item, index) => (
                 <Review key={index} item={item} />
             ))}
-            <div className="w-full flex justify-center my-10">
+            <div className="w-full flex justify-end my-5">
                 <Pagination
                     count={totalPages}
                     page={page}
@@ -122,7 +122,7 @@ const ReviewProductCurrent = (props: Iprops) => {
                     boundaryCount={1}
                 />
             </div>
-        </>
+        </div>
     );
 };
 
