@@ -4,6 +4,8 @@ import { getAllProductSearchWithinPagination } from '../../../apis/productApi';
 import IProduct from '../../../interface/product';
 import { useEffect, useState } from 'react';
 import { toast } from 'react-toastify';
+import { Link } from 'react-router-dom';
+import config from '../../../config';
 interface Iprops {
     categoryName: string;
 }
@@ -40,7 +42,9 @@ const RelatedProduct = (props: Iprops) => {
         <>
             <div className="flex flex-wrap justify-between items-center bg-gray-200 p-3 rounded text-xl font-normal">
                 <span>SẢN PHẨM LIÊN QUAN</span>
-                <Button>{`Xem tất cả >>`} </Button>
+                <Link to={config.Routes.listProducts + `#cate:${categoryName}`}>
+                    <Button>{`Xem tất cả >>`} </Button>
+                </Link>
             </div>
             {data.length !== 0 ? (
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 ">

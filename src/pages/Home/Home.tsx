@@ -135,7 +135,7 @@ function Home() {
                 <div className="h-full grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
                     {[
                         { title: 'Thời trang nam', img: S4Baner1 },
-                        { title: 'Thời trang Nữ', img: S4Baner2 },
+                        { title: 'Thời trang nữ', img: S4Baner2 },
                         { title: 'Thời trang trẻ em', img: S4Baner3 },
                     ].map((item, index) => (
                         <ScrollAnimationElement key={index}>
@@ -148,7 +148,7 @@ function Home() {
                                         <div className="flex flex-col">
                                             <div className=" h-140">
                                                 <Link
-                                                    to={config.Routes.listProducts}
+                                                    to={config.Routes.listProducts + `#cate:${item.title}`}
                                                     className="absolute bottom-7 left-7 "
                                                 >
                                                     <ButtonComp>{item.title}</ButtonComp>

@@ -33,12 +33,21 @@ import LinearProgress from '@mui/material/LinearProgress';
 
 function Listproducts() {
     const location = useLocation();
-    const search = decodeURIComponent(location.hash.substring(1));
+    const hash = decodeURIComponent(location.hash.substring(1));
+    let search = '';
+    let cate = '';
+
     // Kiểm tra xem có dấu thăng (#) hay không
-    if (search) {
+    if (hash) {
+        if (hash.includes('cate')) {
+            cate = hash.substring(5);
+        } else {
+            search = hash;
+        }
         // Thay đổi URL, xóa dấu thăng và mọi dữ liệu sau nó
         window.history.replaceState({}, document.title, window.location.pathname);
     }
+
     // handle load api
     const [isLoading, setLoading] = useState<boolean>(false);
 
@@ -49,12 +58,13 @@ function Listproducts() {
     const [totalProducts, setTotalProducts] = useState<number>(0); // Tổng số san pham
     const [totalProductsPage, setTotalProductsPage] = useState<number>(0); // Tổng số san pham cua 1 trang
     const [filter, setFilter] = useState<string>('');
-    const [cateFilter, setCateFilter] = useState<Array<string>>([]);
+    const [cateFilter, setCateFilter] = useState<Array<string>>([cate]);
     const itemsPerPage = 40;
 
     const getAllProducts = async (pageNo: number, filter: string, cateFilter: Array<string>) => {
         try {
             const resultcateFilterString = cateFilter.join(',');
+
             setLoading(true);
             const response = await getAllProductSearchWithinPagination(
                 pageNo,
@@ -65,16 +75,20 @@ function Listproducts() {
             );
             setLoading(false);
 
-            const { content, totalPages, totalElements, last, lastPageSize, pageSize } = response.data;
-            if (last) {
-                setTotalProductsPage(lastPageSize);
-            } else {
-                setTotalProductsPage(pageSize);
-            }
+            if (response.status === 200) {
+                const { content, totalPages, totalElements, last, lastPageSize, pageSize } = response.data;
+                if (last) {
+                    setTotalProductsPage(lastPageSize);
+                } else {
+                    setTotalProductsPage(pageSize);
+                }
 
-            setData(content);
-            setTotalPages(totalPages);
-            setTotalProducts(totalElements);
+                setData(content);
+                setTotalPages(totalPages);
+                setTotalProducts(totalElements);
+            } else {
+                toast.error(response.data.message || response.data);
+            }
         } catch (error) {
             toast.error('Đang bảo trì quay lại sau');
         }
