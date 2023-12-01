@@ -28,7 +28,7 @@ const style = {
 interface IPropsAddress {
     open: boolean;
     handleClose: () => void;
-    orderItem: IProductCart;
+    orderItem: IProductCart | undefined;
     setLoading: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
@@ -54,28 +54,30 @@ const ModalReview = (propsCh: IPropsAddress) => {
     // form
     const { register, handleSubmit, setValue } = useForm<IreviewOrder>({});
     const onSubmit: SubmitHandler<IreviewOrder> = async (data) => {
-        const objectUpdate: IreviewOrder = {
-            content: data.content,
-            stars: valueRating,
-            itemId: orderItem.id,
-            productId: orderItem.product.id,
-        };
-        try {
-            const response = await addReview(objectUpdate);
+        if (orderItem) {
+            const objectUpdate: IreviewOrder = {
+                content: data.content,
+                stars: valueRating,
+                itemId: orderItem.id,
+                productId: orderItem.product.id,
+            };
+            try {
+                const response = await addReview(objectUpdate);
 
-            if (response.status === 201) {
-                toast.success('Đánh giá thành công');
-                setValue('content', '');
-                setValueRating(5);
-                setLoading((prev) => !prev);
-            } else {
-                toast.error(response.data.message || response.data);
+                if (response.status === 201) {
+                    toast.success('Đánh giá thành công');
+                    setValue('content', '');
+                    setValueRating(5);
+                    setLoading((prev) => !prev);
+                } else {
+                    toast.error(response.data.message || response.data);
+                }
+            } catch (error) {
+                toast.error(`${error}`);
             }
-        } catch (error) {
-            toast.error(`${error}`);
-        }
 
-        handleClose();
+            handleClose();
+        }
     };
     return (
         <div>

@@ -28,19 +28,22 @@ const ManagerPass = () => {
 
     const onSubmit: SubmitHandler<IFormPassWord> = async (data) => {
         // kiem tra mat hien tai  => true
-
-        if (data.newPassWord !== data.confirmPassWord) {
-            toast.error('Mật khẩu mới không khớp với nhau');
-        } else if (data.currentPassWord === data.newPassWord) {
-            toast.error('Mật khẩu mới trùng mật khẩu hiện tại');
+        if (data.currentPassWord.length < 8 || data.confirmPassWord.length < 8 || data.newPassWord.length < 8) {
+            toast.error('Mật khẩu phải lớn hơn 8 số');
         } else {
-            //
-            //  call api doi mk
-            const response = await changePassWordByToken(data.currentPassWord, data.newPassWord);
-            if (response.status === 200) {
-                toast.success(response?.data);
+            if (data.newPassWord !== data.confirmPassWord) {
+                toast.error('Mật khẩu mới không khớp với nhau');
+            } else if (data.currentPassWord === data.newPassWord) {
+                toast.error('Mật khẩu mới trùng mật khẩu hiện tại');
             } else {
-                toast.error(response?.data.message || response?.data);
+                //
+                //  call api doi mk
+                const response = await changePassWordByToken(data.currentPassWord, data.newPassWord);
+                if (response.status === 200) {
+                    toast.success(response?.data);
+                } else {
+                    toast.error(response?.data.message || response?.data);
+                }
             }
         }
     };
@@ -101,7 +104,7 @@ const ManagerPass = () => {
                         size="large"
                         fullWidth
                     >
-                        Save
+                        Lưu mật khẩu mới
                     </Button>
                 </form>
             </div>

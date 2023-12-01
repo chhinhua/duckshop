@@ -55,11 +55,9 @@ const PurchaseHistory = () => {
         if (statusParam === '') {
             const response = await getHistoryOrderForCurrentUser();
             setListHistory(response.data);
-            console.log(response.data);
         } else {
             const response = await searchOrderForUser(statusParam);
             setListHistory(response.data);
-            console.log(response.data);
         }
     };
     useEffect(() => {
@@ -68,7 +66,7 @@ const PurchaseHistory = () => {
 
     return (
         <div>
-            <div className="flex items-center justify-center font-medium text-lg py-3">
+            <div className="flex items-center justify-center font-medium text-lg py-3 ">
                 <span className="w-40">Lọc đơn hàng:</span>
                 <FormControl sx={{ width: 200 }}>
                     <InputLabel>Trạng thái</InputLabel>

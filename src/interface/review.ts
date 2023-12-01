@@ -22,4 +22,5 @@ export default interface Ireview {
     };
     productId: number;
     orderId: number;
+    sku: string;
 }

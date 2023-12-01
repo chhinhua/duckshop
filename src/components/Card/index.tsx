@@ -26,12 +26,18 @@ const Card = (props: { itemProduct: IProduct }) => {
     // yeu thich
     const [favourite, setFavourite] = useState(itemProduct.liked ? true : false);
     const handleChangeFavorite = useCallback(async () => {
-        try {
-            await putFollowProduct(+itemProduct.id);
-            const response = await getWishListNumber();
-            dispatch(setToTalWishList(+response.data));
-        } catch (error) {
-            toast.error(`${error}`);
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            try {
+                await putFollowProduct(+itemProduct.id);
+                const response = await getWishListNumber();
+                dispatch(setToTalWishList(+response.data));
+            } catch (error) {
+                toast.error(`${error}`);
+            }
+        } else {
+            toast.info('Bạn cần đăng nhập trước khi yêu thích sản phẩm');
+            navigate(config.Routes.logIn);
         }
 
         // fake

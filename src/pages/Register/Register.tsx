@@ -101,7 +101,7 @@ const Register = () => {
                             {/* end input email */}
                             {/* start input userName */}
                             <InputText
-                                labelInput="Username phải hơn 4 kí tự"
+                                labelInput="Tên tài khoản phải hơn 4 kí tự"
                                 errorInput={errors.userName ? true : false}
                                 isRequired
                                 errorFormMessage={errors.userName?.message}

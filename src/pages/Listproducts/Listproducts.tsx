@@ -26,6 +26,10 @@ import CardComp from '../../components/Card';
 import { getAllProductSearchWithinPagination } from '../../apis/productApi';
 import IProduct from '../../interface/product';
 import config from '../../config';
+import Dialog from '@mui/material/Dialog';
+import DialogTitle from '@mui/material/DialogTitle';
+import DialogContent from '@mui/material/DialogContent';
+import LinearProgress from '@mui/material/LinearProgress';
 
 function Listproducts() {
     const location = useLocation();
@@ -35,6 +39,8 @@ function Listproducts() {
         // Thay đổi URL, xóa dấu thăng và mọi dữ liệu sau nó
         window.history.replaceState({}, document.title, window.location.pathname);
     }
+    // handle load api
+    const [isLoading, setLoading] = useState<boolean>(false);
 
     // change page
     const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
@@ -49,6 +55,7 @@ function Listproducts() {
     const getAllProducts = async (pageNo: number, filter: string, cateFilter: Array<string>) => {
         try {
             const resultcateFilterString = cateFilter.join(',');
+            setLoading(true);
             const response = await getAllProductSearchWithinPagination(
                 pageNo,
                 itemsPerPage,
@@ -56,6 +63,7 @@ function Listproducts() {
                 resultcateFilterString,
                 filter,
             );
+            setLoading(false);
 
             const { content, totalPages, totalElements, last, lastPageSize, pageSize } = response.data;
             if (last) {
@@ -137,6 +145,12 @@ function Listproducts() {
 
     return (
         <>
+            <Dialog onClose={() => setLoading(false)} open={isLoading} fullWidth maxWidth="sm">
+                <DialogTitle> Chờ giây lát !</DialogTitle>
+                <DialogContent>
+                    <LinearProgress color="success" />
+                </DialogContent>
+            </Dialog>
             <div className="w-10/12 m-auto pt-32">
                 {/* start section 1 */}
                 <div

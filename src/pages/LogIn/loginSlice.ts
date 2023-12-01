@@ -7,6 +7,7 @@ interface IInitialStateLogin {
     isLogin: boolean;
     idUser: string;
     userNameUser: string;
+    nameUser: string;
     avatarUrl: string | null;
 }
 
@@ -15,6 +16,7 @@ const initialState: IInitialStateLogin = {
     isLogin: false,
     idUser: '',
     userNameUser: '',
+    nameUser: '',
     avatarUrl: '',
 };
 // Lấy giá trị khi có từ localStorage
@@ -26,7 +28,8 @@ if (savedIsLogin) {
 if (savedInfoUser) {
     const dataInfo = JSON.parse(savedInfoUser);
     initialState.idUser = dataInfo.idUser;
-    initialState.userNameUser = dataInfo.userName;
+    initialState.userNameUser = dataInfo.userNameUser;
+    initialState.nameUser = dataInfo.nameUser;
     initialState.avatarUrl = dataInfo.avatarUrl;
 }
 
@@ -41,20 +44,22 @@ export const loginSlice = createSlice({
         },
         setInfoUser: (
             state,
-            action: PayloadAction<{ idUser: string; userNameUser: string; avatarUrl: string | null }>,
+            action: PayloadAction<{ idUser: string; userNameUser: string; avatarUrl: string | null; nameUser: string }>,
         ) => {
             state.idUser = action.payload.idUser;
             state.userNameUser = action.payload.userNameUser;
             state.avatarUrl = action.payload.avatarUrl;
+            state.nameUser = action.payload.nameUser;
 
             // Lưu giá trị mới vào localStorage khi có thay đổi
             if (action.payload.idUser && action.payload.userNameUser) {
                 localStorage.setItem(
                     'infoUser',
                     JSON.stringify({
-                        userName: action.payload.userNameUser,
+                        userNameUser: action.payload.userNameUser,
                         idUser: action.payload.idUser,
                         avatarUrl: action.payload.avatarUrl,
+                        nameUser: action.payload.nameUser,
                     }),
                 );
             }
@@ -67,7 +72,7 @@ export const loginSlice = createSlice({
             localStorage.setItem(
                 'infoUser',
                 JSON.stringify({
-                    userName: state.userNameUser,
+                    userNameUser: state.userNameUser,
                     idUser: state.idUser,
                     avatarUrl: action.payload,
                 }),
@@ -84,6 +89,7 @@ export const { setAvatarUser } = loginSlice.actions;
 export const selectIsLogin = (state: RootState) => state.login.isLogin;
 export const selectIDUser = (state: RootState) => state.login.idUser;
 export const selectUserNameUser = (state: RootState) => state.login.userNameUser;
+export const selectnameUser = (state: RootState) => state.login.nameUser;
 export const selectAvatarUrl = (state: RootState) => state.login.avatarUrl;
 
 export default loginSlice.reducer;

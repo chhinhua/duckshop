@@ -47,7 +47,7 @@ const Settings = () => {
         if (savedInfoUser) {
             const dataInfo = JSON.parse(savedInfoUser);
             try {
-                const response = await getUserByUserNameOrEmail(dataInfo.userName);
+                const response = await getUserByUserNameOrEmail(dataInfo.userNameUser);
 
                 if (response.status === 200) {
                     setAvatar(response.data.avatarUrl);
@@ -109,7 +109,6 @@ const Settings = () => {
 
             if (response.status === 200) {
                 dispatch(setAvatarUser(response.data));
-                toast.success('Cập nhật ảnh thành công');
             } else {
                 toast.error(response.data.message || response.data);
             }

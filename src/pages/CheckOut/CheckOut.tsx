@@ -109,8 +109,8 @@ const Pay = () => {
             const savedInfoUser = localStorage.getItem('infoUser');
             let useName: string = ''; // lấy tên username
             if (savedInfoUser) {
-                const dataInfo: { userName: string } = JSON.parse(savedInfoUser);
-                useName = dataInfo.userName;
+                const dataInfo: { userNameUser: string } = JSON.parse(savedInfoUser);
+                useName = dataInfo.userNameUser;
             }
             dispatch(setToTalProductCart(0));
             try {

@@ -34,9 +34,10 @@ const StyledTableCell = styled(TableCell)(({ theme }) => ({
     },
 }));
 
-const StyledTableRow = styled(TableRow)(({ theme }) => ({
+const StyledTableRow = styled(TableRow)(() => ({
     '&:nth-of-type(odd)': {
-        backgroundColor: theme.palette.action.hover,
+        // backgroundColor: theme.palette.action.hover,
+        backgroundColor: '#F3EEEA',
     },
     // hide last border
     '&:last-child td, &:last-child th': {
@@ -59,7 +60,7 @@ export default function RowTable(props: Iprops) {
                 const response = await updateOrderStatusByID(id, config.StatusOrders.CANCELED);
 
                 if (response.status === 200) {
-                    toast.success(response.data.status);
+                    toast.success('Đã hủy đơn hàng');
                     setLoading((prev) => !prev);
                 } else {
                     toast.error(response.data.message || response.data);

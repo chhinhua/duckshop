@@ -18,10 +18,12 @@ type TGetOTPForgot = {
     otp: string;
     email: string;
     pass: string;
+    comfirmPass: string;
 };
 
 const ForgotPassWord = () => {
     const [inputPass, setInputPass] = useState<boolean>(false);
+    const [inputOTP, setInputOTP] = useState<boolean>(false);
     const [isLoading, setIsLoadng] = useState(false);
 
     const navigate = useNavigate();
@@ -56,21 +58,25 @@ const ForgotPassWord = () => {
                 toast.error(`${error}`);
             }
         } else {
-            try {
-                setIsLoadng(true);
-                const response = await forgotPassWord(data.email, data.pass);
-                console.log(response);
+            if (data.pass === data.comfirmPass) {
+                try {
+                    setIsLoadng(true);
+                    const response = await forgotPassWord(data.email, data.pass);
+                    console.log(response);
 
-                setIsLoadng(false);
-                if (response.status === 200) {
-                    toast.success(response.data);
-                    setInputPass(false);
-                    navigate(config.Routes.logIn);
-                } else {
-                    toast.error(response.data.message || response.data);
+                    setIsLoadng(false);
+                    if (response.status === 200) {
+                        toast.success(response.data);
+                        setInputPass(false);
+                        navigate(config.Routes.logIn);
+                    } else {
+                        toast.error(response.data.message || response.data);
+                    }
+                } catch (error) {
+                    toast.error(`${error}`);
                 }
-            } catch (error) {
-                toast.error(`${error}`);
+            } else {
+                toast.error('Mật khẩu hiện chưa khớp');
             }
         }
     };
@@ -80,9 +86,11 @@ const ForgotPassWord = () => {
         // call api voi Email
         setIsLoadng(true);
         const response = await sendOTPRegister(getValues().email);
+
         setIsLoadng(false);
 
-        if (response.status) {
+        if (response.status === 200) {
+            setInputOTP(true);
             toast.error(response.data.message);
         }
         if (response.data) {
@@ -92,7 +100,7 @@ const ForgotPassWord = () => {
     return (
         <>
             <Dialog onClose={() => setIsLoadng(false)} open={isLoading} fullWidth maxWidth="sm">
-                <DialogTitle>Xác thực</DialogTitle>
+                <DialogTitle>Chờ giây lát !</DialogTitle>
                 <DialogContent>
                     <LinearProgress color="success" />
                 </DialogContent>
@@ -124,46 +132,65 @@ const ForgotPassWord = () => {
                                 }}
                                 autoComplete="email"
                             />
-                            <InputText
-                                labelInput="OTP"
-                                errorInput={errors.otp ? true : false}
-                                isRequired
-                                errorFormMessage={errors.otp?.message}
-                                register={{
-                                    ...register('otp', {
-                                        required: 'OTP is required',
-                                        pattern: /^[A-Za-z0-9]{4,}$/,
-                                    }),
-                                }}
-                            />
-                            {/* end input email */}
-                            {inputPass && (
+                            {inputOTP && (
                                 <InputText
-                                    labelInput="Mật khẩu mới"
-                                    errorInput={errors.pass ? true : false}
+                                    labelInput="OTP"
+                                    errorInput={errors.otp ? true : false}
                                     isRequired
-                                    typeInput="password"
-                                    errorFormMessage={errors.pass?.message}
+                                    errorFormMessage={errors.otp?.message}
                                     register={{
-                                        ...register('pass', {
-                                            required: 'pass is required',
+                                        ...register('otp', {
+                                            required: 'OTP is required',
+                                            pattern: /^[A-Za-z0-9]{4,}$/,
                                         }),
                                     }}
-                                    autoComplete="password"
                                 />
                             )}
-                            <Button
-                                style={{ background: 'black' }}
-                                type="submit"
-                                variant="contained"
-                                fullWidth
-                                size="large"
-                            >
-                                {inputPass ? 'Xác nhận mật khẩu mới' : 'Xác thực OTP'}
-                            </Button>
+                            {/* end input email */}
+                            {inputPass && (
+                                <>
+                                    <InputText
+                                        labelInput="Mật khẩu mới"
+                                        errorInput={errors.pass ? true : false}
+                                        isRequired
+                                        typeInput="password"
+                                        errorFormMessage={errors.pass?.message}
+                                        register={{
+                                            ...register('pass', {
+                                                required: 'pass is required',
+                                            }),
+                                        }}
+                                        autoComplete="password"
+                                    />
+                                    <InputText
+                                        labelInput="Xác nhận mật khẩu mới"
+                                        errorInput={errors.comfirmPass ? true : false}
+                                        isRequired
+                                        typeInput="password"
+                                        errorFormMessage={errors.comfirmPass?.message}
+                                        register={{
+                                            ...register('comfirmPass', {
+                                                required: 'comfirmPass is required',
+                                            }),
+                                        }}
+                                        autoComplete="password"
+                                    />
+                                </>
+                            )}
+                            {inputOTP && (
+                                <Button
+                                    style={{ background: 'black' }}
+                                    type="submit"
+                                    variant="contained"
+                                    fullWidth
+                                    size="large"
+                                >
+                                    {inputPass ? 'Xác nhận mật khẩu mới' : 'Xác thực OTP'}
+                                </Button>
+                            )}
                             {!inputPass && (
                                 <Button variant="outlined" fullWidth size="large" onClick={handleSendAgainOTP}>
-                                    Gửi lại mã
+                                    Gửi mã OTP
                                 </Button>
                             )}
                         </form>

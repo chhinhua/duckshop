@@ -134,9 +134,9 @@ function Home() {
                 </div>
                 <div className="h-full grid grid-cols-1 md:grid-cols-3 gap-4 mt-8">
                     {[
-                        { title: "Men's", img: S4Baner1 },
-                        { title: "Women's", img: S4Baner2 },
-                        { title: "Kid's", img: S4Baner3 },
+                        { title: 'Thời trang nam', img: S4Baner1 },
+                        { title: 'Thời trang Nữ', img: S4Baner2 },
+                        { title: 'Thời trang trẻ em', img: S4Baner3 },
                     ].map((item, index) => (
                         <ScrollAnimationElement key={index}>
                             <div className="opacity-0">

@@ -94,6 +94,7 @@ const GetOTPRegister = () => {
                         userNameUser: response.data.user.username,
                         idUser: response.data.user.id,
                         avatarUrl: response.data.user.avatarUrl,
+                        nameUser: response.data.user.name,
                     }),
                 );
                 // chuyen next page home

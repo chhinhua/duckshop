@@ -64,6 +64,8 @@ const LogIn = () => {
             try {
                 setIsLoadng(true);
                 const response = await loginApi(data.email, data.passWord);
+                console.log(response);
+
                 setIsLoadng(false);
 
                 if (response?.data?.jwt) {
@@ -75,6 +77,7 @@ const LogIn = () => {
                             userNameUser: response.data.user.username,
                             idUser: response.data.user.id,
                             avatarUrl: response.data.user.avatarUrl,
+                            nameUser: response.data.user.name,
                         }),
                     );
 
@@ -134,7 +137,7 @@ const LogIn = () => {
                         <form className="space-y-6" onSubmit={handleSubmit(onSubmit)}>
                             <div className="mt-2">
                                 <InputText
-                                    labelInput="Email hoặc username"
+                                    labelInput="Email hoặc Tên tài khoản"
                                     errorInput={errors.email ? true : false}
                                     isRequired
                                     errorFormMessage={errors.email?.message}
@@ -149,7 +152,7 @@ const LogIn = () => {
 
                             <div className="mt-2">
                                 <InputText
-                                    labelInput="Password"
+                                    labelInput="Mật khẩu"
                                     errorInput={errors.passWord ? true : false}
                                     isRequired
                                     typeInput="password"
@@ -176,7 +179,7 @@ const LogIn = () => {
                                 color="primary"
                                 size="large"
                             >
-                                Login
+                                Đăng nhập
                             </Button>
                         </form>
 

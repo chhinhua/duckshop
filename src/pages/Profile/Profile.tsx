@@ -16,7 +16,7 @@ import { useCallback, useEffect, useState } from 'react';
 import config from '../../config';
 import { useLocation } from 'react-router-dom';
 import { useAppSelector } from '../../redux/hook';
-import { selectAvatarUrl, selectUserNameUser } from '../LogIn/loginSlice';
+import { selectAvatarUrl, selectUserNameUser, selectnameUser } from '../LogIn/loginSlice';
 
 const Profile = () => {
     // handle get id
@@ -39,16 +39,17 @@ const Profile = () => {
     );
 
     const userName = useAppSelector(selectUserNameUser);
+    const name = useAppSelector(selectnameUser);
     const avatarUrl = useAppSelector(selectAvatarUrl);
 
     return (
         <div className="w-full m-auto pt-32">
             <div className="bg-headerProfile h-60 flex place-items-end place-content-center">
                 <div className="w-10/12 bg-white h-3/4 flex place-items-center place-content-center border-2 border-headerProfile">
-                    <Avatar src={avatarUrl} sx={{ width: 76, height: 76 }} />
+                    <Avatar src={avatarUrl || undefined} sx={{ width: 76, height: 76 }} />
                     <div className="ml-5">
                         <div className="uppercase font-semibold text-2xl">{userName}</div>
-                        <div className="text-sm text-gray-400">Khách hàng</div>
+                        <div className="text-sm text-gray-400">{name}</div>
                     </div>
                 </div>
             </div>

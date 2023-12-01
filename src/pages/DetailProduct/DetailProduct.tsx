@@ -108,6 +108,7 @@ const DetailProduct = () => {
                 }
             }
         } else {
+            toast.info('Bạn cần đăng nhập trước khi đặt hàng');
             navigate(config.Routes.logIn);
         }
     };
@@ -130,13 +131,19 @@ const DetailProduct = () => {
     };
 
     const handleToggleFavorite = async () => {
-        setFavourite((prev) => !prev);
-        try {
-            await putFollowProduct(+idProduct);
-            const response = await getWishListNumber();
-            dispatch(setToTalWishList(+response.data));
-        } catch (error) {
-            toast.error(`${error}`);
+        const token = localStorage.getItem('accessToken');
+        if (token) {
+            setFavourite((prev) => !prev);
+            try {
+                await putFollowProduct(+idProduct);
+                const response = await getWishListNumber();
+                dispatch(setToTalWishList(+response.data));
+            } catch (error) {
+                toast.error(`${error}`);
+            }
+        } else {
+            toast.info('Bạn cần đăng nhập trước khi yêu thích sản phẩm');
+            navigate(config.Routes.logIn);
         }
     };
     useEffect(() => {
