@@ -191,8 +191,8 @@ function Home() {
             {/* End content */}
             {/* Start section 5 */}
             <ScrollAnimationElement>
-                <div className="h-full mt-8 relative opacity-0">
-                    <video ref={videoRef} muted>
+                <div className="w-full mt-8 relative opacity-0">
+                    <video ref={videoRef} muted className="w-full">
                         <source src={S5BanerVideo1} type="video/mp4" />
                     </video>
                     <div className="w-full flex flex-col absolute bottom-0 text-center mb-4">
