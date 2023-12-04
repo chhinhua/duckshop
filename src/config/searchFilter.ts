@@ -7,6 +7,7 @@ const SearchFilter = {
     favoriteDesc: 'favorite:desc',
     ratingAsc: 'rating:asc',
     ratingDesc: 'rating:desc',
+    random: 'random ',
 };
 
 export default SearchFilter;

@@ -30,6 +30,7 @@ import Dialog from '@mui/material/Dialog';
 import DialogTitle from '@mui/material/DialogTitle';
 import DialogContent from '@mui/material/DialogContent';
 import LinearProgress from '@mui/material/LinearProgress';
+import ScrollButton from '../../components/ScrollButton/ScrollButton';
 
 function Listproducts() {
     const location = useLocation();
@@ -57,9 +58,9 @@ function Listproducts() {
     const [totalPages, setTotalPages] = useState<number>(0); // Tổng số trang
     const [totalProducts, setTotalProducts] = useState<number>(0); // Tổng số san pham
     const [totalProductsPage, setTotalProductsPage] = useState<number>(0); // Tổng số san pham cua 1 trang
-    const [filter, setFilter] = useState<string>('');
+    const [filter, setFilter] = useState<string>(config.SearchFilter.random);
     const [cateFilter, setCateFilter] = useState<Array<string>>([cate]);
-    const itemsPerPage = 40;
+    const itemsPerPage = 32;
 
     const getAllProducts = async (pageNo: number, filter: string, cateFilter: Array<string>) => {
         try {
@@ -73,6 +74,7 @@ function Listproducts() {
                 resultcateFilterString,
                 filter,
             );
+
             setLoading(false);
 
             if (response.status === 200) {
@@ -108,7 +110,6 @@ function Listproducts() {
 
     // handle change page
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
-        window.scrollTo(0, 0);
         setPage(newPage);
     };
 
@@ -139,7 +140,6 @@ function Listproducts() {
 
     // handle menu
     const [openMenu, setOpenMenu] = useState(false);
-
     const toggleMenu = () => () => {
         setOpenMenu((prev) => !prev);
     };
@@ -165,11 +165,12 @@ function Listproducts() {
                     <LinearProgress color="success" />
                 </DialogContent>
             </Dialog>
-            <div className="w-10/12 m-auto pt-32">
+            <div className="w-10/12 m-auto pt-32 relative">
+                <ScrollButton />
                 {/* start section 1 */}
                 <div
                     className={`${
-                        scroll ? 'fixed duration-200 ease-in top-18 left-0 w-full w-screen' : ' grid-cols-2'
+                        scroll ? 'fixed duration-200 ease-in top-18 left-0 w-screen' : 'grid-cols-2'
                     }   z-50 grid bg-transparen `}
                 >
                     <strong className={`${scroll ? 'hidden' : ''} `}>
@@ -204,7 +205,7 @@ function Listproducts() {
                                             input={<OutlinedInput label="Yêu cầu" />}
                                             onChange={handleGetFilter}
                                         >
-                                            <MenuItem value={''}>Không chọn</MenuItem>
+                                            <MenuItem value={config.SearchFilter.random}>Không chọn</MenuItem>
                                             <MenuItem value={config.SearchFilter.favoriteAsc}>
                                                 Lượt thích: Thấp đến Cao
                                             </MenuItem>

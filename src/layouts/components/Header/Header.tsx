@@ -90,7 +90,7 @@ function Header() {
         <>
             <div
                 className={`${
-                    scroll ? 'bg-header shadow-xl fixed duration-200 ease-in ' : 'bg-transparent absolute '
+                    scroll ? 'bg-header shadow-xl fixed duration-200 ease-in' : 'bg-transparent absolute'
                 } h-18 flex flex-col justify-center items-center w-screen z-50`}
             >
                 <div className="sm:w-10/12 w-11/12 flex justify-between gap-3">

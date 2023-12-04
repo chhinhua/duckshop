@@ -10,7 +10,7 @@ import Rating from '@mui/material/Rating';
 
 import { toast } from 'react-toastify';
 import { useNavigate } from 'react-router-dom';
-import { useCallback, useState } from 'react';
+import { useState } from 'react';
 import { useDispatch } from 'react-redux';
 
 import config from '../../config';
@@ -25,13 +25,15 @@ const Card = (props: { itemProduct: IProduct }) => {
 
     // yeu thich
     const [favourite, setFavourite] = useState(itemProduct.liked ? true : false);
-    const handleChangeFavorite = useCallback(async () => {
+    const handleChangeFavorite = async () => {
         const token = localStorage.getItem('accessToken');
         if (token) {
             try {
-                await putFollowProduct(+itemProduct.id);
-                const response = await getWishListNumber();
-                dispatch(setToTalWishList(+response.data));
+                const response = await putFollowProduct(+itemProduct.id);
+                if (response.status === 200) {
+                    const totalFavourite = await getWishListNumber();
+                    dispatch(setToTalWishList(+totalFavourite.data));
+                }
             } catch (error) {
                 toast.error(`${error}`);
             }
@@ -42,7 +44,7 @@ const Card = (props: { itemProduct: IProduct }) => {
 
         // fake
         setFavourite((prev) => !prev);
-    }, [favourite]);
+    };
     // chi tiet san pham
     const handleNextDetailPage = () => {
         if (itemProduct.id) {
