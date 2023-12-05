@@ -25,13 +25,21 @@ const Card = (props: { itemProduct: IProduct }) => {
 
     // yeu thich
     const [favourite, setFavourite] = useState(itemProduct.liked ? true : false);
+    const [favoriteCount, setFavouriteCount] = useState(itemProduct.favoriteCount);
     const handleChangeFavorite = async () => {
         const token = localStorage.getItem('accessToken');
         if (token) {
             try {
                 const response = await putFollowProduct(+itemProduct.id);
+
                 if (response.status === 200) {
                     const totalFavourite = await getWishListNumber();
+                    if (favourite) {
+                        setFavouriteCount((prev) => prev - 1);
+                    } else {
+                        setFavouriteCount((prev) => prev + 1);
+                    }
+                    setFavourite((prev) => !prev);
                     dispatch(setToTalWishList(+totalFavourite.data));
                 }
             } catch (error) {
@@ -43,7 +51,6 @@ const Card = (props: { itemProduct: IProduct }) => {
         }
 
         // fake
-        setFavourite((prev) => !prev);
     };
     // chi tiet san pham
     const handleNextDetailPage = () => {
@@ -97,7 +104,7 @@ const Card = (props: { itemProduct: IProduct }) => {
                     {favourite ? <Favorite sx={{ color: 'red' }} /> : <FavoriteBorder sx={{ color: 'red' }} />}
                 </Button>
                 <div className="flex place-content-center w-full">
-                    <span className="text-sm text-gray-600 font-medium">Yêu thích {itemProduct.favoriteCount}</span>
+                    <span className="text-sm text-gray-600 font-medium">Yêu thích {favoriteCount}</span>
                 </div>
             </CardActions>
         </div>

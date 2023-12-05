@@ -27,7 +27,7 @@ function ScrollButton() {
         <div className="fixed bottom-10 right-10">
             {showButton && (
                 <button
-                    className="rounded-full h-14 w-14 bg-blue-500 animate-bounce transition-all duration-500"
+                    className="rounded-full h-14 w-14 hover:bg-black bg-blue-500 animate-bounce transition-all duration-500"
                     onClick={scrollToTop}
                 >
                     <KeyboardDoubleArrowUp sx={{ color: 'white', fontSize: '30px' }} />
