@@ -26,10 +26,6 @@ import CardComp from '../../components/Card';
 import { getAllProductSearchWithinPagination } from '../../apis/productApi';
 import IProduct from '../../interface/product';
 import config from '../../config';
-import Dialog from '@mui/material/Dialog';
-import DialogTitle from '@mui/material/DialogTitle';
-import DialogContent from '@mui/material/DialogContent';
-import LinearProgress from '@mui/material/LinearProgress';
 import ScrollButton from '../../components/ScrollButton/ScrollButton';
 
 function Listproducts() {
@@ -49,9 +45,6 @@ function Listproducts() {
         window.history.replaceState({}, document.title, window.location.pathname);
     }
 
-    // handle load api
-    const [isLoading, setLoading] = useState<boolean>(false);
-
     // change page
     const [data, setData] = useState<Array<IProduct>>([]); // Dữ liệu từ API
     const [page, setPage] = useState<number>(1); // Trang hiện tại
@@ -66,7 +59,6 @@ function Listproducts() {
         try {
             const resultcateFilterString = cateFilter.join(',');
 
-            setLoading(true);
             const response = await getAllProductSearchWithinPagination(
                 pageNo,
                 itemsPerPage,
@@ -74,8 +66,6 @@ function Listproducts() {
                 resultcateFilterString,
                 filter,
             );
-
-            setLoading(false);
 
             if (response.status === 200) {
                 const { content, totalPages, totalElements, last, lastPageSize, pageSize } = response.data;
@@ -111,6 +101,10 @@ function Listproducts() {
     // handle change page
     const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
+        window.scrollTo({
+            top: 0,
+            behavior: 'smooth',
+        });
     };
 
     useEffect(() => {
@@ -159,12 +153,6 @@ function Listproducts() {
 
     return (
         <>
-            <Dialog onClose={() => setLoading(false)} open={isLoading} fullWidth maxWidth="sm">
-                <DialogTitle> Chờ giây lát !</DialogTitle>
-                <DialogContent>
-                    <LinearProgress color="success" />
-                </DialogContent>
-            </Dialog>
             <div className="w-10/12 m-auto pt-32 relative">
                 <ScrollButton />
                 {/* start section 1 */}

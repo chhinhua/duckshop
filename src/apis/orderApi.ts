@@ -38,7 +38,7 @@ export const getCheckOutDataForPage = async () => {
     }
 };
 
-export const getOrderByID = async (idOrder: string) => {
+export const getOrderByID = async (idOrder: number) => {
     try {
         const response = await axios.get(`/orders/${idOrder}`);
         return response;

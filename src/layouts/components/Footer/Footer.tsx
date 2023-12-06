@@ -1,34 +1,42 @@
-import logo from '../../../assets/img/BG 2.png';
-
+import { Link } from 'react-router-dom';
 import Typography from '@mui/material/Typography';
+
+import logo from '../../../assets/img/BG 2.png';
 import Image from '../../../components/Image';
+import config from '../../../config';
 const LINKS = [
     {
         title: 'Sản phẩm',
-        items: ['Tổng quan', 'Đặc trưng', 'Các giải pháp', 'Hướng dẫn'],
+        items: [{ content: 'Danh sách sản phẩm', to: config.Routes.listProducts }],
     },
-    {
-        title: 'Công ty',
-        items: ['Về chúng tôi', 'Nghề nghiệp', 'Tin tức'],
-    },
-    {
-        title: 'Nguồn',
-        items: ['Blog', 'Bản tin', 'Sự kiện', 'Trung tâm trợ giúp'],
-    },
+    // {
+    //     title: 'Thời trang',
+    //     items: [
+    //         { content: 'Thời trang nam', to: config.Routes.listProducts + `#cate:Thời trang nam` },
+    //         { content: 'Thời trang nữ', to: config.Routes.listProducts + `#cate:Thời trang nữ` },
+    //         { content: 'Thời trang trẻ em', to: config.Routes.listProducts + `#cate:Thời trang trẻ em` },
+    //     ],
+    // },
+    // {
+    //     title: 'Nguồn',
+    //     items: [
+    //         { content: 'Sự kiện', to: '' },
+    //         { content: 'Trung tâm trợ giúp', to: '' },
+    //     ],
+    // },
 ];
 
 const currentYear = new Date().getFullYear();
 
 function Footer() {
     return (
-        <div className="bg-footer text-white  pt-10 pb-5 bottom-0 left-0 mt-10">
+        <div className="bg-footer text-white  pt-8 pb-2 bottom-0 left-0 mt-10">
             <footer className="relative w-10/12 m-auto">
                 <div className="mx-auto w-full">
                     <div className="grid grid-cols-1 justify-between gap-4 md:grid-cols-2">
-                        <Typography variant="h5" className="mb-6 flex justify-center lg:justify-start cursor-pointer">
-                            <Image src={logo} className="h-full w-48" />
-                        </Typography>
-                        <div className="grid grid-cols-3 justify-between gap-4">
+                        <Image src={logo} className="h-full w-72" />
+                        {/* <div className="grid grid-cols-2 justify-between gap-4"> */}
+                        <div className="grid grid-cols-1 items-center place-items-center">
                             {LINKS.map(({ title, items }) => (
                                 <ul key={title}>
                                     <Typography
@@ -43,18 +51,20 @@ function Footer() {
                                     >
                                         {title}
                                     </Typography>
-                                    {items.map((link) => (
-                                        <li key={link}>
-                                            <p className="py-1.5 font-normal opacity-60 transition-colors hover:opacity-100 cursor-pointer">
-                                                {link}
-                                            </p>
+                                    {items.map((content, index) => (
+                                        <li key={index}>
+                                            <Link to={content.to}>
+                                                <p className="py-1 font-normal opacity-60 transition-colors hover:opacity-100 cursor-pointer">
+                                                    {content.content}
+                                                </p>
+                                            </Link>
                                         </li>
                                     ))}
                                 </ul>
                             ))}
                         </div>
                     </div>
-                    <div className="mt-12 flex w-full flex-col items-center justify-center border-t border-blue-gray-50 py-4 md:flex-row md:justify-between">
+                    <div className="mt-7 flex w-full flex-col items-center justify-center border-t border-blue-gray-50 py-3 md:flex-row md:justify-between">
                         <Typography variant="body2" className="mb-4 text-center font-normal text-blue-gray-900 md:mb-0">
                             Duck &copy; {currentYear} . Đã đăng ký Bản quyền.
                         </Typography>

@@ -1,15 +1,18 @@
-import { useForm, SubmitHandler } from 'react-hook-form';
-
 import Button from '@mui/material/Button';
 import Checkbox from '@mui/material/Checkbox';
 import { useEffect, useState } from 'react';
 import FormControl from '@mui/material/FormControl';
 import InputLabel from '@mui/material/InputLabel';
 import OutlinedInput from '@mui/material/OutlinedInput';
-import Select from '@mui/material/Select';
+import Select, { SelectChangeEvent } from '@mui/material/Select';
 import MenuItem from '@mui/material/MenuItem';
+import Avatar from '@mui/material/Avatar';
 
 import { toast } from 'react-toastify';
+import { useDispatch } from 'react-redux';
+import { setToTalProductCart } from '../Cart/totalProducCartSlice';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
+import { useForm, SubmitHandler } from 'react-hook-form';
 
 import config from '../../config';
 import Textarea from '../../components/Textarea/Textarea';
@@ -17,17 +20,20 @@ import { IOrderCheckOut } from '../../interface/order';
 import IAddress from '../../interface/address';
 import { getListAddressOffCurrentUser } from '../../apis/addressApi';
 import { getTotalPriceForYourCart } from '../../apis/cartApi';
-import { addOrderByToken } from '../../apis/orderApi';
-import { useDispatch } from 'react-redux';
-import { setToTalProductCart } from '../Cart/totalProducCartSlice';
-import { Link, useNavigate } from 'react-router-dom';
+import { addOrderByToken, getOrderByID } from '../../apis/orderApi';
+import imgVNPAY from '../../assets/img/VnPay.png';
 
 const Pay = () => {
+    const location = useLocation();
     const dispatch = useDispatch();
     const navigate = useNavigate();
+
+    const idOrder = location.hash.substring(1);
+
     const {
         register,
         handleSubmit,
+        setValue,
         formState: { errors },
     } = useForm<IOrderCheckOut>({});
 
@@ -59,7 +65,7 @@ const Pay = () => {
     // handle get total price
     const [totalPrice, setTotalPrice] = useState<number>(0);
 
-    const getListProduct = async () => {
+    const getTotalPrice = async () => {
         try {
             const response = await getTotalPriceForYourCart();
 
@@ -72,9 +78,35 @@ const Pay = () => {
             toast.error(`${error}`);
         }
     };
+
+    const [addressID, setAddressID] = useState<string>('');
+    const [paymentTYPE, setPaymentTYPE] = useState<string>('');
+    const handleChangeAddressID = (e: SelectChangeEvent) => {
+        setAddressID(e.target.value);
+    };
+    const handleChangePayment = (e: SelectChangeEvent) => {
+        setPaymentTYPE(e.target.value);
+    };
+    const getOrderForWaiting = async () => {
+        const response = await getOrderByID(+idOrder);
+
+        if (response.status === 200) {
+            await setValue('addressId', response.data.address.id);
+            setAddressID(response.data.address.id);
+            setTotalPrice(response.data.total);
+            await setValue('note', response.data.note);
+            await setValue('paymentType', response.data.paymentType);
+            setPaymentTYPE(response.data.paymentType);
+        }
+    };
+
     useEffect(() => {
         getListAddress();
-        getListProduct();
+        if (idOrder) {
+            getOrderForWaiting();
+        } else {
+            getTotalPrice();
+        }
     }, []);
 
     // submit form
@@ -106,15 +138,16 @@ const Pay = () => {
             const note = encodeURIComponent(data.note);
             const total = totalPrice;
             const addressId = data.addressId;
+
             const savedInfoUser = localStorage.getItem('infoUser');
-            let useName: string = ''; // lấy tên username
+            let userName: string = ''; // lấy tên username
             if (savedInfoUser) {
                 const dataInfo: { userNameUser: string } = JSON.parse(savedInfoUser);
-                useName = dataInfo.userNameUser;
+                userName = dataInfo.userNameUser;
             }
             dispatch(setToTalProductCart(0));
             try {
-                const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${useName}&addressId=${addressId}&note=${note}`;
+                const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${userName}&addressId=${addressId}&note=${note}`;
 
                 // window.location.href = redirectURL;
                 window.open(redirectURL, '_blank');
@@ -139,13 +172,26 @@ const Pay = () => {
                                 input={<OutlinedInput label="Hình thức thanh toán" />}
                                 fullWidth
                                 error={errors.paymentType ? true : false}
-                                defaultValue={''}
                                 {...register('paymentType', {
                                     required: 'PaymentType is required',
                                 })}
+                                value={paymentTYPE}
+                                onChange={handleChangePayment}
                             >
-                                <MenuItem value={config.PaymentType.VNPay}>{config.PaymentType.VNPay}</MenuItem>
-                                <MenuItem value={config.PaymentType.CashOnDelivery}>
+                                <MenuItem value={config.PaymentType.VNPay} sx={{ height: '50px' }}>
+                                    <div className="w-full flex justify-between items-center">
+                                        {config.PaymentType.VNPay}
+                                        <Avatar
+                                            src={imgVNPAY}
+                                            sx={{
+                                                height: '100%',
+                                                width: '70px',
+                                            }}
+                                            variant="rounded"
+                                        />
+                                    </div>
+                                </MenuItem>
+                                <MenuItem value={config.PaymentType.CashOnDelivery} sx={{ height: '50px' }}>
                                     {config.PaymentType.CashOnDelivery}
                                 </MenuItem>
                             </Select>
@@ -159,10 +205,11 @@ const Pay = () => {
                                     input={<OutlinedInput label="Địa chỉ" />}
                                     fullWidth
                                     error={errors.addressId ? true : false}
-                                    defaultValue={''}
                                     {...register('addressId', {
                                         required: 'address is required',
                                     })}
+                                    value={addressID}
+                                    onChange={handleChangeAddressID}
                                 >
                                     {listAddress.map((item, index) => (
                                         <MenuItem value={item.id} key={index}>

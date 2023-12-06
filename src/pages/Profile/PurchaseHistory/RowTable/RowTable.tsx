@@ -14,6 +14,7 @@ import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
 import { useState } from 'react';
 import { toast } from 'react-toastify';
 import { Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 import { updateOrderStatusByID } from '../../../../apis/orderApi';
 import Image from '../../../../components/Image';
@@ -50,6 +51,7 @@ interface Iprops {
 }
 
 export default function RowTable(props: Iprops) {
+    const navigate = useNavigate();
     const { item, setLoading } = props;
     const [open, setOpen] = useState(true);
 
@@ -71,6 +73,10 @@ export default function RowTable(props: Iprops) {
         } else {
             toast.info('Hủy xóa');
         }
+    };
+
+    const handlePaymentOrder = async (idOder: number) => {
+        navigate(config.Routes.checkOut + '#' + idOder);
     };
 
     // modal
@@ -114,6 +120,9 @@ export default function RowTable(props: Iprops) {
                             item.status === config.StatusOrders.DELIVERED
                                 ? 'text-green-600 text-base font-semibold'
                                 : ''
+                        }
+                        ${
+                            item.status === config.StatusOrders.WAITFORPAY ? 'text-red-600 text-base font-semibold' : ''
                         } font-medium `}
                     >
                         {item.status}
@@ -149,26 +158,47 @@ export default function RowTable(props: Iprops) {
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1 }}>
-                            <div>
-                                <Typography fontWeight={600} component="span">
-                                    Địa chỉ nhận hàng:
-                                </Typography>
-                                <Typography component="span">
-                                    {item.address.orderDetails}, {item.address.ward}, {item.address.district},
-                                    {item.address.city}
-                                </Typography>
-                            </div>
-                            <div>
-                                <Typography fontWeight={600} component="span">
-                                    Hình thức thanh toán:
-                                </Typography>
-                                <Typography component="span">{item.paymentType}</Typography>
-                            </div>
-                            <div>
-                                <Typography fontWeight={600} component="span">
-                                    Ghi chú:
-                                </Typography>
-                                <Typography component="span">{item.note}</Typography>
+                            <div className="flex justify-between items-center">
+                                <div>
+                                    <div>
+                                        <Typography fontWeight={600} component="span">
+                                            Địa chỉ nhận hàng:
+                                        </Typography>
+                                        <Typography component="span">
+                                            {item.address.orderDetails}, {item.address.ward}, {item.address.district},
+                                            {item.address.city}
+                                        </Typography>
+                                    </div>
+                                    <div>
+                                        <Typography fontWeight={600} component="span">
+                                            Hình thức thanh toán:
+                                        </Typography>
+                                        <Typography component="span">{item.paymentType}</Typography>
+                                    </div>
+                                    <div>
+                                        <Typography fontWeight={600} component="span">
+                                            Ghi chú:
+                                        </Typography>
+                                        <Typography component="span">{item.note}</Typography>
+                                    </div>
+                                </div>
+                                {item.status === config.StatusOrders.WAITFORPAY && (
+                                    <Button
+                                        onClick={() => handlePaymentOrder(item.id)}
+                                        variant="contained"
+                                        sx={{
+                                            marginLeft: 1,
+                                            ':hover': {
+                                                bgcolor: '#2B2A4C',
+                                            },
+                                            height: '40px',
+                                        }}
+                                    >
+                                        <MouseOverPopover content="Thanh toán đơn hàng">
+                                            <span className="normal-case text-white text-base">Thanh toán</span>
+                                        </MouseOverPopover>
+                                    </Button>
+                                )}
                             </div>
                             <Table size="small" aria-label="purchases">
                                 <TableHead>

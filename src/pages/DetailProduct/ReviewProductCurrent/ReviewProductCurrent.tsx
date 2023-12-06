@@ -67,9 +67,7 @@ const ReviewProductCurrent = (props: Iprops) => {
         getAllReviewOfProduct(+idProduct, page, star);
         scrollToComponent();
     }, [idProduct, page, star]);
-    useEffect(() => {
-        window.scroll(0, 0);
-    }, []);
+
     return (
         <div className="rounded border-2">
             <div ref={targetComponentRef} className="bg-gray-200 p-3 rounded text-xl font-normal">

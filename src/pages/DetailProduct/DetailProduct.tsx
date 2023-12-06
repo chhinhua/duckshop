@@ -53,8 +53,6 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
-                console.log(response);
-
                 if (response && response.data) {
                     setProduct(response.data);
                     setFavourite(response.data.liked);
@@ -74,6 +72,7 @@ const DetailProduct = () => {
     };
     useEffect(() => {
         getProduct(+idProduct);
+        window.scroll(0, 0);
     }, [idProduct]);
 
     //  handle size, color
@@ -257,16 +256,19 @@ const DetailProduct = () => {
                             value={size}
                             onChange={handleChangeSize}
                         >
-                            {product?.options.filter(option =>
-                                option.optionName.toLowerCase() === "size" || option.optionName.toLowerCase() === "kích thước")
-                                .flatMap(filteredOption =>
+                            {product?.options
+                                .filter(
+                                    (option) =>
+                                        option.optionName.toLowerCase() === 'size' ||
+                                        option.optionName.toLowerCase() === 'kích thước',
+                                )
+                                .flatMap((filteredOption) =>
                                     filteredOption.values.map((item, index) => (
                                         <MenuItem key={index} value={item.valueName}>
                                             {item.valueName}
                                         </MenuItem>
-                                    ))
-                                )
-                            }
+                                    )),
+                                )}
                         </Select>
                     </FormControl>
                     {/* end sỉze */}
@@ -275,9 +277,13 @@ const DetailProduct = () => {
                         <span>Chọn Màu</span>
                     </div>
                     <div className="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-1 lg:grid-cols-2 gap-2">
-                        {product?.options.filter(option =>
-                            option.optionName.toLowerCase() === "màu" || option.optionName.toLowerCase() === "color")
-                            .flatMap(filteredOption =>
+                        {product?.options
+                            .filter(
+                                (option) =>
+                                    option.optionName.toLowerCase() === 'màu' ||
+                                    option.optionName.toLowerCase() === 'color',
+                            )
+                            .flatMap((filteredOption) =>
                                 filteredOption.values.map((item, index) => (
                                     <BootstrapButton key={index} onClick={() => handleChangePicColor(item)}>
                                         <Card sx={{ display: 'flex', justifyContent: 'space-between', width: '100%' }}>
@@ -287,9 +293,8 @@ const DetailProduct = () => {
                                             <Image className="h-18" src={item.imageUrl} alt={item.valueName} />
                                         </Card>
                                     </BootstrapButton>
-                                ))
-                            )
-                        }
+                                )),
+                            )}
                     </div>
 
                     {/* end list color */}
