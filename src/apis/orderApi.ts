@@ -79,6 +79,19 @@ export const addOrderByToken = async (data: IOrderCheckOut) => {
     }
 };
 
+export const makePaymentAgainByToken = async (orderId: number, data: IOrderCheckOut) => {
+    try {
+        const response = await axios.post(`/orders/pay-cod?orderId=${orderId}`, {
+            total: data.total,
+            note: data.note,
+            addressId: data.addressId,
+        });
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
 export const updateOrderStatusByID = async (idOrder: number, status: string) => {
     try {
         const response = await axios.put(`/orders/${idOrder}/status?status=${status}`);

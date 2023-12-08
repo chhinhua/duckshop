@@ -20,8 +20,9 @@ import { IOrderCheckOut } from '../../interface/order';
 import IAddress from '../../interface/address';
 import { getListAddressOffCurrentUser } from '../../apis/addressApi';
 import { getTotalPriceForYourCart } from '../../apis/cartApi';
-import { addOrderByToken, getOrderByID } from '../../apis/orderApi';
+import { addOrderByToken, getOrderByID, makePaymentAgainByToken } from '../../apis/orderApi';
 import imgVNPAY from '../../assets/img/VnPay.png';
+import { checkOutVNPay, makePaymentVNPay } from '../../apis/vnpayApi';
 
 const Pay = () => {
     const location = useLocation();
@@ -117,40 +118,65 @@ const Pay = () => {
         if (data.paymentType === config.PaymentType.CashOnDelivery) {
             PaymentType = 'COD';
             try {
-                const response = await addOrderByToken({
-                    total: totalPrice,
-                    paymentType: PaymentType,
-                    note: data.note,
-                    addressId: data.addressId,
-                });
-                if (response?.status === 201) {
-                    dispatch(setToTalProductCart(0));
-                    toast.success('Đặt hàng thành công');
-                    navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+                if (idOrder) {
+                    const response = await makePaymentAgainByToken(+idOrder, {
+                        total: totalPrice,
+                        paymentType: PaymentType,
+                        note: data.note,
+                        addressId: data.addressId,
+                    });
+
+                    if (response?.status === 200) {
+                        toast.success('Đặt hàng thành công');
+                        navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+                    } else {
+                        toast.error(response?.data.message || response?.data);
+                    }
                 } else {
-                    toast.error(response?.data.message || response?.data);
+                    const response = await addOrderByToken({
+                        total: totalPrice,
+                        paymentType: PaymentType,
+                        note: data.note,
+                        addressId: data.addressId,
+                    });
+                    if (response?.status === 201) {
+                        dispatch(setToTalProductCart(0));
+                        toast.success('Đặt hàng thành công');
+                        navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+                    } else {
+                        toast.error(response?.data.message || response?.data);
+                    }
                 }
             } catch (error) {
                 toast.error(`${error}`);
             }
         } else {
             PaymentType = 'VN_PAY';
-            const note = encodeURIComponent(data.note);
-            const total = totalPrice;
-            const addressId = data.addressId;
-
             const savedInfoUser = localStorage.getItem('infoUser');
             let userName: string = ''; // lấy tên username
             if (savedInfoUser) {
                 const dataInfo: { userNameUser: string } = JSON.parse(savedInfoUser);
                 userName = dataInfo.userNameUser;
             }
-            dispatch(setToTalProductCart(0));
             try {
-                const redirectURL = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${total}&username=${userName}&addressId=${addressId}&note=${note}`;
-
-                // window.location.href = redirectURL;
-                window.open(redirectURL, '_blank');
+                if (idOrder) {
+                    const redirectURL = makePaymentVNPay(totalPrice, +idOrder, data.addressId, data.note);
+                    window.location.href = redirectURL;
+                    // window.open(redirectURL, '_blank');
+                } else {
+                    dispatch(setToTalProductCart(0));
+                    const redirectURL = checkOutVNPay(
+                        {
+                            total: totalPrice,
+                            paymentType: PaymentType,
+                            note: data.note,
+                            addressId: data.addressId,
+                        },
+                        userName,
+                    );
+                    window.location.href = redirectURL;
+                    // window.open(redirectURL, '_blank');
+                }
             } catch (error) {
                 toast.error(`${error}`);
             }

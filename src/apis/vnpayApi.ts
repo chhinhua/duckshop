@@ -1,14 +1,18 @@
 /* eslint-disable no-useless-catch */
 import { IOrderCheckOut } from '../interface/order.js';
-import axios from './axiosConfig.js';
-export const checkOutVNPay = async (data: IOrderCheckOut) => {
+export const checkOutVNPay = (data: IOrderCheckOut, userName: string) => {
     try {
-        const response = await axios.post('/vnpay/submit-order', {
-            total: data.total,
-            paymentType: data.paymentType,
-            note: data.note,
-            addressId: data.addressId,
-        });
+        const response = `http://localhost:8080/api/v1/vnpay/submit-order?amount=${data.total}&username=${userName}&addressId=${data.addressId}&note=${data.note}`;
+        return response;
+    } catch (error) {
+        throw error;
+    }
+};
+
+export const makePaymentVNPay = (total: number, orderId: number, addressId: number, note: string) => {
+    try {
+        const response = `http://localhost:8080/api/v1/vnpay/pay?amount=${total}&orderId=${orderId}&addressId=${addressId}&note=${note}`;
+
         return response;
     } catch (error) {
         throw error;
