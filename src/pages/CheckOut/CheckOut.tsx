@@ -125,10 +125,12 @@ const Pay = () => {
                         note: data.note,
                         addressId: data.addressId,
                     });
+                    console.log(response);
 
                     if (response?.status === 200) {
                         toast.success('Đặt hàng thành công');
-                        navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+                        // navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+                        navigate(config.Routes.detailOrder + '#' + response.data.id);
                     } else {
                         toast.error(response?.data.message || response?.data);
                     }
@@ -139,10 +141,11 @@ const Pay = () => {
                         note: data.note,
                         addressId: data.addressId,
                     });
+
                     if (response?.status === 201) {
                         dispatch(setToTalProductCart(0));
                         toast.success('Đặt hàng thành công');
-                        navigate(config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile);
+                        navigate(config.Routes.detailOrder + '#' + response.data.id);
                     } else {
                         toast.error(response?.data.message || response?.data);
                     }

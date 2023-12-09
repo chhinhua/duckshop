@@ -10,6 +10,8 @@ import TableRow from '@mui/material/TableRow';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
+import IconButton from '@mui/material/IconButton';
+import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -134,6 +136,11 @@ export default function RowTable(props: Iprops) {
                     </Button>
                 </StyledTableCell>
                 <StyledTableCell>
+                    <IconButton onClick={() => navigate(config.Routes.detailOrder + '#' + item.id)}>
+                        <MouseOverPopover content="Xem thông tin chi tiết">
+                            <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
+                        </MouseOverPopover>
+                    </IconButton>
                     {(item.status === config.StatusOrders.ORDERED ||
                         item.status === config.StatusOrders.WAITFORPAY) && (
                         <Button
@@ -157,7 +164,7 @@ export default function RowTable(props: Iprops) {
             <TableRow>
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
-                        <Box sx={{ margin: 1 }}>
+                        <Box sx={{ margin: 1, paddingBottom: 10 }}>
                             <div className="flex justify-between items-center">
                                 <div>
                                     <div>
@@ -197,6 +204,19 @@ export default function RowTable(props: Iprops) {
                                         <MouseOverPopover content="Thanh toán đơn hàng">
                                             <span className="normal-case text-white text-base">Thanh toán</span>
                                         </MouseOverPopover>
+                                    </Button>
+                                )}
+                                {item.isPaidBefore && (
+                                    <Button
+                                        onClick={() => handlePaymentOrder(item.id)}
+                                        variant="contained"
+                                        disabled
+                                        sx={{
+                                            marginLeft: 1,
+                                            height: '40px',
+                                        }}
+                                    >
+                                        <span className="normal-case text-base">Đã thanh toán</span>
                                     </Button>
                                 )}
                             </div>

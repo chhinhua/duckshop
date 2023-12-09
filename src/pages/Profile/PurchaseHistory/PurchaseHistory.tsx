@@ -55,6 +55,7 @@ const PurchaseHistory = () => {
         if (statusParam === '') {
             const response = await getHistoryOrderForCurrentUser();
             setListHistory(response.data);
+            console.log(response.data);
         } else {
             const response = await searchOrderForUser(statusParam);
             setListHistory(response.data);
@@ -91,7 +92,7 @@ const PurchaseHistory = () => {
                                 <StyledTableCell align="left">Thành tiền</StyledTableCell>
                                 <StyledTableCell align="left">Trạng thái</StyledTableCell>
                                 <StyledTableCell>Chi tiết</StyledTableCell>
-                                <StyledTableCell>Hủy đơn</StyledTableCell>
+                                <StyledTableCell></StyledTableCell>
                             </StyledTableRow>
                         </TableHead>
                         <TableBody>

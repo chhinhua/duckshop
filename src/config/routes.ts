@@ -10,6 +10,7 @@ const Routes = {
     cart: '/gio-hang',
     checkOut: '/thanh-toan',
     profile: '/trang-cua-ban',
+    detailOrder: '/trang-cua-ban/chi-tiet-don-hang',
     error: '*',
 };
 

@@ -13,6 +13,7 @@ import Profile from '../pages/Profile/Profile';
 import GetOTPRegister from '../pages/GetOTPRegister/GetOTPRegister';
 import GetOTPLogin from '../pages/GetOTPLogin/GetOTPLogin';
 import ForgotPassWord from '../pages/ForgotPassWord/ForgotPassWord';
+import Detail from '../pages/Profile/PurchaseHistory/Detail/Detail';
 
 type TRouters = {
     path: string;
@@ -32,6 +33,7 @@ const publishRoute: Array<TRouters> = [
     { path: config.Routes.cart, component: Cart },
     { path: config.Routes.checkOut, component: CheckOut },
     { path: config.Routes.profile, component: Profile },
+    { path: config.Routes.detailOrder, component: Detail },
     { path: config.Routes.error, component: Error404, layout: null },
 ];
 
