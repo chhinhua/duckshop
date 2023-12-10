@@ -48,12 +48,12 @@ const Detail = () => {
         <>
             <table className="border-collapse border border-slate-400 mx-auto my-20 w-5/6">
                 <caption className="caption-top pb-10 font-bold text-2xl">
-                    Thông tin chi tiết đơn hàng
                     <span className="float-right">
                         <Link to={config.Routes.profile + '#' + config.PageInProfile.historyPaymentProfile}>
-                            <Button variant="contained">Lịch sử giao dịch</Button>
+                            <Button variant="contained">Quay lại</Button>
                         </Link>
                     </span>
+                    Thông tin chi tiết đơn hàng
                 </caption>
                 <thead>
                     <tr>
