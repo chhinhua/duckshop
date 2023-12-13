@@ -53,6 +53,7 @@ const DetailProduct = () => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getSingleProduct(id);
+
                 if (response && response.data) {
                     setProduct(response.data);
                     setFavourite(response.data.liked);
@@ -297,6 +298,9 @@ const DetailProduct = () => {
                             )}
                     </div>
 
+                    <div className="text-gray-500 text-sm w-full flex items-center justify-start mt-10">
+                        {product?.quantityAvailable} sản phẩm có sẵn
+                    </div>
                     {/* end list color */}
                     <div className="flex gap-2">
                         <Button
@@ -308,7 +312,6 @@ const DetailProduct = () => {
                         >
                             + <ShoppingCart />
                         </Button>
-
                         <Button
                             sx={{ height: 50, marginTop: 2, color: 'red', border: '1px solid red' }}
                             variant="outlined"
