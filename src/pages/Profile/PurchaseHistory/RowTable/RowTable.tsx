@@ -25,6 +25,7 @@ import ModalReview from '../ModalReview/ModalReview';
 import IOrder from '../../../../interface/order';
 import config from '../../../../config';
 import IProductCart from '../../../../interface/productCart';
+import { Label } from '@mui/icons-material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -136,11 +137,26 @@ export default function RowTable(props: Iprops) {
                     </Button>
                 </StyledTableCell>
                 <StyledTableCell>
-                    <IconButton onClick={() => navigate(config.Routes.detailOrder + '#' + item.id)}>
+                    {/* <IconButton onClick={() => navigate(config.Routes.detailOrder + '#' + item.id)}>
                         <MouseOverPopover content="Xem thông tin chi tiết">
                             <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
                         </MouseOverPopover>
-                    </IconButton>
+                    </IconButton> */}
+                    <Button onClick={() => navigate(config.Routes.detailOrder + '#' + item.id)}
+                        variant="contained"
+                        sx={{
+                            bgcolor: 'blue',
+                            marginLeft: 1,
+                            ':hover': {
+                                bgcolor: '#2B2A4C',
+                            },
+                        }}
+                    >
+                        <MouseOverPopover content="Hủy đơn hàng">
+                                <span className="normal-case text-white text-base">Chi tiết</span>
+                        </MouseOverPopover>
+                    </Button>
+
                     {(item.status === config.StatusOrders.ORDERED ||
                         item.status === config.StatusOrders.WAITFORPAY) && (
                         <Button
@@ -165,61 +181,7 @@ export default function RowTable(props: Iprops) {
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1, paddingBottom: 10 }}>
-                            <div className="flex justify-between items-center">
-                                <div>
-                                    <div>
-                                        <Typography fontWeight={600} component="span">
-                                            Địa chỉ nhận hàng:
-                                        </Typography>
-                                        <Typography component="span">
-                                            {item.address.orderDetails}, {item.address.ward}, {item.address.district},
-                                            {item.address.city}
-                                        </Typography>
-                                    </div>
-                                    <div>
-                                        <Typography fontWeight={600} component="span">
-                                            Hình thức thanh toán:
-                                        </Typography>
-                                        <Typography component="span">{item.paymentType}</Typography>
-                                    </div>
-                                    <div>
-                                        <Typography fontWeight={600} component="span">
-                                            Ghi chú:
-                                        </Typography>
-                                        <Typography component="span">{item.note}</Typography>
-                                    </div>
-                                </div>
-                                {item.status === config.StatusOrders.WAITFORPAY && (
-                                    <Button
-                                        onClick={() => handlePaymentOrder(item.id)}
-                                        variant="contained"
-                                        sx={{
-                                            marginLeft: 1,
-                                            ':hover': {
-                                                bgcolor: '#2B2A4C',
-                                            },
-                                            height: '40px',
-                                        }}
-                                    >
-                                        <MouseOverPopover content="Thanh toán đơn hàng">
-                                            <span className="normal-case text-white text-base">Thanh toán</span>
-                                        </MouseOverPopover>
-                                    </Button>
-                                )}
-                                {item.isPaidBefore && (
-                                    <Button
-                                        onClick={() => handlePaymentOrder(item.id)}
-                                        variant="contained"
-                                        disabled
-                                        sx={{
-                                            marginLeft: 1,
-                                            height: '40px',
-                                        }}
-                                    >
-                                        <span className="normal-case text-base">Đã thanh toán</span>
-                                    </Button>
-                                )}
-                            </div>
+                         
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
@@ -290,10 +252,55 @@ export default function RowTable(props: Iprops) {
                                     ))}
                                 </TableBody>
                             </Table>
+                            <div className="flex justify-between items-center mt-10">
+                                <div className='pl-5'>
+                                    <div className='pb-2'>
+                                        <Typography fontWeight={600} component="span">
+                                            Địa chỉ nhận hàng:
+                                        </Typography>
+                                        <Typography component="span"> {item.address.orderDetails}, {item.address.ward}, 
+                                            {item.address.district}, {item.address.city}
+                                        </Typography>
+                                    </div>
+                                    <div className='pb-2'>
+                                        <Typography fontWeight={600} component="span">
+                                            Phương thức thanh toán:
+                                        </Typography>
+                                        <Typography component="span"> {item.paymentType}</Typography>
+                                    </div>
+                                    <div>
+                                        <Typography fontWeight={600} component="span">
+                                            Ghi chú:
+                                        </Typography>
+                                        <Typography component="span"> {item.note}</Typography>
+                                    </div>
+                                </div>
+                                {item.status === config.StatusOrders.WAITFORPAY && (
+                                    <Button
+                                        onClick={() => handlePaymentOrder(item.id)}
+                                        variant="contained"
+                                        sx={{
+                                            marginLeft: 1,
+                                            ':hover': {
+                                                bgcolor: '#2B2A4C',
+                                            },
+                                            height: '40px',
+                                        }}
+                                    >
+                                        <MouseOverPopover content="Thanh toán đơn hàng">
+                                            <span className="normal-case text-white text-base">Thanh toán</span>
+                                        </MouseOverPopover>
+                                    </Button>
+                                )}
+                                {item.isPaidBefore && (
+                                    <Box><span className="normal-case text-base">Đã thanh toán</span></Box>
+                                )}
+                            </div>
                         </Box>
                     </Collapse>
                 </TableCell>
             </TableRow>
+            <div className='h-10'></div>
         </>
     );
 }
