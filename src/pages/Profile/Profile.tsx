@@ -30,7 +30,7 @@ const Profile = () => {
     }, [location.hash]);
 
     const handleChange = useCallback(
-        (event: React.SyntheticEvent, newValue: string) => {
+        (_: React.SyntheticEvent, newValue: string) => {
             setValuePage(newValue);
             // Xóa fragment identifier khi component được mount
             window.location.hash = `#${newValue}`;

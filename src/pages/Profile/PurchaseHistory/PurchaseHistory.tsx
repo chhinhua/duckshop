@@ -55,7 +55,6 @@ const PurchaseHistory = () => {
         if (statusParam === '') {
             const response = await getHistoryOrderForCurrentUser();
             setListHistory(response.data);
-            console.log(response.data);
         } else {
             const response = await searchOrderForUser(statusParam);
             setListHistory(response.data);

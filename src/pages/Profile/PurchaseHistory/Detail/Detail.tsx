@@ -28,7 +28,6 @@ const Detail = () => {
                 // tồn tai ma san pham và phải là số
                 const response = await getOrderByID(id);
 
-                console.log(response);
                 if (response.status === 200) {
                     setOrder(response.data);
                 } else {

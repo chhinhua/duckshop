@@ -150,7 +150,7 @@ function Header() {
                                 </Link>
 
                                 <Button onClick={handlePopoverToggle}>
-                                    <Avatar src={avatarUrl} alt="Avatar" sx={{ width: 32, height: 32 }} />
+                                    <Avatar src={avatarUrl || undefined} alt="Avatar" sx={{ width: 32, height: 32 }} />
                                     <span className="text-base ml-1 font-medium normal-case text-black">
                                         {userName}
                                     </span>

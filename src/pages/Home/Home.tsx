@@ -145,7 +145,7 @@ function Home() {
                     <div className="uppercase text-xl font-semibold not-italic">PHỔ BIẾN TRONG TUẦN NÀY</div>
                 </div>
                 <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 mt-8">
-                    {[S2Baner1, S2Baner2, S2Baner3, S2Baner4].map((item, index) => (
+                    {[S2Baner1, S2Baner2, S2Baner3, S2Baner4].map((_, index) => (
                         <ScrollAnimationElement key={index}>
                             <div className="opacity-0">{/* <CardComp image={item} /> */}</div>
                         </ScrollAnimationElement>

@@ -58,7 +58,6 @@ const Wishlist = () => {
             const response = await getWishListWithPagination(pageNo, itemsPerPage);
             if (response.status === 200) {
                 const { content, totalPages } = response.data;
-                console.log(content);
 
                 setData(content);
                 setTotalPages(totalPages);
@@ -81,7 +80,7 @@ const Wishlist = () => {
         getAllFollowProduct(page);
     }, [page, isLoading]);
 
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
     return (

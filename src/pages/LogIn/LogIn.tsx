@@ -64,7 +64,6 @@ const LogIn = () => {
             try {
                 setIsLoadng(true);
                 const response = await loginApi(data.email, data.passWord);
-                console.log(response);
 
                 setIsLoadng(false);
 

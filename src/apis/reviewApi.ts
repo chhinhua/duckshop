@@ -23,7 +23,7 @@ export const getAllReviewWithPagination = async (
     star?: number | undefined | null,
 ) => {
     try {
-        const params: { [key: string]: string | number } = {
+        const params: Record<string, string | number | undefined> = {
             pageNo: pageNo,
             pageSize: pageSize,
         };
@@ -32,7 +32,7 @@ export const getAllReviewWithPagination = async (
             params['star'] = star;
         }
 
-        const url = `/reviews/${idProduct}?` + new URLSearchParams(params).toString();
+        const url = `/reviews/${idProduct}?` + new URLSearchParams(params as Record<string, string>).toString();
         const response = await axios.get(url);
 
         // const response = await axios.get(`/reviews/${idProduct}?pageNo=${pageNo}&pageSize=${pageSize}`);

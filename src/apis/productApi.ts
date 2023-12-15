@@ -9,7 +9,7 @@ export const getAllProductSearchWithinPagination = async (
     sort: string,
 ) => {
     try {
-        const params: { [key: string]: string | number | boolean } = {
+        const params: Record<string, string | number | boolean> = {
             sell: true,
             pageNo: pageNo,
             pageSize: pageSize,
@@ -29,7 +29,7 @@ export const getAllProductSearchWithinPagination = async (
         if (cate !== '') {
             params['cate'] = cate;
         }
-        const url = '/products/search?' + new URLSearchParams(params).toString();
+        const url = '/products/search?' + new URLSearchParams(params as Record<string, string>).toString();
 
         const response = await axios.get(url);
         // const response = await axios.get(

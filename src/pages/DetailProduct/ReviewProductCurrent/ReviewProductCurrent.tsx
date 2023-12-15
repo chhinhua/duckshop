@@ -29,7 +29,6 @@ const ReviewProductCurrent = (props: Iprops) => {
             if (idProduct && !isNaN(+idProduct)) {
                 // tồn tai ma san pham và phải là số
                 const response = await getAllReviewWithPagination(id, pageNo, itemsPerPage, star);
-                console.log(response.data.content);
 
                 if (response.status === 200) {
                     setData(response.data.content);
@@ -50,7 +49,7 @@ const ReviewProductCurrent = (props: Iprops) => {
     };
 
     // handle change page
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
     };
     // auto scroll

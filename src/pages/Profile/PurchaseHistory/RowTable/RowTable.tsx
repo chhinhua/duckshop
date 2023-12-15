@@ -10,8 +10,6 @@ import TableRow from '@mui/material/TableRow';
 import TableCell, { tableCellClasses } from '@mui/material/TableCell';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
 import KeyboardArrowUpIcon from '@mui/icons-material/KeyboardArrowUp';
-import IconButton from '@mui/material/IconButton';
-import InfoTwoTone from '@mui/icons-material/InfoTwoTone';
 
 import { useState } from 'react';
 import { toast } from 'react-toastify';
@@ -25,7 +23,6 @@ import ModalReview from '../ModalReview/ModalReview';
 import IOrder from '../../../../interface/order';
 import config from '../../../../config';
 import IProductCart from '../../../../interface/productCart';
-import { Label } from '@mui/icons-material';
 
 const StyledTableCell = styled(TableCell)(({ theme }) => ({
     [`&.${tableCellClasses.head}`]: {
@@ -142,7 +139,8 @@ export default function RowTable(props: Iprops) {
                             <InfoTwoTone sx={{ color: '#0802A3', fontSize: 26 }} />
                         </MouseOverPopover>
                     </IconButton> */}
-                    <Button onClick={() => navigate(config.Routes.detailOrder + '#' + item.id)}
+                    <Button
+                        onClick={() => navigate(config.Routes.detailOrder + '#' + item.id)}
                         variant="contained"
                         sx={{
                             bgcolor: 'blue',
@@ -153,7 +151,7 @@ export default function RowTable(props: Iprops) {
                         }}
                     >
                         <MouseOverPopover content="Hủy đơn hàng">
-                                <span className="normal-case text-white text-base">Chi tiết</span>
+                            <span className="normal-case text-white text-base">Chi tiết</span>
                         </MouseOverPopover>
                     </Button>
 
@@ -181,7 +179,6 @@ export default function RowTable(props: Iprops) {
                 <TableCell style={{ paddingBottom: 0, paddingTop: 0 }} colSpan={6}>
                     <Collapse in={open} timeout="auto" unmountOnExit>
                         <Box sx={{ margin: 1, paddingBottom: 10 }}>
-                         
                             <Table size="small" aria-label="purchases">
                                 <TableHead>
                                     <TableRow>
@@ -253,16 +250,18 @@ export default function RowTable(props: Iprops) {
                                 </TableBody>
                             </Table>
                             <div className="flex justify-between items-center mt-10">
-                                <div className='pl-5'>
-                                    <div className='pb-2'>
+                                <div className="pl-5">
+                                    <div className="pb-2">
                                         <Typography fontWeight={600} component="span">
                                             Địa chỉ nhận hàng:
                                         </Typography>
-                                        <Typography component="span"> {item.address.orderDetails}, {item.address.ward}, 
-                                            {item.address.district}, {item.address.city}
+                                        <Typography component="span">
+                                            {' '}
+                                            {item.address.orderDetails}, {item.address.ward},{item.address.district},{' '}
+                                            {item.address.city}
                                         </Typography>
                                     </div>
-                                    <div className='pb-2'>
+                                    <div className="pb-2">
                                         <Typography fontWeight={600} component="span">
                                             Phương thức thanh toán:
                                         </Typography>
@@ -293,14 +292,16 @@ export default function RowTable(props: Iprops) {
                                     </Button>
                                 )}
                                 {item.isPaidBefore && (
-                                    <Box><span className="normal-case text-base">Đã thanh toán</span></Box>
+                                    <Box>
+                                        <span className="normal-case text-base">Đã thanh toán</span>
+                                    </Box>
                                 )}
                             </div>
                         </Box>
                     </Collapse>
                 </TableCell>
             </TableRow>
-            <div className='h-10'></div>
+            <div className="h-10"></div>
         </>
     );
 }

@@ -99,7 +99,7 @@ function Listproducts() {
     };
 
     // handle change page
-    const handlePageChange = (event: React.ChangeEvent<unknown>, newPage: number) => {
+    const handlePageChange = (_: React.ChangeEvent<unknown>, newPage: number) => {
         setPage(newPage);
         window.scrollTo({
             top: 0,

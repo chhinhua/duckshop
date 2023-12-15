@@ -107,10 +107,10 @@ const ModalReview = (propsCh: IPropsAddress) => {
                                     value={valueRating}
                                     precision={1}
                                     getLabelText={getLabelText}
-                                    onChange={(event, newValue) => {
+                                    onChange={(_, newValue) => {
                                         setValueRating(newValue || 1);
                                     }}
-                                    onChangeActive={(event, newHover) => {
+                                    onChangeActive={(_, newHover) => {
                                         setHoverRating(newHover);
                                     }}
                                     emptyIcon={<StarIcon style={{ opacity: 0.55 }} fontSize="inherit" />}
