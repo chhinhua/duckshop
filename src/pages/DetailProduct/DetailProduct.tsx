@@ -348,7 +348,7 @@ const DetailProduct = () => {
             {/* Start product description */}
             <div className="mt-5">
                 <div className="bg-gray-200 p-3 rounded text-xl font-normal">MÔ TẢ SẢN PHẨM</div>
-                <div className="mt-5 text-lg bg-gray-100 p-5 rounded shadow-md">{product?.description}</div>
+                <div className="mt-5 text-lg bg-gray-100 p-5 rounded shadow-md whitespace-pre-line">{product?.description}</div>
             </div>
 
             {/* Start product reviews */}
