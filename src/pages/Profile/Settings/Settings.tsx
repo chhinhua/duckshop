@@ -131,8 +131,9 @@ const Settings = () => {
                                 src={avatar}
                                 sx={{
                                     width: '100%',
-                                    height: '20rem',
+                                    height: '100%',
                                     borderRadius: '100%',
+                                    objectFit: 'cover',
                                 }}
                             />
                         </Button>
