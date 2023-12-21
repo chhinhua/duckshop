@@ -10,7 +10,7 @@ function DefaultLayout({ children }: DefaultLayoutProps) {
     return (
         <div>
             <Header />
-            <div className="text-base pt-18 ">{children}</div>
+            <div className="text-base pt-18 min-h-screen">{children}</div>
             <Footer />
         </div>
     );
