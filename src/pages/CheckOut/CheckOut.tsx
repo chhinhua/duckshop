@@ -270,17 +270,6 @@ const Pay = () => {
                             }}
                         />
                         {/* end input firtname */}
-                        <Button
-                            style={{ background: isChecked ? 'black' : '', height: '50px' }}
-                            type="submit"
-                            variant="contained"
-                            fullWidth
-                            color="primary"
-                            size="large"
-                            disabled={!isChecked}
-                        >
-                            Đặt hàng
-                        </Button>
                         <div className="grid grid-cols-10">
                             <span>
                                 <Checkbox checked={isChecked} onChange={handleCheckboxChange} />
@@ -292,6 +281,17 @@ const Pay = () => {
                                 của Duck.
                             </span>
                         </div>
+                        <Button
+                            style={{ background: isChecked ? 'black' : '', height: '50px' }}
+                            type="submit"
+                            variant="contained"
+                            fullWidth
+                            color="primary"
+                            size="large"
+                            disabled={!isChecked}
+                        >
+                            Đặt hàng
+                        </Button>
                     </form>
                 </div>
                 {/* end infomation */}
